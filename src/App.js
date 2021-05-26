@@ -24,9 +24,9 @@ class App extends Component {
           <hr />
           */}
           <Switch>
-            <Route path='/' component={Events} />
-            <Route path='/results/:slug' component={Results} />
             <Route path='/results/:slug/:year' component={Results} />
+            <Route path='/results/:slug' component={Results} />
+            <Route path='/' component={Events} />
           </Switch>
         </div>
       </Router>

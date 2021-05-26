@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class Events extends Component {
     constructor(props) {
@@ -22,22 +23,22 @@ class Events extends Component {
       if (state.events && state.events.length > 0) {
         return (
           <div className="App">
-            <div>
-              Events
-            </div>
-            { state.events.map( (ev, index) => {
-              return (
-                <div key={ index }>
-                  <a href={ "/results/" + ev.slug }>{ ev.name }</a>
-                </div>
-              )
-            }) }
+            <h3>Events</h3>
+            <ul>
+              { state.events.map( (ev, index) => {
+                return (
+                  <li key={ index }>
+                    <Link to={`/results/${ev.slug}`}>{ ev.name }</Link>
+                  </li>
+                )
+              }) }
+            </ul>
           </div>
         );
       } else {
         return (
           <div className="App">
-            No events found.
+            <h3>No events found.</h3>
           </div>
         )
       }
