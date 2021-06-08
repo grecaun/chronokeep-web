@@ -3,8 +3,9 @@ import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Results from './components/Results';
-import Events from './components/Events';
+import Results from './components/Pages/Results';
+import Events from './components/Pages/Events';
+import Person from './components/Pages/Person';
 
 require('dotenv').config()
 
@@ -24,6 +25,7 @@ class App extends Component {
           <hr />
           */}
           <Switch>
+            <Route path='/results/:slug/:year/:bib' component={Person} />
             <Route path='/results/:slug/:year' component={Results} />
             <Route path='/results/:slug' component={Results} />
             <Route path='/' component={Events} />

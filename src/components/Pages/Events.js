@@ -12,9 +12,20 @@ class Events extends Component {
     componentDidMount() {
       const BASE_URL = process.env.REACT_APP_BASE_URL;
       fetch(BASE_URL + '/api/event/all')
-      .then(res => res.json())
-      .then(json => json.events)
-      .then(events => {this.setState({ 'events': events })
+      .then(response => {
+        console.log("response found for events query")
+        this.setState({
+          status: response.status,
+          loading: false,
+          response: true,
+        });
+        return response.json();
+      })
+      .then(data => {
+        this.setState({
+          found: data,
+          events: data.events
+        });
       })
     }
     
