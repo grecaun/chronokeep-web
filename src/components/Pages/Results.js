@@ -77,7 +77,7 @@ class Results extends Component {
                                 var show = false
                                 if (state.dist !== "" && state.dist === distance) {
                                     show = true
-                                } else if (index === 0) {
+                                } else if (state.dist === "" && index === 0) {
                                     show = true
                                 }
                                 return (
@@ -94,7 +94,7 @@ class Results extends Component {
                                 var show = false
                                 if (state.dist !== "" && state.dist === distance) {
                                     show = true
-                                } else if (index === 0) {
+                                } else if (state.dist === "" && index === 0) {
                                     show = true
                                 }
                                 if (state.event.type === "time") {
