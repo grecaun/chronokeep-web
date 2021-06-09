@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Results from './components/Pages/Results';
 import Events from './components/Pages/Events';
