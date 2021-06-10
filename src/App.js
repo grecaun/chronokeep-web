@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-// import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Results from './components/Pages/Results';
 import Events from './components/Pages/Events';
@@ -13,16 +13,19 @@ class App extends Component {
     return (
       <Router>
         <div>
-          {/*
-          <h2>Router Tutorial</h2>
-          <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <ul className="navbar-nav mr-auto">
-              <li><Link to={'/'} className="nav-link">Events</Link></li>
-              <li><Link to={'/results'} className="nav-link">Results</Link></li>
-            </ul>
+          <nav className="navbar navbar-expand-sm navbar-light bg-light">
+            <div class="container-lg lg-max-width">
+              <a class="navbar-brand" href={'/'}>Chronokeep</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <div class="navbar-nav">
+                  <Link to={'/'} className="nav-link">Events</Link>
+                </div>
+              </div>
+            </div>
           </nav>
-          <hr />
-          */}
           <Switch>
             <Route path='/results/:slug/:year/:bib' component={Person} />
             <Route path='/results/:slug/:year' component={Results} />

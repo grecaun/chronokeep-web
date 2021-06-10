@@ -33,13 +33,13 @@ class Events extends Component {
       const state = this.state;
       if (state.events && state.events.length > 0) {
         return (
-          <div className="App">
-            <h3>Events</h3>
-            <ul>
+          <div className="card mx-auto sm-max-width text-center event-container">
+            <h1 className="text-important">Events</h1>
+            <ul className="nav justicy-content-center flex-column nav-pills">
               { state.events.map( (ev, index) => {
                 return (
-                  <li key={ index }>
-                    <Link to={`/results/${ev.slug}`}>{ ev.name }</Link>
+                  <li className="nav-item" key={ index }>
+                    <Link className="nav-link text-important" to={`/results/${ev.slug}`}>{ ev.name }</Link>
                   </li>
                 )
               }) }

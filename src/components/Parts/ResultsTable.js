@@ -7,28 +7,27 @@ const ResultsTable = (distance, results, index, show) => {
         }
         return a.ranking - b.ranking
     })
-    var collapseClass = "collapse"
+    var collapseClass = "collapse table-responsive-sm"
     if (show === true) {
-        collapseClass = "collapse show"
+        collapseClass = "collapse table-responsive-sm show"
     }
     return (
-        <div class={collapseClass} key={distance} id={"distance" + index} data-bs-parent="#results-parent">
+        <div class={collapseClass} key={distance} id={`distance${index}`} data-bs-parent="#results-parent">
             <table class="table table-sm table-bordered">
                 <thead>
                     <tr>
-                        <td class="table-header text-important center" colSpan="10">{distance}</td>
+                        <td class="text-important text-center h5" colSpan="10">{distance}</td>
                     </tr>
                     <tr>
-                        <th class="overflow-hidden-sm col-md center">Bib</th>
-                        <th class="col-sm center">Place</th>
-                        <th class="col-lg">First</th>
-                        <th class="col-lg">Last</th>
-                        <th class="overflow-hidden-lg col-sm center">Age</th>
-                        <th class="overflow-hidden-lg col-sm center">Pl</th>
-                        <th class="overflow-hidden-lg col-sm center">Gender</th>
-                        <th class="overflow-hidden-lg col-sm center">Pl</th>
-                        <th class="overflow-hidden-sm col-lg center">Gun Time</th>
-                        <th class="col-lg center">Time</th>
+                        <th class="overflow-hidden-sm col-md text-center">Bib</th>
+                        <th class="col-sm text-center">Place</th>
+                        <th class="col-xl">Name</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Age</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Gender</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="overflow-hidden-sm col-lg text-center">Gun Time</th>
+                        <th class="col-lg text-center">Time</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,10 +54,10 @@ const ResultsTable = (distance, results, index, show) => {
                             const chipHour = Math.floor(result.chip_seconds / 3600)
                             var chipMinutes = Math.floor((result.chip_seconds % 3600) / 60 )
                             // Change minutes into a string starting with 0 if its less than 10, i.e. 09
-                            chipMinutes = chipMinutes < 10 ? '0' + chipMinutes : chipMinutes
+                            chipMinutes = chipMinutes < 10 ? `0${chipMinutes}` : chipMinutes
                             var chipSeconds = result.chip_seconds % 60
                             // Change seconds into a string starting with 0 if its less than 10, i.e. 09
-                            chipSeconds = chipSeconds < 10 ? '0' + chipSeconds : chipSeconds
+                            chipSeconds = chipSeconds < 10 ? `0${chipSeconds}` : chipSeconds
                             // Only care about tenths of a second
                             const chipMill = Math.floor(result.chip_milliseconds / 100)
                             var chipTimeString = ''
@@ -84,24 +83,23 @@ const ResultsTable = (distance, results, index, show) => {
                             }
                             // Early start time
                             if (result.type === 1) {
-                                rankStr = rankStr + "e"
+                                rankStr = `${rankStr}e`
                             }
                             // Unofficial time
                             if (result.Type === 2) {
-                                rankStr = rankStr + "u"
+                                rankStr = `${rankStr}u`
                             }
                             return (
                                 <tr key={result.bib}>
-                                    <td class="overflow-hidden-sm center">{result.bib}</td>
-                                    <td class="center">{rankStr}</td>
-                                    <td>{result.first}</td>
-                                    <td>{result.last}</td>
-                                    <td class="overflow-hidden-lg center">{result.age}</td>
-                                    <td class="overflow-hidden-lg center">{arankStr}</td>
-                                    <td class="overflow-hidden-lg center">{result.gender}</td>
-                                    <td class="overflow-hidden-lg center">{grankStr}</td>
-                                    <td class="overflow-hidden-sm center">{timeString}</td>
-                                    <td class="center">{chipTimeString}</td>
+                                    <td class="overflow-hidden-sm text-center">{result.bib}</td>
+                                    <td class="text-center">{rankStr}</td>
+                                    <td>{`${result.first} ${result.last}`}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.age}</td>
+                                    <td class="overflow-hidden-lg text-center">{arankStr}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.gender}</td>
+                                    <td class="overflow-hidden-lg text-center">{grankStr}</td>
+                                    <td class="overflow-hidden-sm text-center">{timeString}</td>
+                                    <td class="text-center">{chipTimeString}</td>
                                 </tr>
                             );
                         })
