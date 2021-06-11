@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TimeResultsTable = (distance, results, index, show) => {
+const TimeResultsTable = (distance, results, index, show, info) => {
     const sorted = results.sort((a, b) => {
         return a.ranking - b.ranking
     })
@@ -13,18 +13,18 @@ const TimeResultsTable = (distance, results, index, show) => {
             <table class="table table-sm table-bordered">
                 <thead>
                     <tr>
-                        <td class="text-important center" colSpan="10">{distance}</td>
+                        <td class="table-distance-header text-important text-center" colSpan="10">{distance}</td>
                     </tr>
                     <tr>
-                        <th class="overflow-hidden-sm col-md center">Bib</th>
-                        <th class="col-sm center">Place</th>
+                        <th class="overflow-hidden-sm col-md text-center">Bib</th>
+                        <th class="col-sm text-center">Place</th>
                         <th class="col-xl">Name</th>
-                        <th class="overflow-hidden-lg col-sm center">Age</th>
-                        <th class="overflow-hidden-lg col-sm center">Pl</th>
-                        <th class="overflow-hidden-lg col-sm center">Gender</th>
-                        <th class="overflow-hidden-lg col-sm center">Pl</th>
-                        <th class="col-lg center">Time</th>
-                        <th class="col-lg center">Laps</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Age</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Gender</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="col-lg text-center">Time</th>
+                        <th class="col-lg text-center">Laps</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,15 +49,15 @@ const TimeResultsTable = (distance, results, index, show) => {
                             }
                             return (
                                 <tr key={result.bib}>
-                                    <td class="overflow-hidden-sm center">{result.bib}</td>
-                                    <td class="center">{result.ranking}</td>
+                                    <td class="overflow-hidden-sm text-center">{result.bib}</td>
+                                    <td class="text-center">{result.ranking}</td>
                                     <td>{`${result.first} ${result.last}`}</td>
-                                    <td class="overflow-hidden-lg center">{result.age}</td>
-                                    <td class="overflow-hidden-lg center">{result.age_ranking}</td>
-                                    <td class="overflow-hidden-lg center">{result.gender}</td>
-                                    <td class="overflow-hidden-lg center">{result.gender_ranking}</td>
-                                    <td class="center">{timeString}</td>
-                                    <td class="center">{result.segment}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.age}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.age_ranking}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.gender}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.gender_ranking}</td>
+                                    <td class="text-center">{timeString}</td>
+                                    <td class="text-center">{result.segment}</td>
                                 </tr>
                             );
                         })

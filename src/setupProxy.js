@@ -13,7 +13,7 @@ module.exports = function(app) {
     // define the route and map the proxy
     app.use('/api', createProxyMiddleware({
         target: apiUrl,
-        changeOrigin: true,
+        changeOrigin: false,
         pathRewrite: {
             '^/api/':'/'
         },

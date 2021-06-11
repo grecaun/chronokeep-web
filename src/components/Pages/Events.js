@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../Parts/Header';
+import Footer from '../Parts/Footer';
+import Loading from '../Parts/Loading';
+import ErrorMsg from '../Parts/ErrorMsg';
 
 class Events extends Component {
     constructor(props) {
       super(props);
       this.state = {
+        loading: true,
+        error: false,
         events: []
       }
     }
@@ -23,33 +29,65 @@ class Events extends Component {
       })
       .then(data => {
         this.setState({
+          loading: false,
           found: data,
           events: data.events
         });
+      })
+      .catch(error => {
+        this.setState({
+          error: true,
+          errorMessage: error.toString()
+        });
+        console.error("There was an error!", error)
       })
     }
     
     render() {
       const state = this.state;
+      if (state.error === true) {
+        return (
+          <div>
+            { Header("events") }
+            { ErrorMsg() }
+            { Footer() }
+          </div>
+        )
+      }
+      if (state.loading === true) {
+        return (
+            <div>
+                { Header("events") }
+                { Loading() }
+                { Footer() }
+            </div>
+        );
+      }
       if (state.events && state.events.length > 0) {
         return (
-          <div className="card mx-auto sm-max-width text-center event-container">
-            <h1 className="text-important">Events</h1>
-            <ul className="nav justicy-content-center flex-column nav-pills">
-              { state.events.map( (ev, index) => {
-                return (
-                  <li className="nav-item" key={ index }>
-                    <Link className="nav-link text-important" to={`/results/${ev.slug}`}>{ ev.name }</Link>
-                  </li>
-                )
-              }) }
-            </ul>
+          <div>
+            { Header("event") }
+            <div className="mx-auto sm-max-width text-center event-container container-md border border-light shadow-sm p-5 pt-4">
+              <h1 className="text-important text-primary">Events</h1>
+              <div className="list-group justify-content-center flex-column mt-4">
+                { state.events.map( (ev, index) => {
+                  return (
+                    <Link className="list-group-item list-group-item-action text-important" to={`/results/${ev.slug}`} key={`event${index}`}>{ ev.name }</Link>
+                  )
+                }) }
+              </div>
+            </div>
+            { Footer() }
           </div>
         );
       } else {
         return (
-          <div className="App">
-            <h3>No events found.</h3>
+          <div>
+            { Header("event") }
+            <div className="container-lg lg-max-width shadow">
+              <h2 className="text-important text-primary">No events found.</h2>
+            </div>
+            { Footer() }
           </div>
         )
       }

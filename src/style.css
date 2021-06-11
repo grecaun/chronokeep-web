@@ -12,16 +12,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-.spinner-border {
-  border-color: #337ab7;
-}
 .text-important {
-  color: #337ab7;
   font-family: 'Roboto Condensed', sans-serif;
 }
+/*.text-primary {
+  color:#337ab7 !important;
+} /**/
 .table {
   max-width: 1000px;
   margin: 0 auto;
+}
+.ck-spinner {
+  width: 4rem;
+  height: 4rem;
 }
 .card {
   max-width: 1000px;
@@ -57,30 +60,16 @@ code {
 .sm-max-width {
   max-width: 500px;
 }
-.results-container {
-  border: 0px;
-}
-.results-header {
-  font-size: 3em;
-  margin-bottom: 0px;
-}
-.results-date {
-  font-size: 1.5em;
-}
-.event-header-container {
-  margin-top: 2em;
-  margin-bottom: 1.5em;
+.table-distance-header {
+  font-size: 1.5rem;
+  border-bottom-color: currentColor;
 }
 .bib-box {
-  min-width: 40px;
-  padding: 3px;
+  width: fit-content;
   font-weight: bold;
-  font-size: 13px;
   border-color: rgb(225, 36, 22) lightgrey lightgrey;
   border-style: solid;
-  border-width: 4px 1px 1px;
-  border-image: none 100% / 1 / 0 stretch;
-  text-align: center;
+  border-width: 7px 1px 1px;
 }
 .event-container {
   margin-top: 1em;
@@ -88,12 +77,19 @@ code {
 ul.nav a:hover, a.nav-link:hover {
   color:rgb(225, 36, 22) !important;
 }
-@media (max-width: 576px) {
+a.active:hover {
+  color:rgba(0,0,0,.9) !important;
+}
+@media (max-width: 575px) {
   .overflow-hidden-sm {
     display: none;
   }
+  .col-cst {
+    min-width: 100%;
+    width: 100%;
+  }
 }
-@media (max-width: 992px) {
+@media (max-width: 991px) {
   .overflow-hidden-lg {
     display: none;
   }
