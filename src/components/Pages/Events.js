@@ -17,14 +17,8 @@ class Events extends Component {
         }
     
         componentDidMount() {
-            const BASE_URL = process.env.CHRONOKEEP_API_URL;
-            const requestOptions = {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + process.env.CHRONOKEEP_ACCESS_TOKEN
-                }
-            }
-            fetch(BASE_URL + 'event/all', requestOptions)
+            const BASE_URL = process.env.REACT_APP_BASE_URL;
+            fetch(BASE_URL + '/api/event/all')
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
