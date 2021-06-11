@@ -29,7 +29,7 @@ class Results extends Component {
                 "Authorization": "Bearer " + process.env.REACT_APP_CHRONOKEEP_ACCESS_TOKEN
             }
         }
-        fetch(BASE_URL + 'api/results', requestOptions)
+        fetch(BASE_URL + 'results', requestOptions)
         .then(response => {
             if (response.status === 200) {
                 this.setState({
