@@ -20,12 +20,16 @@ class Results extends Component {
     }
 
     componentDidMount() {
-        const BASE_URL = process.env.REACT_APP_BASE_URL;
+        const BASE_URL = process.env.CHRONOKEEP_API_URL;
         const requestOptions = {
             method: 'POST',
-            body: JSON.stringify({ slug: this.state.slug, year: this.state.year })
+            body: JSON.stringify({ slug: this.state.slug, year: this.state.year }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + process.env.CHRONOKEEP_ACCESS_TOKEN
+            }
         }
-        fetch(BASE_URL + '/api/results', requestOptions)
+        fetch(BASE_URL + 'api/results', requestOptions)
         .then(response => {
             if (response.status === 200) {
                 this.setState({
