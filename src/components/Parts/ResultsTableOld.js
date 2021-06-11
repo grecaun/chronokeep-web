@@ -2,30 +2,34 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
 
-const ResultsTable2 = (distance, results, info) => {
+const ResultsTable = (distance, results, index, show, info) => {
     const sorted = results.sort((a, b) => {
         if (a.occurence !== b.occurence) {
             return b.occurence - a.occurence
         }
         return a.ranking - b.ranking
     })
+    var collapseClass = "collapse table-responsive-sm"
+    if (show === true) {
+        collapseClass = "collapse table-responsive-sm show"
+    }
     return (
-        <div className="table-responsive-sm m-3" key={distance} id={distance}>
-            <table className="table table-sm">
+        <div class={collapseClass} key={distance} id={`distance${index}`} data-bs-parent="#results-parent">
+            <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th className="table-distance-header text-important text-center" colSpan="10">{distance}</th>
+                        <th class="table-distance-header text-important text-center" colSpan="10">{distance}</th>
                     </tr>
                     <tr>
-                        <th className="overflow-hidden-sm col-md text-center">Bib</th>
-                        <th className="col-sm text-center">Place</th>
-                        <th className="col-xl">Name</th>
-                        <th className="overflow-hidden-lg col-sm text-center">Age</th>
-                        <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                        <th className="overflow-hidden-lg col-sm text-center">Gender</th>
-                        <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                        <th className="overflow-hidden-sm col-lg text-center">Gun Time</th>
-                        <th className="col-lg text-center">Time</th>
+                        <th class="overflow-hidden-sm col-md text-center">Bib</th>
+                        <th class="col-sm text-center">Place</th>
+                        <th class="col-xl">Name</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Age</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Gender</th>
+                        <th class="overflow-hidden-lg col-sm text-center">Pl</th>
+                        <th class="overflow-hidden-sm col-lg text-center">Gun Time</th>
+                        <th class="col-lg text-center">Time</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,15 +57,15 @@ const ResultsTable2 = (distance, results, info) => {
                             }
                             return (
                                 <tr key={result.bib}>
-                                    <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                    <td className="text-center">{rankStr}</td>
+                                    <td class="overflow-hidden-sm text-center">{result.bib}</td>
+                                    <td class="text-center">{rankStr}</td>
                                     <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
-                                    <td className="overflow-hidden-lg text-center">{result.age}</td>
-                                    <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                    <td className="overflow-hidden-lg text-center">{result.gender}</td>
-                                    <td className="overflow-hidden-lg text-center">{grankStr}</td>
-                                    <td className="overflow-hidden-sm text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                    <td className="text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.age}</td>
+                                    <td class="overflow-hidden-lg text-center">{arankStr}</td>
+                                    <td class="overflow-hidden-lg text-center">{result.gender}</td>
+                                    <td class="overflow-hidden-lg text-center">{grankStr}</td>
+                                    <td class="overflow-hidden-sm text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
+                                    <td class="text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
                                 </tr>
                             );
                         })
@@ -72,4 +76,4 @@ const ResultsTable2 = (distance, results, info) => {
     )
 }
 
-export default ResultsTable2
+export default ResultsTable

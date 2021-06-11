@@ -1,5 +1,3 @@
-import React from 'react';
-
 const FormatTime = (seconds, milliseconds, result, chip) => {
     // Calculate the string to display for Time (Chip to Chip time)
     const hour = Math.floor(seconds / 3600)

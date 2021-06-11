@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ResultsTable from '../Parts/ResultsTable';
+import ResultsTable from '../Parts/ResultsTableOld';
 import TimeResultsTable from '../Parts/TimeResultsTable';
 import Header from '../Parts/Header';
 import Footer from '../Parts/Footer';
@@ -10,12 +10,14 @@ import DateString from '../Parts/DateString';
 class Results extends Component {
     constructor(props) {
         super(props);
+        const query = new URLSearchParams(this.props.location.search);
+        const dist = query.get('dist')
         this.state = {
             loading: true,
             error: false,
             slug: props.match.params.slug,
             year: props.match.params.year,
-            found: null
+            dist: dist === null ? "" : dist
         }
     }
 
@@ -62,14 +64,12 @@ class Results extends Component {
     }
 
     render() {
-        document.title = `Chronokeep - Results`
         const state = this.state
         if (state.error === true) {
-            document.title = `Chronokeep - Error`
             return (
                 <div>
                     { Header("results") }
-                    { ErrorMsg(state.status, state.found) }
+                    { ErrorMsg() }
                     { Footer() }
                 </div>
             );
@@ -78,10 +78,7 @@ class Results extends Component {
             return (
                 <div>
                     { Header("results") }
-                    <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                        <h1 className="text-important display-4">Loading Results</h1>
-                        { Loading() }
-                    </div>
+                    { Loading() }
                     { Footer() }
                 </div>
             );
@@ -96,22 +93,21 @@ class Results extends Component {
             slug: state.slug,
             year: state.year.year
         }
-        document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results`
         return (
             <div>
                 { Header("results") }
                 <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                     <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                        <p className="text-important mb-2 mt-1 h1">{`${state.year.year} ${state.event.name} Results`}</p>
-                        <p className="text-important h4">{DateString(state.year.date_time)}</p>
+                        <p className="text-important text-primary mb-2 mt-1 h1">{`${state.year.year} ${state.event.name} Results`}</p>
+                        <p className="text-important text-primary h4">{DateString(state.year.date_time)}</p>
                     </div>
                     { years.length > 1 && 
                         <div className="col-md-2 nav flex-md-column justify-content-center p-0">
                             {
                                 years.map((year, index) => {
-                                    var className = "nav-link text-center text-important text-secondary"
+                                    var className = "nav-link text-center text-important"
                                     if (year.year === state.year.year) {
-                                        className = "nav-link disabled text-center text-important text-dark"
+                                        className = "nav-link disabled text-center text-important"
                                     }
                                     return <a href={`/results/${state.slug}/${year.year}`} key={`year${index}`} className={className}>{year.year}</a>
                                 })
@@ -125,9 +121,15 @@ class Results extends Component {
                         <ul className="nav nav-tabs nav-fill">
                             {
                                 distances.map((distance, index) => {
+                                    var show = false
+                                    if (state.dist !== "" && state.dist === distance) {
+                                        show = true
+                                    } else if (state.dist === "" && index === 0) {
+                                        show = true
+                                    }
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
-                                            <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
+                                            <a className="nav-link text-important h5" data-bs-toggle="collapse" href={`#distance${index}`} role="button" aria-expanded={show} aria-controls={`distance${index}`}>{distance}</a>
                                         </li>
                                     );
                                 })
@@ -136,10 +138,16 @@ class Results extends Component {
                         <div id="results-parent">
                             {
                                 distances.map((distance, index) => {
+                                    var show = false
+                                    if (state.dist !== "" && state.dist === distance) {
+                                        show = true
+                                    } else if (state.dist === "" && index === 0) {
+                                        show = true
+                                    }
                                     if (state.event.type === "time") {
-                                        return TimeResultsTable(distance, state.results[distance], info)
+                                        return TimeResultsTable(distance, state.results[distance], index, show, info)
                                     } else {
-                                        return ResultsTable(distance, state.results[distance], info)
+                                        return ResultsTable(distance, state.results[distance], index, show, info)
                                     }
                                 })
                             }

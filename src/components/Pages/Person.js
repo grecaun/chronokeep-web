@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Link } from 'react-router-dom';
 import DateString from '../Parts/DateString';
 import ErrorMsg from '../Parts/ErrorMsg';
 import Footer from '../Parts/Footer';
@@ -15,7 +16,8 @@ class Person extends Component {
             slug: props.match.params.slug,
             year: props.match.params.year,
             bib: props.match.params.bib,
-            distance: null
+            distance: null,
+            found: null
         }
     }
 
@@ -27,7 +29,6 @@ class Person extends Component {
         }
         fetch(BASE_URL + '/api/results/bib', requestOptions)
         .then(response => {
-            console.log("response found for bib results query", response.status)
             if (response.status === 200) {
                 this.setState({
                     status: response.status,
@@ -62,12 +63,14 @@ class Person extends Component {
     }
 
     render() {
+        document.title = `Chronokeep - Individual Results`
         const state = this.state
         if (state.error === true) {
+            document.title = "Chronokeep - Error"
             return (
                 <div>
                     { Header("person") }
-                    { ErrorMsg() }
+                    { ErrorMsg(state.status, state.found) }
                     { Footer() }
                 </div>
             );
@@ -76,12 +79,14 @@ class Person extends Component {
             return (
                 <div>
                     { Header("person") }
-                    { Loading() }
+                    <div className="mx-auto sm-max-width text-center container-md p-5 pt-4">
+                        <h1 className="text-important display-4">Loading Results</h1>
+                        { Loading() }
+                    </div>
                     { Footer() }
                 </div>
             );
         }
-        console.log(state.person)
         var results = []
         var start = null
         var finish = null
@@ -97,7 +102,7 @@ class Person extends Component {
         results.sort((a, b) => {
             return a.seconds - b.seconds;
         })
-        const date = new Date(state.year.date_time).toLocaleDateString()
+        document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
         return (
             <div>
                 { Header("person") }
@@ -106,12 +111,14 @@ class Person extends Component {
                         <div className="text-center text-important display-4 m-0">{`${state.year.year} ${state.event.name}`}</div>
                         <div className="text-center text-important text-secondary m-0 mt-2">{DateString(state.year.date_time)}</div>
                     </div>
+                    <div class="mx-auto fit-width mt-3"><Link to={`/results/${state.event.slug}/${state.year.year}`} className="btn btn-secondary nav-link text-white fit-width">Back</Link></div>
                 </div>
-                <div className="container-sm sm-max-width m-5 mt-2 p-4 mx-auto shadow">
+                <div className="container-sm sm-max-width m-5 mt-0 p-4 mx-auto shadow">
                     <div className="p-2">
                         <div className="text-center text-important display-4 m-0">{`${state.person.first} ${state.person.last}`}</div>
                         <div className="text-center text-important text-secondary m-0">{`${state.person.gender} ${state.person.age}`}</div>
                     </div>
+                    <div className="h3 m-2 mt-0 text-center text-important text-secondary mx-auto">{state.person.distance}</div>
                     <div className="bib-box h4 m-2 p-2 mx-auto">{state.person.bib}</div>
                 </div>
                 <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
