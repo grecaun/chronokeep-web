@@ -22,12 +22,16 @@ class Person extends Component {
     }
 
     componentDidMount() {
-        const BASE_URL = process.env.REACT_APP_BASE_URL;
+        const BASE_URL = process.env.CHRONOKEEP_API_URL;
         const requestOptions = {
             method: 'POST',
-            body: JSON.stringify({ slug: this.state.slug, year: this.state.year, bib: this.state.bib })
+            body: JSON.stringify({ slug: this.state.slug, year: this.state.year, bib: this.state.bib }),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + process.env.CHRONOKEEP_ACCESS_TOKEN
+            }
         }
-        fetch(BASE_URL + '/api/results/bib', requestOptions)
+        fetch(BASE_URL + 'results/bib', requestOptions)
         .then(response => {
             if (response.status === 200) {
                 this.setState({
