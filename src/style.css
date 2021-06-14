@@ -83,6 +83,12 @@ a.active:hover {
 .logo {
   max-width: 40px;
 }
+@media (max-width: 450px) {
+  .col-xl {
+    max-width: fit-content;
+    min-width: 120px;
+  }
+}
 @media (max-width: 575px) {
   .overflow-hidden-sm {
     display: none;
