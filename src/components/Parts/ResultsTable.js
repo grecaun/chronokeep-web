@@ -4,12 +4,6 @@ import FormatTime from './FormatTime';
 
 const ResultsTable2 = (distance, results, info) => {
     const sorted = results.sort((a, b) => {
-        if (a.type !== 0 && b.type !== 0) {
-            if (a.occurence !== b.occurence) {
-                return b.occurence - a.occurence
-            }
-            return a.ranking - b.ranking
-        }
         if (a.type !== 0 || b.type !== 0) {
             return a.type - b.type
         }
