@@ -81,7 +81,12 @@ class Events extends Component {
                     </div>
                 );
             }
-            if (state.events && state.events.length > 0) {
+            const events = state.events.sort((a, b) => {
+                var aDate = new Date(a.recent_time)
+                var bDate = new Date(b.recent_time)
+                return bDate - aDate
+            })
+            if (events && events.length > 0) {
                 return (
                     <div>
                         { Header("event") }
