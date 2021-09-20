@@ -83,6 +83,16 @@ a.active:hover {
 .logo {
   max-width: 40px;
 }
+.qr-holder {
+  text-align: center;
+}
+.qr-label {
+  color:#5c6c7d;
+  margin-top: -10px;
+}
+.qr-buffer {
+  margin: 50px;
+}
 @media (max-width: 450px) {
   .col-xl {
     max-width: fit-content;

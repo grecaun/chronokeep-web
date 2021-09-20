@@ -8,6 +8,7 @@ import Person from './components/Pages/Person';
 import Login from './components/Pages/Login';
 import Logout from './components/Pages/Logout';
 import Account from './components/Pages/Account';
+import QRCode from './components/Pages/QRCode';
 
 require('dotenv').config()
 
@@ -17,7 +18,9 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
+            <Route path='/results/:slug/:year/qr' component={QRCode} />
             <Route path='/results/:slug/:year/:bib' component={Person} />
+            <Route path='/results/:slug/qr' component={QRCode} />
             <Route path='/results/:slug/:year' component={Results} />
             <Route path='/results/:slug' component={Results} />
             <Route path='/login' component={Login} />
