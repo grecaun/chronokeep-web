@@ -12,12 +12,12 @@ function getAPIKeys(email) {
     const requestOptions = {
         method: 'POST',
         headers: authHeader(),
-        body: ''
+        body: '{ }'
     };
     if (email !== null) {
         requestOptions.body = JSON.stringify({ email: email });
     }
-    return fetch(BASE_URL + 'users', requestOptions).then(handleResponse);
+    return fetch(BASE_URL + 'key', requestOptions).then(handleResponse);
 }
 
 function addAPIKey(type, allowedHosts, email) {

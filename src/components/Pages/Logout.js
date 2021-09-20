@@ -7,14 +7,14 @@ import ErrorMsg from '../Parts/ErrorMsg';
 
 import { authenticationService } from '../Auth/_services/authentication.service';
 import { history } from '../Auth/_helpers/history';
-import { tsImportEqualsDeclaration } from '@babel/types';
 
 class Logout extends Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            error: false
+            error: false,
+            found: null
         }
     }
 
@@ -47,7 +47,8 @@ class Logout extends Component {
             .catch(error => {
                 this.setState({
                     error: true,
-                    errorMessage: error.toString()
+                    errorMessage: error.toString(),
+                    found: null
                 });
                 console.error("There was an error!", error)
             })

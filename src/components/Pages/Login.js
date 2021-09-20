@@ -42,7 +42,7 @@ class Login extends Component {
                                     },
                                     error => {
                                         setSubmitting(false);
-                                        setStatus(error);
+                                        setStatus(error.message);
                                     }
                                 );
                         }}

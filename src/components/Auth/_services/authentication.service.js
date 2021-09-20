@@ -1,7 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { authHeader } from '../_helpers/auth-header';
 import { handleResponse } from '../_helpers/handle-response';
-import { history } from '../_helpers/history';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 const BASE_URL = process.env.REACT_APP_CHRONOKEEP_API_URL;
@@ -24,9 +23,9 @@ function login(username, password) {
     return fetch(BASE_URL + 'account/login', requestOptions)
     .then(handleResponse)
     .then(user => {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        currentUserSubject.next(user);
-        return user;
+        localStorage.setItem('currentUser', JSON.stringify(user.data));
+        currentUserSubject.next(user.data);
+        return user.data;
     });
 }
 
@@ -40,9 +39,12 @@ function refresh(token) {
     return fetch(BASE_URL + 'account/refresh', requestOptions)
     .then(handleResponse)
     .then(user => {
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        currentUserSubject.next(user);
-        return user;
+        if (user.access_token) {
+            console.log(`token: ${user.access_token}`)
+        }
+        localStorage.setItem('currentUser', JSON.stringify(user.data));
+        currentUserSubject.next(user.data);
+        return user.data;
     });
 }
 
@@ -54,12 +56,9 @@ function logout() {
     };
     return fetch(BASE_URL + 'account/logout', requestOptions)
     .then(response => {
-        if (response.status === 200) {
-            // remove user from local storage to log user out
-            localStorage.removeItem('currentUser');
-            currentUserSubject.next(null);
-            history.push('/');
-        }
+        // remove user from local storage to log user out
+        localStorage.removeItem('currentUser');
+        currentUserSubject.next(null);
         return response;
     });
 }
