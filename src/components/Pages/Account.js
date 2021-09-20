@@ -19,14 +19,16 @@ class Account extends Component {
     }
 
     componentDidMount() {
-        userService.getAPIKeys(null)
+        userService.getAccountInfo()
             .then(
                 data => {
                     this.setState({
                         status: data.status,
                         found: data.data,
+                        account: data.data.account,
                         keys: data.data.keys,
-                        loading: false
+                        events: data.data.events,
+                        loading: false,
                     })
                 },
                 error => {

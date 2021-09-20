@@ -50,27 +50,29 @@ class Login extends Component {
                             {({ errors, status, touched, isSubmitting }) => (
                             <Form>
                                 <div className="form-group">
-                                    <label htmlFor="username">Email</label>
-                                    <Field name="username" type="text" className={'form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                                    <label className="chronokeep-form-label" htmlFor="username">Email</label>
+                                    <Field name="username" type="text" className={'chronokeep-input form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
                                     <ErrorMessage name="username" component="div" className="invalid-feedback" />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="password">Password</label>
-                                    <Field name="password" type="password" className={'form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                                    <label className="chronokeep-form-label" htmlFor="password">Password</label>
+                                    <Field name="password" type="password" className={'chronokeep-input form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
                                     <ErrorMessage name="password" component="div" className="invalid-feedback" />
                                 </div>
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>Login</button>
+                                    {!isSubmitting &&
+                                    <button type="submit" className="btn btn-primary btn-chronokeep" disabled={isSubmitting}>Login</button>
+                                    }
                                     {isSubmitting &&
-                                        <div className="d-flex justify-content-center align-items-center">
-                                            <div className="spinner-border text-primary ck-spinner m-5" role="status">
+                                        <div className="d-flex justify-content-center align-items-center login-spinner-container">
+                                            <div className="spinner-border text-chronokeep" role="status">
                                                 <span className="visually-hidden">Loading...</span>
                                             </div>
                                         </div>
                                     }
                                 </div>
                                 {status &&
-                                    <div className={'alert alert-danger'}>{status}</div>
+                                    <div className={'alert alert-danger chronokeep-alert'}>{status}</div>
                                 }
                             </Form>
                         )}

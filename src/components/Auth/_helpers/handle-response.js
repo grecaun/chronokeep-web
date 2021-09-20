@@ -9,7 +9,20 @@ export function handleResponse(response) {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
                 authenticationService.logout();
             }
-            const message = (data && data.message) || response.statusText;
+            const message = (data.data && data.data.message) || response.statusText;
+            const error = { message: message, status: response.status }
+            return Promise.reject(error);
+        }
+        return data;
+    });
+}
+
+export function handleResponseNoLogout(response) {
+    return response.text().then(text => {
+        const dataVal = text && JSON.parse(text);
+        const data = { data: dataVal, status: response.status }
+        if (!response.ok) {
+            const message = (data.data && data.data.message) || response.statusText;
             const error = { message: message, status: response.status }
             return Promise.reject(error);
         }

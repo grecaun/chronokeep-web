@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { authHeader } from '../_helpers/auth-header';
-import { handleResponse } from '../_helpers/handle-response';
+import { handleResponseNoLogout } from '../_helpers/handle-response';
 
 const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('currentUser')));
 const BASE_URL = process.env.REACT_APP_CHRONOKEEP_API_URL;
@@ -21,7 +21,7 @@ function login(username, password) {
     };
 
     return fetch(BASE_URL + 'account/login', requestOptions)
-    .then(handleResponse)
+    .then(handleResponseNoLogout)
     .then(user => {
         localStorage.setItem('currentUser', JSON.stringify(user.data));
         currentUserSubject.next(user.data);
@@ -37,7 +37,7 @@ function refresh(token) {
     };
 
     return fetch(BASE_URL + 'account/refresh', requestOptions)
-    .then(handleResponse)
+    .then(handleResponseNoLogout)
     .then(user => {
         if (user.access_token) {
             console.log(`token: ${user.access_token}`)
