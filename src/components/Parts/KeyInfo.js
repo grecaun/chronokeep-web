@@ -31,9 +31,7 @@ const KeyInfo = (keys) => {
                                                 allowedHosts = data.data.key.allowedHosts;
                                                 setSubmitting(false);
                                                 document.getElementById(`name${key.value}`).disabled = true
-                                                document.getElementById(`type1${key.value}`).disabled = true
-                                                document.getElementById(`type2${key.value}`).disabled = true
-                                                document.getElementById(`type3${key.value}`).disabled = true
+                                                document.getElementById(`type${key.value}`).disabled = true
                                                 document.getElementById(`hosts${key.value}`).disabled = true
                                                 document.getElementById(`edit${key.value}`).disabled = true
                                                 document.getElementById(`submit${key.value}`).disabled = true
@@ -42,9 +40,7 @@ const KeyInfo = (keys) => {
                                                 setSubmitting(false);
                                                 setStatus(error.message);
                                                 document.getElementById(`name${key.value}`).disabled = true
-                                                document.getElementById(`type1${key.value}`).disabled = true
-                                                document.getElementById(`type2${key.value}`).disabled = true
-                                                document.getElementById(`type3${key.value}`).disabled = true
+                                                document.getElementById(`type${key.value}`).disabled = true
                                                 document.getElementById(`hosts${key.value}`).disabled = true
                                                 document.getElementById(`edit${key.value}`).disabled = true
                                                 document.getElementById(`submit${key.value}`).disabled = true
@@ -61,20 +57,11 @@ const KeyInfo = (keys) => {
                                                 <label className="chronokeep-label" htmlFor="name">Name</label>
                                                 <Field name="name" type="text" disabled={true} id={`name${key.value}`} className="chronokeep-input form-control" />
                                                 <label className="chronokeep-label" htmlFor="type">Type</label>
-                                                <div className="error-container">
-                                                    <label className="radio-label">
-                                                        <Field name="type" type="radio" className="form-radio" id={`type1${key.value}`} value="read" disabled={true} />
-                                                        Read
-                                                    </label>
-                                                    <label className="radio-label">
-                                                        <Field name="type" type="radio" className="form-radio" id={`type2${key.value}`} value="write" disabled={true} />
-                                                        Write
-                                                    </label>
-                                                    <label className="radio-label">
-                                                        <Field name="type" type="radio" className="form-radio" id={`type3${key.value}`} value="delete" disabled={true} />
-                                                        Delete
-                                                    </label>
-                                                </div>
+                                                <Field as="select" name="type" id={`type${key.value}`} disabled={true}>
+                                                    <option value="read">Read</option>
+                                                    <option value="write">Write</option>
+                                                    <option value="delete">Delete</option>
+                                                </Field>
                                                 <label className="chronokeep-label" htmlFor="allowedHosts">Allowed Hosts</label>
                                                 <Field name="allowedHosts" type="text" disabled={true} id={`hosts${key.value}`} className="chronokeep-input form-control" />
                                                 {!isSubmitting &&
@@ -94,9 +81,7 @@ const KeyInfo = (keys) => {
                                                 </button>
                                                 <button type="button" key={`edit${key.value}`} onClick={()=>{
                                                     document.getElementById(`name${key.value}`).disabled = !document.getElementById(`name${key.value}`).disabled
-                                                    document.getElementById(`type1${key.value}`).disabled = !document.getElementById(`type1${key.value}`).disabled
-                                                    document.getElementById(`type2${key.value}`).disabled = !document.getElementById(`type2${key.value}`).disabled
-                                                    document.getElementById(`type3${key.value}`).disabled = !document.getElementById(`type3${key.value}`).disabled
+                                                    document.getElementById(`type${key.value}`).disabled = !document.getElementById(`type${key.value}`).disabled
                                                     document.getElementById(`hosts${key.value}`).disabled = !document.getElementById(`hosts${key.value}`).disabled
                                                     document.getElementById(`edit${key.value}`).disabled = !document.getElementById(`edit${key.value}`).disabled
                                                     document.getElementById(`submit${key.value}`).disabled = !document.getElementById(`submit${key.value}`).disabled
