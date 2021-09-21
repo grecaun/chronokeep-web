@@ -77,16 +77,8 @@ class Account extends Component {
                     { account && 
                         AccountInfo(account)
                     }
-                    { keys.length > 0 && 
+                    { keys && keys.length > 0 && 
                         KeyInfo(keys)
-                    }
-                    {
-                        keys.length === 0 && 
-                        <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
-                            <div className="text-center">
-                                <h2>No keys to display.</h2>
-                            </div>
-                        </div>
                     }
                 </div>
                 { Footer() }

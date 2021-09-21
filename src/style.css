@@ -128,6 +128,7 @@ a.active:hover {
 }
 .chronokeep-alert {
   margin-top: 10px;
+  margin-bottom: 0;
 }
 .chronokeep-input {
   width: 100%;

@@ -64,37 +64,33 @@ function getAPIKeys(email) {
     return fetchWithRefresh(BASE_URL + 'key', requestOptions);
 }
 
-function updateAPIKey(value, name, type, allowedHosts, email) {
+function updateAPIKey(value, name, type, allowedHosts, validUntil) {
     var key = {
         value: value,
         name: name,
         type: type,
-        allowed_hosts: allowedHosts
-    };
-    if (email !== null) {
-        key["email"] = email;
+        allowed_hosts: allowedHosts,
+        valid_until: validUntil
     };
     const requestOptions = {
         method: 'PUT',
-        headrs: authHeader(),
+        headers: authHeader(),
         body: JSON.stringify({ key: key })
     };
     return fetchWithRefresh(BASE_URL + 'key/update', requestOptions)
 }
 
-function addAPIKey(name, type, allowedHosts, email) {
+function addAPIKey(name, type, allowedHosts, validUntil, email) {
     var key = {
         name: name,
         type: type,
-        allowed_hosts: allowedHosts
-    };
-    if (email !== null) {
-        key["email"] = email;
+        allowed_hosts: allowedHosts,
+        valid_until: validUntil
     };
     const requestOptions = {
         method: 'POST',
-        headrs: authHeader(),
-        body: JSON.stringify({ key: key })
+        headers: authHeader(),
+        body: JSON.stringify({ email: email, key: key })
     };
     return fetchWithRefresh(BASE_URL + 'key/add', requestOptions)
 }
@@ -152,9 +148,9 @@ function changePassword(oldPassword, newPassword, email) {
         body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, email: email })
     }
     return fetchWithRefresh(BASE_URL + 'account/password', requestOptions)
-    .then(() => {
-        return authenticationService.logout();
-    });
+        .then(() => {
+            return authenticationService.logout();
+        });
 }
 
 function changeEmail(oldEmail, newEmail) {
