@@ -4,8 +4,13 @@ export function authHeader() {
     // return authorization header with jwt token
     const currentUser = authenticationService.currentUserValue;
     if (currentUser && currentUser.access_token) {
-        return { Authorization: `Bearer ${currentUser.access_token}` };
+        return { 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${currentUser.access_token}`
+        };
     } else {
-        return {};
+        return {
+            "Content-Type": "application/json",
+        };
     }
 }

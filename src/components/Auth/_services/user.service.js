@@ -5,24 +5,51 @@ import { authenticationService } from './authentication.service';
 export const userService = {
     getAPIKeys,
     addAPIKey,
+    updateAPIKey,
+    deleteAPIKey,
     getAccountInfo,
+    updateAccountInfo,
+    addAccount,
+    changeEmail,
+    changePassword,
 };
 
 const BASE_URL = process.env.REACT_APP_CHRONOKEEP_API_URL;
 
-function refresh(refresh_token, successFunction) {
-    console.log("refreshing token");
-    return authenticationService.refresh(refresh_token)
+// the backbone of the authentication protocols
+// checks if our token has expired and refreshes as necessary
+function fetchWithRefresh(url, requestOptions) {
+    return fetch(url, requestOptions).then(handleResponseNoLogout)
         .then(
-            // if we get data back then send our request again
-            _data => {
-                return successFunction();
+            // if we found data, return it
+            data => {
+                return data;
             },
-            // if there was an error return the error
+            // if there's an error, our token might have expired, try refreshing it
             error => {
-                return error;
+                // only try to refresh the token if we're given a 401 unauthorized or 403 forbidden response
+                if ([401, 403].indexOf(error.status) !== -1) {
+                    const currentUser = authenticationService.currentUserValue;
+                    // send a refresh request if the token is set
+                    if (currentUser && currentUser.refresh_token) {
+                        console.log("Refreshing token.");
+                        return authenticationService.refresh(currentUser.refresh_token)
+                            .then(
+                                // if we get data back then send our request again
+                                _data => {
+                                    requestOptions.headers = authHeader();
+                                    return fetch(url, requestOptions).then(handleResponse);
+                                },
+                                // if there was an error return the error
+                                error => {
+                                    return Promise.reject(error);
+                                }
+                            )
+                    }
+                }
+                return Promise.reject(error);
             }
-        )
+        );
 }
 
 function getAPIKeys(email) {
@@ -34,55 +61,30 @@ function getAPIKeys(email) {
     if (email !== null) {
         requestOptions.body = JSON.stringify({ email: email });
     }
-    return fetch(BASE_URL + 'key', requestOptions).then(handleResponseNoLogout)
-        .then(
-            // if we found data, return it
-            data => {
-                return data;
-            },
-            // if there's an error, our token might have expired, try refreshing it
-            error => {
-                var successFunction = () => {
-                    requestOptions.headers = authHeader();
-                    return fetch(BASE_URL + 'key', requestOptions).then(handleResponse);
-                }
-                const currentUser = authenticationService.currentUserValue;
-                // send a refresh request if the token is set
-                if (currentUser && currentUser.refresh_token) {
-                    return refresh(currentUser.refresh_token, successFunction)
-                }
-                return error;
-            }
-        );
+    return fetchWithRefresh(BASE_URL + 'key', requestOptions);
 }
 
-function getAccountInfo() {
-    const requestOptions = {
-        method: 'POST',
-        headers: authHeader(),
-        body: '{ }'
-    };
-    return fetch(BASE_URL + 'account', requestOptions).then(handleResponseNoLogout)
-        .then(
-            data => {
-                return data;
-            },
-            error => {
-                var successFunction = () => {
-                    requestOptions.headers = authHeader();
-                    return fetch(BASE_URL + 'account', requestOptions).then(handleResponse);
-                }
-                const currentUser = authenticationService.currentUserValue;
-                if (currentUser && currentUser.refresh_token) {
-                    return refresh(currentUser.refresh_token, successFunction)
-                }
-                return error;
-            }
-        );
-}
-
-function addAPIKey(type, allowedHosts, email) {
+function updateAPIKey(value, name, type, allowedHosts, email) {
     var key = {
+        value: value,
+        name: name,
+        type: type,
+        allowed_hosts: allowedHosts
+    };
+    if (email !== null) {
+        key["email"] = email;
+    };
+    const requestOptions = {
+        method: 'PUT',
+        headrs: authHeader(),
+        body: JSON.stringify({ key: key })
+    };
+    return fetchWithRefresh(BASE_URL + 'key/update', requestOptions)
+}
+
+function addAPIKey(name, type, allowedHosts, email) {
+    var key = {
+        name: name,
         type: type,
         allowed_hosts: allowedHosts
     };
@@ -94,21 +96,75 @@ function addAPIKey(type, allowedHosts, email) {
         headrs: authHeader(),
         body: JSON.stringify({ key: key })
     };
-    return fetch(BASE_URL + 'key/add', requestOptions).then(handleResponseNoLogout)
-        .then(
-            data => {
-                return data;
-            },
-            error => {
-                var successFunction = () => {
-                    requestOptions.headers = authHeader();
-                    return fetch(BASE_URL + 'key/add', requestOptions).then(handleResponse)
-                }
-                const currentUser = authenticationService.currentUserValue;
-                if (currentUser && currentUser.refresh_token) {
-                    return refresh(currentUser.refresh_token, successFunction)
-                }
-                return error;
-            }
-        );
+    return fetchWithRefresh(BASE_URL + 'key/add', requestOptions)
+}
+
+function deleteAPIKey(value) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader(),
+        body: JSON.stringify({ key: value })
+    }
+    return fetchWithRefresh(BASE_URL + 'key/delete', requestOptions)
+}
+
+function getAccountInfo() {
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: '{ }'
+    };
+    return fetchWithRefresh(BASE_URL + 'account', requestOptions);
+}
+
+function updateAccountInfo(name, email, type) {
+    var account = {
+        name: name,
+        email: email,
+        type: type,
+    };
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({ account: account })
+    };
+    return fetchWithRefresh(BASE_URL + 'account/update', requestOptions);
+}
+
+function addAccount(name, email, type, password) {
+    var account = {
+        name: name,
+        email: email,
+        type: type,
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({ account: account, password: password })
+    };
+    return fetchWithRefresh(BASE_URL + 'account/add', requestOptions);
+}
+
+function changePassword(oldPassword, newPassword, email) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, email: email })
+    }
+    return fetchWithRefresh(BASE_URL + 'account/password', requestOptions)
+    .then(() => {
+        return authenticationService.logout();
+    });
+}
+
+function changeEmail(oldEmail, newEmail) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({ old_email: oldEmail, new_email: newEmail })
+    }
+    return fetchWithRefresh(BASE_URL + 'account/email', requestOptions)
+        .then(() => {
+            return authenticationService.logout();
+        });
 }

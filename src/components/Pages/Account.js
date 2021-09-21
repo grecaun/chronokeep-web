@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { userService } from '../Auth/_services/user.service';
+import AccountInfo from '../Parts/AccountInfo';
 import ErrorMsg from '../Parts/ErrorMsg';
 import Footer from '../Parts/Footer';
 import Header from '../Parts/Header';
+import KeyInfo from '../Parts/KeyInfo';
 import Loading from '../Parts/Loading';
 
 
@@ -67,26 +69,26 @@ class Account extends Component {
             )
         }
         const keys = state.keys;
+        const account = state.account;
         return (
             <div>
                 { Header("account") }
-                { keys.length > 0 && 
-                    <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
-                        {
-                            keys.map((key, index) => {
-                                return <p key={`key${index}`}>{key.value}</p>
-                            })
-                        }
-                    </div>
-                }
-                {
-                    keys.length === 0 && 
-                    <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
-                        <div className="text-center">
-                            <h2>No keys to display.</h2>
+                <div className="account-container">
+                    { account && 
+                        AccountInfo(account)
+                    }
+                    { keys.length > 0 && 
+                        KeyInfo(keys)
+                    }
+                    {
+                        keys.length === 0 && 
+                        <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
+                            <div className="text-center">
+                                <h2>No keys to display.</h2>
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
                 { Footer() }
             </div>
         )
