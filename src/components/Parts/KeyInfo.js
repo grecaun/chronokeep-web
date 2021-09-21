@@ -10,7 +10,7 @@ const KeyInfo = (keys) => {
         <div className="key-info-container">
             <h2>Keys</h2>
             {
-                keys.map((key, index) => {
+                keys.map(key => {
                     const keyVal = key.value;
                     return (
                         <div className="key-info" key={key.value}>
@@ -48,7 +48,7 @@ const KeyInfo = (keys) => {
                                         )
                                 }}
                             >
-                                {({ errors, status, touched, isSubmitting }) => (
+                                {({ status, isSubmitting }) => (
                                     <div>
                                         <Form className="key-form">
                                             <div className="inline">
@@ -57,7 +57,7 @@ const KeyInfo = (keys) => {
                                                 <label className="chronokeep-label" htmlFor="name">Name</label>
                                                 <Field name="name" type="text" disabled={true} id={`name${key.value}`} className="chronokeep-input form-control" />
                                                 <label className="chronokeep-label" htmlFor="type">Type</label>
-                                                <Field as="select" name="type" id={`type${key.value}`} disabled={true}>
+                                                <Field as="select" name="type" id={`type${key.value}`} disabled={true} className="form-select">
                                                     <option value="read">Read</option>
                                                     <option value="write">Write</option>
                                                     <option value="delete">Delete</option>
@@ -89,6 +89,9 @@ const KeyInfo = (keys) => {
                                                     <img src={gear} alt={`edit key ${key.value}`} />
                                                 </button>
                                             </div>
+                                            {status &&
+                                                <div className={'alert alert-danger chronokeep-alert'}>status</div>
+                                            }
                                         </Form>
                                     </div>
                                 )}

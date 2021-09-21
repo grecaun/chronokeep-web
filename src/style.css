@@ -99,11 +99,25 @@ a.active:hover {
 .btn-chronokeep {
   background-color: #5c6c7d;
   border-color: #5c6c7d;
+}
+.btn-margin-top {
   margin-top: 13px;
 }
 .btn-chronokeep:hover {
-  background-color: rgb(180, 36, 22);
-  border-color: rgb(150, 36, 22);
+  color: #fff;
+  background-color: #b42316;
+  border-color: #962316;
+}
+.btn-chronokeep:focus {
+  color: #fff;
+  background-color: #5c6c7d;
+  border-color: #5c6c7d;
+  box-shadow: 0 0 0 .25rem rgba(92, 108, 125,.5);
+}
+.btn-chronokeep:disabled {
+  color: #fff;
+  background-color: #97a7b8;
+  border-color: #828f9e;
 }
 .chronokeep-form-label {
   margin-bottom: 2px;
@@ -114,6 +128,40 @@ a.active:hover {
 }
 .chronokeep-alert {
   margin-top: 10px;
+}
+.chronokeep-input {
+  width: 100%;
+}
+.chronokeep-middle {
+  margin: auto 0;
+}
+.account-info {
+  width: 575px;
+  margin: 30px auto;
+}
+.name-form {
+  margin-bottom: 10px;
+}
+.email-form {
+  margin-top: 10px;
+}
+.chronokeep-card {
+  padding: 0px;
+}
+.chronokeep-card-header {
+  background-color: #e9ecef;;
+}
+.hidden {
+  display: none;
+}
+.password-form {
+  margin-top: 20px;
+}
+.chronokeep-margin-top {
+  margin-top: 10px;
+}
+.chronokeep-margin-bottom {
+  margin-bottom: 10px;
 }
 @media (max-width: 450px) {
   .col-xl {
@@ -127,6 +175,11 @@ a.active:hover {
   }
   .col-cst {
     min-width: 100%;
+    width: 100%;
+  }
+}
+@media (max-width: 770px) {
+  .account-info {
     width: 100%;
   }
 }

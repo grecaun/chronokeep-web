@@ -61,7 +61,7 @@ class Login extends Component {
                                 </div>
                                 <div className="form-group">
                                     {!isSubmitting &&
-                                    <button type="submit" className="btn btn-primary btn-chronokeep" disabled={isSubmitting}>Login</button>
+                                    <button type="submit" className="btn btn-primary btn-chronokeep btn-margin-top" disabled={isSubmitting}>Login</button>
                                     }
                                     {isSubmitting &&
                                         <div className="d-flex justify-content-center align-items-center login-spinner-container">
