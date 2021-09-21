@@ -136,7 +136,7 @@ a.active:hover {
   margin: auto 0;
 }
 .account-info {
-  width: 575px;
+  max-width: 575px;
   margin: 30px auto;
 }
 .name-form {
@@ -144,6 +144,9 @@ a.active:hover {
 }
 .email-form {
   margin-top: 10px;
+}
+.key-form {
+  margin: 0px auto;
 }
 .chronokeep-card {
   padding: 0px;
@@ -163,6 +166,9 @@ a.active:hover {
 .chronokeep-margin-bottom {
   margin-bottom: 10px;
 }
+.key-card {
+  margin: 15px auto;
+}
 @media (max-width: 450px) {
   .col-xl {
     max-width: fit-content;
@@ -178,13 +184,19 @@ a.active:hover {
     width: 100%;
   }
 }
-@media (max-width: 770px) {
+@media (max-width: 635px) {
   .account-info {
-    width: 100%;
+    max-width: 100%;
+    margin: 30px;
   }
 }
 @media (max-width: 991px) {
   .overflow-hidden-lg {
     display: none;
+  }
+}
+@media (max-width: 1060px) {
+  .key-form {
+    margin: 0px 30px;
   }
 }
