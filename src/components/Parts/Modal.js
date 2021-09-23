@@ -16,7 +16,7 @@ const Modal = ({ handleClose, show, save, text, title, saveText }) => {
                         {text}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" onClick={save}>Delete</button>
+                        <button type="button" className="btn btn-primary" onClick={save}>{saveText}</button>
                         <button type="button" className="btn btn-secondary" onClick={handleClose}>Cancel</button>
                     </div>
                 </div>
