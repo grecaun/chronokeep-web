@@ -7,6 +7,7 @@ import Header from '../Parts/Header';
 import KeyInfo from '../Parts/KeyInfo';
 import Loading from '../Parts/Loading';
 import NewKey from '../Parts/NewKey';
+import Modal from '../Parts/Modal';
 
 
 class Account extends Component {
@@ -17,8 +18,20 @@ class Account extends Component {
             loading: true,
             error: false,
             keys: [],
-            found: null
+            found: null,
+            show: false,
         }
+
+        this.hideModal = this.hideModal.bind(this);
+        this.deleteKey = this.deleteKey.bind(this);
+    }
+
+    hideModal = () => {
+        this.setState({
+            show: false,
+            deleteKey: null,
+            childKey: null,
+        });
     }
 
     componentDidMount() {
@@ -50,19 +63,47 @@ class Account extends Component {
             )
     }
 
-    remove(value) {
-        const keys = this.state.keys;
-        const newKeys = []
-        var i = 0;
-        while (i < keys.length) {
-            if (keys[i].value !== value) {
-                newKeys.push(keys[i])
-            }
-            i++;
-        }
+    remove(key, child) {
+        console.log("removing key?")
         this.setState({
-            keys: newKeys,
+            show: true,
+            deleteKey: key,
+            childKey: child,
         })
+    }
+
+    deleteKey = () => {
+        const key = this.state.deleteKey;
+        const child = this.state.childKey;
+        userService.deleteAPIKey(key.value)
+           .then(
+                // delete was successful
+                () => {
+                    const keys = this.state.keys;
+                    const newKeys = []
+                    var i = 0;
+                    while (i < keys.length) {
+                        if (keys[i].value !== key.value) {
+                            newKeys.push(keys[i])
+                        }
+                        i++;
+                    }
+                    this.setState({
+                        keys: newKeys,
+                        show: false,
+                        deleteKey: null,
+                        childKey: null,
+                    })
+                },
+                // failed
+                error => {
+                    child.error(error.message);
+                    this.setState({
+                        show: false,
+                        deleteKey: null,
+                        childKey: null,
+                    })
+                });
     }
 
     add(key) {
@@ -110,6 +151,7 @@ class Account extends Component {
                     { keys && keys.length > 0 && 
                         <div className="key-info-container">
                             <h4 className="text-center">Keys</h4>
+                            <Modal show={state.show} handleClose={this.hideModal} save={this.deleteKey} title="Warning" text="Deletion of this key is permanent."></Modal>
                             <NewKey parent={this} />
                             {
                                 keys.map(key => {

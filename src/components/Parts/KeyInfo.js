@@ -16,6 +16,12 @@ class KeyInfo extends Component {
             parent: props.parent,
         }
     }
+    
+    error(message) {
+        const key = this.state.key;
+        document.getElementById(`err${key.value}`).style.display = "block";
+        document.getElementById(`err${key.value}`).innerHTML = message;
+    }
 
     render() {
         const parent = this.state.parent;
@@ -103,17 +109,7 @@ class KeyInfo extends Component {
                                                     <div className="col-auto">
                                                         <button type="button" key={`del${key.value}`} onClick={()=>{
                                                             document.getElementById(`err${key.value}`).style.display = "none";
-                                                            userService.deleteAPIKey(key.value)
-                                                               .then(
-                                                                    // delete was successful
-                                                                    () => {
-                                                                        parent.remove(key.value);
-                                                                    },
-                                                                    // failed
-                                                                    error => {
-                                                                        document.getElementById(`err${key.value}`).style.display = "block";
-                                                                        document.getElementById(`err${key.value}`).innerHTML = error.message;
-                                                                    });
+                                                            parent.remove(key, this);
                                                         }} className="btn btn-primary btn-chronokeep">
                                                             <img src={trash} alt={`delete key ${key.value}`} />
                                                         </button>
