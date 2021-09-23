@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,9 +14,18 @@ class Login extends Component {
         if (authenticationService.currentUserValue) {
             this.props.history.push('/');
         }
+        this.state = {
+            success: false,
+        }
     }
 
     render() {
+        const state = this.state;
+        if (state.success) {
+            return (
+                <Redirect to={{ pathname: this.state.from }} />
+            )
+        }
         document.title = `Chronokeep - Login`
         return (
             <div>
@@ -35,10 +45,12 @@ class Login extends Component {
                             setStatus();
                             authenticationService.login(username, password)
                                 .then(
-                                    user => {
-                                        const { from } = this.props.location.state || { from: { pathname: "/" } };
-                                        this.props.history.push(from);
-                                        window.location.reload();
+                                    () => {
+                                        const { from } = this.props.location.state || { from: { pathname: "/" } }
+                                        this.setState({
+                                            from: from.pathname,
+                                            success: true,
+                                        })
                                     },
                                     error => {
                                         setSubmitting(false);
@@ -51,12 +63,12 @@ class Login extends Component {
                             <Form>
                                 <div className="form-group">
                                     <label className="chronokeep-form-label" htmlFor="username">Email</label>
-                                    <Field name="username" type="text" className={'chronokeep-input form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                                    <Field name="username" type="text" autoComplete="username" className={'chronokeep-input form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
                                     <ErrorMessage name="username" component="div" className="invalid-feedback" />
                                 </div>
                                 <div className="form-group">
                                     <label className="chronokeep-form-label" htmlFor="password">Password</label>
-                                    <Field name="password" type="password" className={'chronokeep-input form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                                    <Field name="password" type="password" autoComplete="current-password" className={'chronokeep-input form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
                                     <ErrorMessage name="password" component="div" className="invalid-feedback" />
                                 </div>
                                 <div className="form-group">

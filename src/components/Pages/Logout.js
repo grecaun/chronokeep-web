@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import Header from '../Parts/Header';
 import Footer from '../Parts/Footer';
@@ -6,7 +7,6 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 
 import { authenticationService } from '../Auth/_services/authentication.service';
-import { history } from '../Auth/_helpers/history';
 
 class Logout extends Component {
     constructor(props) {
@@ -19,7 +19,6 @@ class Logout extends Component {
     }
 
     componentDidMount() {
-        console.log("logging out?");
         authenticationService.logout()
             .then(response => {
                 if (response.status !== 200) {
@@ -79,14 +78,8 @@ class Logout extends Component {
                 </div>
             );
         }
-        console.log("pushing main page");
-        history.push('/')
-        window.location.reload();
         return (
-            <div>
-                <Header page={"logout"} />
-                <Footer />
-            </div>
+            <Redirect to={{ pathname: '/' }} />
         )
     }
 }
