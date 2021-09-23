@@ -63,21 +63,21 @@ class Events extends Component {
                 document.title = `Chronokeep - Error`
                 return (
                     <div>
-                        { Header("events") }
-                        { ErrorMsg(state.status, state.found) }
-                        { Footer() }
+                        <Header page={"events"} />
+                        <ErrorMsg status={state.status} data={state.found} />
+                        <Footer />
                     </div>
                 )
             }
             if (state.loading === true) {
                 return (
                     <div>
-                        { Header("events") }
+                        <Header page={"events"} />
                         <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                             <h1 className="text-important display-5">Loading Events</h1>
-                            { Loading() }
+                            <Loading />
                         </div>
-                        { Footer() }
+                        <Footer />
                     </div>
                 );
             }
@@ -89,7 +89,7 @@ class Events extends Component {
             if (events && events.length > 0) {
                 return (
                     <div>
-                        { Header("event") }
+                        <Header page={"events"} />
                         <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                             <h1 className="text-important display-4">Events</h1>
                             <div className="list-group justify-content-center flex-column mt-4">
@@ -100,17 +100,17 @@ class Events extends Component {
                                 }) }
                             </div>
                         </div>
-                        { Footer() }
+                        <Footer />
                     </div>
                 );
             } else {
                 return (
                     <div>
-                        { Header("event") }
+                        <Header page={"events"} />
                         <div className="container-lg lg-max-width shadow">
                             <h2 className="text-important text-primary">No events found.</h2>
                         </div>
-                        { Footer() }
+                        <Footer />
                     </div>
                 )
             }

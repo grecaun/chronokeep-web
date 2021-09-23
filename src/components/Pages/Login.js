@@ -19,7 +19,7 @@ class Login extends Component {
         document.title = `Chronokeep - Login`
         return (
             <div>
-                { Header("login") }
+                <Header page={"login"} />
                 <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                     <h2>Login</h2>
                     <Formik
@@ -78,7 +78,7 @@ class Login extends Component {
                         )}
                         </Formik>
                 </div>
-                { Footer() }
+                <Footer />
             </div>
         )
     }

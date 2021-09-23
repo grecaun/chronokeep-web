@@ -153,7 +153,7 @@ a.active:hover {
   padding: 0px;
 }
 .chronokeep-card-header {
-  background-color: #e9ecef;;
+  background-color: #ffffff;;
 }
 .hidden {
   display: none;
@@ -169,6 +169,10 @@ a.active:hover {
 }
 .key-card {
   margin: 15px auto;
+}
+.key-card {
+  max-width: 800px;
+  padding: 0px;
 }
 @media (max-width: 450px) {
   .col-xl {

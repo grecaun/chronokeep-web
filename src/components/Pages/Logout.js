@@ -61,21 +61,21 @@ class Logout extends Component {
             document.title = `Chronokeep - Error`
             return (
                 <div>
-                    { Header("logout") }
-                    { ErrorMsg(state.status, state.found) }
-                    { Footer() }
+                    <Header page={"logout"} />
+                    <ErrorMsg status={state.status} data={state.found} />
+                    <Footer />
                 </div>
             )
         }
         if (state.loading === true) {
             return (
                 <div>
-                    { Header("events") }
+                    <Header page={"logout"} />
                     <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                         <h1 className="text-important display-5">Attempting to logout.</h1>
-                        { Loading() }
+                        <Loading />
                     </div>
-                    { Footer() }
+                    <Footer />
                 </div>
             );
         }
@@ -84,8 +84,8 @@ class Logout extends Component {
         window.location.reload();
         return (
             <div>
-                { Header("logout") }
-                { Footer() }
+                <Header page={"logout"} />
+                <Footer />
             </div>
         )
     }

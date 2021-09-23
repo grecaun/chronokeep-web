@@ -72,21 +72,21 @@ class Results extends Component {
             document.title = `Chronokeep - Error`
             return (
                 <div>
-                    { Header("results") }
-                    { ErrorMsg(state.status, state.found) }
-                    { Footer() }
+                    <Header page={"results"} />
+                    <ErrorMsg status={state.status} data={state.found} />
+                    <Footer />
                 </div>
             );
         }
         if (state.loading === true) {
             return (
                 <div>
-                    { Header("results") }
+                    <Header page={"results"} />
                     <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                         <h1 className="text-important display-4">Loading Results</h1>
-                        { Loading() }
+                        <Loading />
                     </div>
-                    { Footer() }
+                    <Footer />
                 </div>
             );
         }
@@ -103,7 +103,7 @@ class Results extends Component {
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results`
         return (
             <div>
-                { Header("results") }
+                <Header page={"results"} />
                 <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                     <div className="col-md-10 flex-fill text-center mx-auto m-1">
                         <p className="text-important mb-2 mt-1 h1">{`${state.year.year} ${state.event.name} Results`}</p>
@@ -141,9 +141,13 @@ class Results extends Component {
                             {
                                 distances.map((distance, index) => {
                                     if (state.event.type === "time") {
-                                        return TimeResultsTable(distance, state.results[distance], info)
+                                        return (
+                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} />
+                                        )
                                     } else {
-                                        return ResultsTable(distance, state.results[distance], info)
+                                         return (
+                                             <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} />
+                                         )
                                     }
                                 })
                             }

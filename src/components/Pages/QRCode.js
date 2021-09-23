@@ -23,7 +23,7 @@ class QRCode extends Component {
         const state = this.state;
         return (
             <div>
-                { Header("qrcode") }
+                <Header page={"qrcode"} />
                 <div className="qr-holder">
                     <div className="qr-buffer" />
                     <h1 className="qr-label display-4">Results By</h1>
@@ -32,7 +32,7 @@ class QRCode extends Component {
                     }} />
                     <h1 className="qr-label display-4">Chronokeep</h1>
                 </div>
-                { Footer() }
+                <Footer />
             </div>
         )
     }

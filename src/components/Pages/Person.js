@@ -73,21 +73,21 @@ class Person extends Component {
             document.title = "Chronokeep - Error"
             return (
                 <div>
-                    { Header("person") }
-                    { ErrorMsg(state.status, state.found) }
-                    { Footer() }
+                    <Header page={"person"} />
+                    <ErrorMsg status={state.status} data={state.found} />
+                    <Footer />
                 </div>
             );
         }
         if (state.loading === true) {
             return (
                 <div>
-                    { Header("person") }
+                    <Header page={"person"} />
                     <div className="mx-auto sm-max-width text-center container-md p-5 pt-4">
                         <h1 className="text-important display-4">Loading Results</h1>
-                        { Loading() }
+                        <Loading />
                     </div>
-                    { Footer() }
+                    <Footer />
                 </div>
             );
         }
@@ -109,7 +109,7 @@ class Person extends Component {
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
         return (
             <div>
-                { Header("person") }
+                <Header page={"person"} />
                 <div className="container-sm sm-max-width m-2 p-4 mx-auto">
                     <div className="p-2">
                         <div className="text-center text-important display-4 m-0">{`${state.year.year} ${state.event.name}`}</div>
@@ -225,7 +225,7 @@ class Person extends Component {
                     </table>
                 </div>
                 }
-                { Footer() }
+                <Footer />
             </div>
         );
     }
