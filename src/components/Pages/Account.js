@@ -151,7 +151,7 @@ class Account extends Component {
                     { keys && keys.length > 0 && 
                         <div className="key-info-container">
                             <h4 className="text-center">Keys</h4>
-                            <Modal show={state.show} handleClose={this.hideModal} save={this.deleteKey} title="Warning" text="Deletion of this key is permanent." saveText="Delete"></Modal>
+                            <Modal show={state.show} handleClose={this.hideModal} save={this.deleteKey} title="Warning" text="Deletion of this key is permanent." saveText="Delete" />
                             <NewKey parent={this} />
                             {
                                 keys.map(key => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Modal = ({ handleClose, show, save, text, title, saveText }) => {
+const Modal = ({ handleClose, show, save, title, saveText, text, id }) => {
     const showHideClassName = show ? "modal fade show display-block" : "modal fade";
     return (
         <div className={showHideClassName} tabIndex="-1" role="dialog" >
@@ -12,7 +12,7 @@ const Modal = ({ handleClose, show, save, text, title, saveText }) => {
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div className="modal-body">
+                    <div className="modal-body" id={id}>
                         {text}
                     </div>
                     <div className="modal-footer">
