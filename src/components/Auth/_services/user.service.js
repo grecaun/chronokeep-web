@@ -42,6 +42,11 @@ function fetchWithRefresh(url, requestOptions) {
                                 },
                                 // if there was an error return the error
                                 error => {
+                                    // log out the user if unauthorized or forbidden is returned
+                                    if ([401, 403].indexOf(error.status) !== -1) {
+                                        authenticationService.logout();
+                                        window.location.reload(false);
+                                    }
                                     return Promise.reject(error);
                                 }
                             )
