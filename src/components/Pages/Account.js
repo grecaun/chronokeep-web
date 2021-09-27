@@ -8,6 +8,7 @@ import KeyInfo from '../Parts/KeyInfo';
 import Loading from '../Parts/Loading';
 import NewKey from '../Parts/NewKey';
 import Modal from '../Parts/Modal';
+import { Redirect } from 'react-router';
 
 
 class Account extends Component {
@@ -117,6 +118,9 @@ class Account extends Component {
     render() {
         document.title = `Chronokeep - Account`
         const state = this.state;
+        if (state.error === true && [401, 403].indexOf(state.status) !== -1) {
+            return <Redirect to={{ pathname: '/login', state: { from: '/account' } }} />
+        }
         if (state.error === true) {
             document.title = `Chronokeep - Error`
             return (
