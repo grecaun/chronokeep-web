@@ -100,12 +100,14 @@ class QRCode extends Component {
                 </div>
             );
         }
-        document.title = `Chronokeep - ${state.year.year} ${state.event.name} QRCode`
+        const codeName = `${state.year.year} ${state.event.name}`;
+        document.title = `Chronokeep - ${codeName} QRCode`;
         return (
             <div>
                 <Header page={"qrcode"} />
                 <div className="qr-holder">
                     <div className="qr-buffer" />
+                    <h1 className="qr-label display-4">{codeName}</h1>
                     <h1 className="qr-label display-4">Results By</h1>
                     <QR {...{
                         ...qrValues
