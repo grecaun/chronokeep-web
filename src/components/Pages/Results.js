@@ -127,7 +127,7 @@ class Results extends Component {
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
                     <div className="p-0">
                         <ul className="nav nav-tabs nav-fill">
-                            {
+                            { distances.length > 1 &&
                                 distances.map((distance, index) => {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
@@ -142,11 +142,11 @@ class Results extends Component {
                                 distances.map((distance, index) => {
                                     if (state.event.type === "time") {
                                         return (
-                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} />
+                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
                                         )
                                     } else {
                                          return (
-                                             <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} />
+                                             <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
                                          )
                                     }
                                 })

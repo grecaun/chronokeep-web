@@ -10,6 +10,7 @@ class ResultsTable extends Component {
             distance: props.distance,
             results: props.results,
             info: props.info,
+            showTitle: props.showTitle,
         }
     }
 
@@ -17,6 +18,7 @@ class ResultsTable extends Component {
         const results = this.state.results;
         const distance = this.state.distance;
         const info = this.state.info;
+        const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
             if (a.type !== 0 || b.type !== 0) {
                 return a.type - b.type
@@ -30,9 +32,11 @@ class ResultsTable extends Component {
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
                     <thead>
+                        { showTitle &&
                         <tr>
                             <th className="table-distance-header text-important text-center" colSpan="10">{distance}</th>
                         </tr>
+                        }
                         <tr>
                             <th className="overflow-hidden-sm col-md text-center">Bib</th>
                             <th className="col-sm text-center">Place</th>
