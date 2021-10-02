@@ -20,11 +20,11 @@ class ResultsTable extends Component {
         const info = this.state.info;
         const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
-            if (a.type !== 0 || b.type !== 0) {
-                return a.type - b.type
-            }
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
+            }
+            if (a.type !== 0 || b.type !== 0) {
+                return a.type - b.type
             }
             return a.ranking - b.ranking
         })
