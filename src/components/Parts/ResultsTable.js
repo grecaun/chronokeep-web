@@ -20,7 +20,17 @@ class ResultsTable extends Component {
         const info = this.state.info;
         const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
-            // if occurences are equal we sort by type
+            // if both occurrences are greater than 0, sort by type then occurrence then ranking
+            if (a.occurence > 0 && b.occurence > 0) {
+                if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
+                    return a.type - b.type
+                }
+                if (a.occurence !== b.occurence) {
+                    return b.occurence - a.occurence
+                }
+                return a.ranking - b.ranking
+            }
+            // otherwise sort by occurrence then type then ranking
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
             }
