@@ -70,7 +70,7 @@ class ResultsTable extends Component {
                                     rankStr = `${rankStr}e`
                                 }
                                 // Unofficial time
-                                if (result.Type === 2) {
+                                if (result.type === 2) {
                                     rankStr = `${rankStr}u`
                                 }
                                 return (
