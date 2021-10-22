@@ -15,6 +15,7 @@ class QRCode extends Component {
             error: false,
             slug: props.match.params.slug,
             year: props.match.params.year,
+            yearSet: props.match.params.year ? true : false,
             found: null
         }
     }
@@ -100,7 +101,7 @@ class QRCode extends Component {
                 </div>
             );
         }
-        const codeName = typeof state.year !== "undefined" ? `${state.event.year} ${state.event.name}` :  `${state.event.name}`;
+        const codeName = state.yearSet ? `${state.event.year} ${state.event.name}` :  `${state.event.name}`;
         document.title = `Chronokeep - ${codeName} QRCode`;
         return (
             <div>
