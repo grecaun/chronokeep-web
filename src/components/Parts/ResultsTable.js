@@ -20,22 +20,13 @@ class ResultsTable extends Component {
         const info = this.state.info;
         const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
-            // if both occurrences are greater than 0, sort by type then occurrence then ranking
-            if (a.occurence > 0 && b.occurence > 0) {
-                if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
-                    return a.type - b.type
-                }
-                if (a.occurence !== b.occurence) {
-                    return b.occurence - a.occurence
-                }
-                return a.ranking - b.ranking
+            // sorting by type first (again, this was a problem with the program not the website)
+            if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
+                return a.type - b.type
             }
             // otherwise sort by occurrence then type then ranking
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
-            }
-            if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
-                return a.type - b.type
             }
             return a.ranking - b.ranking
         })
