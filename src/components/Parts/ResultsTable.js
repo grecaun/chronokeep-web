@@ -20,13 +20,12 @@ class ResultsTable extends Component {
         const info = this.state.info;
         const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
-            // sorting by type first (again, this was a problem with the program not the website)
-            if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
-                return a.type - b.type
-            }
-            // otherwise sort by occurrence then type then ranking
+            // sort by occurence, this will place everyone who's finished (or DNF'ed) above those who haven't
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
+            }
+            if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
+                return a.type - b.type
             }
             return a.ranking - b.ranking
         })
