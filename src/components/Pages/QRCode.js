@@ -101,7 +101,7 @@ class QRCode extends Component {
                 </div>
             );
         }
-        const codeName = state.yearSet ? `${state.event.year} ${state.event.name}` :  `${state.event.name}`;
+        const codeName = state.yearSet ? `${state.year} ${state.event.name}` :  `${state.event.name}`;
         document.title = `Chronokeep - ${codeName} QRCode`;
         return (
             <div>
