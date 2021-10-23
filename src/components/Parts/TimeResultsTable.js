@@ -14,18 +14,12 @@ class TimeResultsTable extends Component {
     render() {
         const results = this.state.results;
         const distance = this.state.distance;
-        const index = this.state.index;
-        const show = this.state.show;
         const sorted = results.sort((a, b) => {
             return a.ranking - b.ranking
         })
-        var collapseClass = "collapse table-responsive-sm"
-        if (show === true) {
-            collapseClass = "collapse table-responsive-sm show"
-        }
         return (
-            <div class={collapseClass} key={distance} id={`distance${index}`} data-bs-parent="#results-parent">
-                <table class="table table-sm table-bordered">
+            <div className="table-responsive-sm m-3" key={distance} id={distance}>
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <td class="table-distance-header text-important text-center" colSpan="10">{distance}</td>
