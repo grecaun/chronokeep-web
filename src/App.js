@@ -10,8 +10,6 @@ import Logout from './components/Pages/Logout';
 import Account from './components/Pages/Account';
 import QRCode from './components/Pages/QRCode';
 
-require('dotenv').config()
-
 class App extends Component {
   render() {
     return (
