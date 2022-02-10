@@ -61,17 +61,21 @@ class ResultsTable extends Component {
                                 if (result.finish !== true) {
                                     rankStr = arankStr = grankStr = ''
                                 }
-                                // DNF
-                                if (result.type === 3) {
+                                // DNF - DNF - DNS
+                                if (result.type === 3 || result.type === 30 || result.type === 31) {
                                     rankStr = arankStr = grankStr = ''
                                 }
                                 // Early start time
-                                if (result.type === 1) {
+                                if (result.type === 1 || result.type === 11) {
                                     rankStr = `${rankStr}e`
                                 }
                                 // Unofficial time
-                                if (result.type === 2) {
+                                if (result.type === 2 || result.type === 12) {
                                     rankStr = `${rankStr}u`
+                                }
+                                // Virtual
+                                if (result.type === 13) {
+                                    rankStr = `${rankStr}v`
                                 }
                                 return (
                                     <tr key={result.bib}>
