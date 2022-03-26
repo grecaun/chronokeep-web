@@ -33,7 +33,7 @@ class TimeResultsTable extends Component {
                             <th class="overflow-hidden-lg col-sm text-center">Gender</th>
                             <th class="overflow-hidden-lg col-sm text-center">Pl</th>
                             <th class="col-lg text-center">Time</th>
-                            <th class="col-lg text-center">Laps</th>
+                            <th class="col-lg text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
