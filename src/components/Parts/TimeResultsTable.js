@@ -27,7 +27,7 @@ class TimeResultsTable extends Component {
                         <tr>
                             <th class="overflow-hidden-sm col-md text-center">Bib</th>
                             <th class="col-sm text-center">Place</th>
-                            <th class="col-xl">Name</th>
+                            <th class="col-lg">Name</th>
                             <th class="overflow-hidden-lg col-sm text-center">Age</th>
                             <th class="overflow-hidden-lg col-sm text-center">Pl</th>
                             <th class="overflow-hidden-lg col-sm text-center">Gender</th>
@@ -60,7 +60,7 @@ class TimeResultsTable extends Component {
                                     <tr key={result.bib}>
                                         <td class="overflow-hidden-sm text-center">{result.bib}</td>
                                         <td class="text-center">{result.ranking}</td>
-                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
                                         <td class="overflow-hidden-lg text-center">{result.age}</td>
                                         <td class="overflow-hidden-lg text-center">{result.age_ranking}</td>
                                         <td class="overflow-hidden-lg text-center">{result.gender}</td>
