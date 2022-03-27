@@ -9,6 +9,7 @@ class TimeResultsTable extends Component {
             distance: props.distance,
             results: props.results,
             index: props.index,
+            info: props.info,
             show: props.show,
         }
     }
@@ -16,6 +17,7 @@ class TimeResultsTable extends Component {
     render() {
         const results = this.state.results;
         const distance = this.state.distance;
+        const info = this.state.info;
         const sorted = results.sort((a, b) => {
             return a.ranking - b.ranking
         })
