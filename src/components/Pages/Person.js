@@ -99,9 +99,12 @@ class Person extends Component {
         state.results.forEach((res) => {
             if (res.segment === "Start") {
                 start = res
-            } else if (res.segment === "Finish") {
+            } else if (res.finish && state.event.type !== "time") {
                 finish = res
             } else {
+                if (state.event.type === "time" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
+                    finish = res
+                }
                 results.push(res)
             }
         })
@@ -191,7 +194,7 @@ class Person extends Component {
                 {state.event.type === "time" &&
                     <PersonTime results={results} />
                 }
-                {state.event.type === "distance" &&
+                {state.event.type !== "time" &&
                     <PersonDistance results={results} />
                 }
                 <Footer />

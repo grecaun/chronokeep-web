@@ -43,6 +43,10 @@ class TimeResultsTable extends Component {
                     <tbody>
                         {
                             sorted.map(result => {
+                                var segName = result.segment;
+                                if (segName === "Finish") {
+                                    segName = "Lap " + result.occurence;
+                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
@@ -53,7 +57,7 @@ class TimeResultsTable extends Component {
                                         <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                         <td className="overflow-hidden-lg text-center">{result.gender_ranking}</td>
                                         <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                        <td className="text-center">{result.segment}</td>
+                                        <td className="text-center">{segName}</td>
                                     </tr>
                                 );
                             })

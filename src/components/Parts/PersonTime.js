@@ -7,14 +7,12 @@ class PersonTime extends Component {
 
         this.state = {
             results: props.results,
-            distance: props.distance,
         }
     }
 
     render() {
-        const results = this.state.results; 
-        const distance = this.state.distance;
-        if (results.length > 0){
+        const results = this.state.results;
+        if (results.length > 0) {
             return (
                 <div className="container-lg lg-max-width m-4 mx-auto shadow p-5">
                     <table className="table table-sm text-center">
@@ -24,9 +22,6 @@ class PersonTime extends Component {
                             </tr>
                             <tr>
                                 <th></th>
-                                { distance !== null &&
-                                <th className="overflow-hidden-lg">Pace</th>
-                                }
                                 <th>Chip Time</th>
                                 <th>Gun Time</th>
                             </tr>
@@ -34,12 +29,13 @@ class PersonTime extends Component {
                         <tbody>
                         {
                         results.map((res, index) => {
+                            var segName = res.segment;
+                            if (segName === "Finish") {
+                                segName = "Lap " + res.occurence;
+                            }
                             return(
                                 <tr key={`segment${index}`}>
-                                    <td>{res.segment}</td>
-                                    { distance !== null &&
-                                    <td className="overflow-hidden-lg">{FormatTime(res.chip_seconds / distance.dist, 0, res, true)}</td>
-                                    }
+                                    <td>{segName}</td>
                                     <td>{FormatTime(res.chip_seconds, res.chip_milliseconds, res)}</td>
                                     <td>{FormatTime(res.seconds, res.milliseconds, res)}</td>
                                 </tr>
