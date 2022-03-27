@@ -6,6 +6,8 @@ import Footer from '../Parts/Footer';
 import FormatTime from '../Parts/FormatTime';
 import Header from '../Parts/Header';
 import Loading from '../Parts/Loading';
+import PersonTime from '../Parts/PersonTime';
+import PersonDistance from '../Parts/PersonDistance';
 
 class Person extends Component {
     constructor(props) {
@@ -138,9 +140,9 @@ class Person extends Component {
                             <div className="col-sm-4 overflow-hidden">
                                 <div className="d-flex border-bottom text-center">
                                     <div className="h5 me-1 mb-0">Pace </div>
-                                    <div className="text-secondary">(min/mi)</div>
+                                    <div className="text-secondary">(per {state.distance.unit})</div>
                                 </div>
-                                <div className="h5">6:00</div>
+                                <div className="h5">{FormatTime(state.finish.chip_seconds / state.distance.dist, 0, state.finish, true)}</div>
                             </div>
                             }
                         </div>
@@ -174,7 +176,7 @@ class Person extends Component {
                             { state.distance !== null &&
                             <div className="col col-cst text-center">
                                 <div className="h5 border-bottom">Distance</div>
-                                <div className="h5">100 Miles</div>
+                                <div className="h5">{state.distance.dist} {state.distance.unit}</div>
                             </div>
                             }
                             { finish !== null && finish.type === 0 &&
@@ -186,44 +188,11 @@ class Person extends Component {
                         </div>
                     </div>
                 </div>
-                { results.length > 0 &&
-                <div className="container-lg lg-max-width m-4 mx-auto shadow p-5">
-                    <table className="table table-sm text-center">
-                        <thead>
-                            <tr>
-                                <th className="table-distance-header text-important text-center" colSpan="6">Partial Times</th>
-                            </tr>
-                            <tr>
-                                <th>Segment</th>
-                                <th className="overflow-hidden-sm">Place</th>
-                                <th className="overflow-hidden-sm">Age Pl</th>
-                                <th className="overflow-hidden-sm">Gender Pl</th>
-                                { state.distance !== null &&
-                                <th className="overflow-hidden-lg">Pace</th>
-                                }
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {
-                        results.map((res, index) => {
-                            return(
-                                <tr key={`segment${index}`}>
-                                    <td>{res.segment}</td>
-                                    <td className="overflow-hidden-sm">{res.ranking > 0 ? res.ranking : ''}</td>
-                                    <td className="overflow-hidden-sm">{res.age_ranking > 0 ? res.age_ranking : ''}</td>
-                                    <td className="overflow-hidden-sm">{res.gender_ranking > 0 ? res.gender_ranking : ''}</td>
-                                    { state.distance !== null &&
-                                    <td className="overflow-hidden-lg">Pace</td>
-                                    }
-                                    <td>{FormatTime(res.chip_seconds, res.chip_milliseconds, res)}</td>
-                                </tr>
-                            );
-                        })
-                        }
-                        </tbody>
-                    </table>
-                </div>
+                {state.event.type === "time" &&
+                    <PersonTime results={results} />
+                }
+                {state.event.type === "distance" &&
+                    <PersonDistance results={results} />
                 }
                 <Footer />
             </div>
