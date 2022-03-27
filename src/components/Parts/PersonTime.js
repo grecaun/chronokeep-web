@@ -7,13 +7,14 @@ class PersonTime extends Component {
 
         this.state = {
             results: props.results,
+            distance: props.distance,
         }
     }
 
     render() {
-        var state = this.state;
-        if (state.results.length > 0)
-        {
+        const results = this.state.results; 
+        const distance = this.state.distance;
+        if (results.length > 0){
             return (
                 <div className="container-lg lg-max-width m-4 mx-auto shadow p-5">
                     <table className="table table-sm text-center">
@@ -23,7 +24,7 @@ class PersonTime extends Component {
                             </tr>
                             <tr>
                                 <th></th>
-                                { state.distance !== null &&
+                                { distance !== null &&
                                 <th className="overflow-hidden-lg">Pace</th>
                                 }
                                 <th>Chip Time</th>
@@ -32,12 +33,12 @@ class PersonTime extends Component {
                         </thead>
                         <tbody>
                         {
-                        state.results.map((res, index) => {
+                        results.map((res, index) => {
                             return(
                                 <tr key={`segment${index}`}>
                                     <td>{res.segment}</td>
-                                    { state.distance !== null &&
-                                    <td className="overflow-hidden-lg">{FormatTime(res.chip_seconds / state.distance.dist, 0, res, true)}</td>
+                                    { distance !== null &&
+                                    <td className="overflow-hidden-lg">{FormatTime(res.chip_seconds / distance.dist, 0, res, true)}</td>
                                     }
                                     <td>{FormatTime(res.chip_seconds, res.chip_milliseconds, res)}</td>
                                     <td>{FormatTime(res.seconds, res.milliseconds, res)}</td>

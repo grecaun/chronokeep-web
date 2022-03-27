@@ -23,21 +23,21 @@ class TimeResultsTable extends Component {
         })
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
-                <table class="table table-sm">
+                <table className="table table-sm">
                     <thead>
                         <tr>
-                            <td class="table-distance-header text-important text-center" colSpan="10">{distance}</td>
+                            <td className="table-distance-header text-important text-center" colSpan="10">{distance}</td>
                         </tr>
                         <tr>
-                            <th class="overflow-hidden-sm col-md text-center">Bib</th>
-                            <th class="col-sm text-center">Place</th>
-                            <th class="col-lg">Name</th>
-                            <th class="overflow-hidden-lg col-sm text-center">Age</th>
-                            <th class="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th class="overflow-hidden-lg col-sm text-center">Gender</th>
-                            <th class="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th class="col-lg text-center">Time</th>
-                            <th class="col-lg text-center"></th>
+                            <th className="overflow-hidden-sm col-md text-center">Bib</th>
+                            <th className="col-sm text-center">Place</th>
+                            <th className="col-lg">Name</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Age</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Pl</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Gender</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Pl</th>
+                            <th className="col-lg text-center">Time</th>
+                            <th className="col-lg text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,15 +45,15 @@ class TimeResultsTable extends Component {
                             sorted.map(result => {
                                 return (
                                     <tr key={result.bib}>
-                                        <td class="overflow-hidden-sm text-center">{result.bib}</td>
-                                        <td class="text-center">{result.ranking}</td>
+                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                        <td className="text-center">{result.ranking}</td>
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
-                                        <td class="overflow-hidden-lg text-center">{result.age}</td>
-                                        <td class="overflow-hidden-lg text-center">{result.age_ranking}</td>
-                                        <td class="overflow-hidden-lg text-center">{result.gender}</td>
-                                        <td class="overflow-hidden-lg text-center">{result.gender_ranking}</td>
-                                        <td class="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                        <td class="text-center">{result.segment}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.age}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.age_ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.gender}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.gender_ranking}</td>
+                                        <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
+                                        <td className="text-center">{result.segment}</td>
                                     </tr>
                                 );
                             })
