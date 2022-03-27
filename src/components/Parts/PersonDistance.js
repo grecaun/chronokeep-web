@@ -52,6 +52,8 @@ class PersonDistance extends Component {
                     </table>
                 </div>
             );
+        } else {
+            return (null);
         }
     }
 }

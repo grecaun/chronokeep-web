@@ -49,6 +49,8 @@ class PersonTime extends Component {
                     </table>
                 </div>
             );
+        } else {
+            return (null);
         }
     }
 }
