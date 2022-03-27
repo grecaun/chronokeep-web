@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import FormatTime from './FormatTime';
 
 class TimeResultsTable extends Component {
     constructor(props) {
@@ -39,23 +41,6 @@ class TimeResultsTable extends Component {
                     <tbody>
                         {
                             sorted.map(result => {
-                                // Calculate the string to display for Gun Time
-                                const timeHour = Math.floor(result.seconds / 3600)
-                                var timeMinutes = Math.floor((result.seconds % 3600) / 60)
-                                // Change minutes into a string starting with 0 if its less than 10, i.e. 09
-                                timeMinutes = timeMinutes < 10 ? `0${timeMinutes}` : timeMinutes
-                                var timeSeconds = result.seconds % 60
-                                // Change seconds into a string starting with 0 if its less than 10, i.e. 09
-                                timeSeconds = timeSeconds < 10 ? `0${timeSeconds}` : timeSeconds
-                                // Only care about tenths of a second
-                                const timeMill = Math.floor(result.milliseconds / 100)
-                                var timeString = '';
-                                // Only show hour if it exists.
-                                if (timeHour > 0) {
-                                    timeString = `${timeHour}:${timeMinutes}:${timeSeconds}.${timeMill}`
-                                } else {
-                                    timeString = `${timeMinutes}:${timeSeconds}.${timeMill}`
-                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td class="overflow-hidden-sm text-center">{result.bib}</td>
@@ -65,7 +50,7 @@ class TimeResultsTable extends Component {
                                         <td class="overflow-hidden-lg text-center">{result.age_ranking}</td>
                                         <td class="overflow-hidden-lg text-center">{result.gender}</td>
                                         <td class="overflow-hidden-lg text-center">{result.gender_ranking}</td>
-                                        <td class="text-center">{timeString}</td>
+                                        <td class="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
                                         <td class="text-center">{result.segment}</td>
                                     </tr>
                                 );
