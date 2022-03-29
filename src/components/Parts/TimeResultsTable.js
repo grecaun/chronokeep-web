@@ -43,6 +43,14 @@ class TimeResultsTable extends Component {
                     <tbody>
                         {
                             sorted.map(result => {
+                                // Use variables for displaying rank strings so we can hide if not a finish time
+                                var rankStr = result.ranking
+                                var arankStr = result.age_ranking
+                                var grankStr = result.gender_ranking
+                                // If not a finish time
+                                if (result.finish !== true) {
+                                    rankStr = arankStr = grankStr = ''
+                                }
                                 var segName = result.segment;
                                 if (segName === "Finish") {
                                     segName = "Lap " + result.occurence;
@@ -50,12 +58,12 @@ class TimeResultsTable extends Component {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                        <td className="text-center">{result.ranking}</td>
+                                        <td className="text-center">{rankStr}</td>
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.age}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.age_ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                         <td className="overflow-hidden-lg text-center">{result.gender}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.gender_ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                         <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
                                         <td className="text-center">{segName}</td>
                                     </tr>
