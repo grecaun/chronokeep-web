@@ -77,6 +77,10 @@ class ResultsTable extends Component {
                                 if (result.type === 13) {
                                     rankStr = `${rankStr}v`
                                 }
+                                // Late time
+                                if (results.type === 14) {
+                                    rankStr = `${rankStr}l`
+                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>

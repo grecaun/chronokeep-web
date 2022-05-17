@@ -14,9 +14,16 @@ const FormatTime = (seconds, milliseconds, result, chip) => {
         return result.segment
     }
     // Check for DNF
-    if (result.type === 3) {
+    if (result.type === 3 || result.type === 30) {
         if (chip === true) {
             return 'DNF'
+        }
+        return ''
+    }
+    // Check for DNS
+    if (result.type === 31) {
+        if (chip === true) {
+            return 'DNS'
         }
         return ''
     }
