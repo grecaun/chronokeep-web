@@ -58,7 +58,7 @@ class ResultsTable extends Component {
                                 var arankStr = result.age_ranking
                                 var grankStr = result.gender_ranking
                                 // If not a finish time
-                                if (result.finish !== true) {
+                                if (result.ranking === -1 || result.occurence === 0) {
                                     rankStr = arankStr = grankStr = ''
                                 }
                                 // DNF - DNF - DNS
