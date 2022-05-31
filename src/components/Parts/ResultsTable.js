@@ -24,8 +24,8 @@ class ResultsTable extends Component {
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
             }
-            if ((a.type !== 0 || b.type !== 0) && a.type !== b.type) {
-                return a.type - b.type
+            if (a.rank < 1 || b.rank < 1) {
+                return a.type - b.type;
             }
             return a.ranking - b.ranking
         })
@@ -58,7 +58,7 @@ class ResultsTable extends Component {
                                 var arankStr = result.age_ranking
                                 var grankStr = result.gender_ranking
                                 // If not a finish time
-                                if (result.ranking === -1 || result.occurence === 0) {
+                                if (result.finish !== true) {
                                     rankStr = arankStr = grankStr = ''
                                 }
                                 // DNF - DNF - DNS
