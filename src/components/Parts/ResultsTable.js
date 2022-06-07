@@ -20,13 +20,23 @@ class ResultsTable extends Component {
         const info = this.state.info;
         const showTitle = this.state.showTitle;
         const sorted = results.sort((a, b) => {
-            // sort by occurence, this will place everyone who's finished (or DNF'ed) above those who haven't
+            // sort all DNF and DNS to the bottom
+            if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
+                return a.type - b.type;
+            }
+            // sort by occurence, this will place everyone who's finished above those who haven't
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
             }
-            if (a.rank < 1 || b.rank < 1) {
-                return a.type - b.type;
+            // if both values are set to the same ranking (start times with -1 or 0 set essentially)
+            // sort by gun time given
+            if (a.ranking === b.ranking) {
+                if (a.seconds === b.seconds) {
+                    return a.milliseconds - b.milliseconds;
+                }
+                return a.seconds - b.seconds;
             }
+            // finally sort by ranking
             return a.ranking - b.ranking
         })
         return (
@@ -57,8 +67,9 @@ class ResultsTable extends Component {
                                 var rankStr = result.ranking
                                 var arankStr = result.age_ranking
                                 var grankStr = result.gender_ranking
-                                // If not a finish time
-                                if (result.finish !== true) {
+                                // If ranking is set to -1, or it is a start time then ignore output
+                                // otherwise display the current ranking for that value
+                                if (result.ranking < 1 || result.occurence === 0) {
                                     rankStr = arankStr = grankStr = ''
                                 }
                                 // DNF - DNF - DNS
