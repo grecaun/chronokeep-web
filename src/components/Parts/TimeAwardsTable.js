@@ -39,9 +39,9 @@ class TimeResultsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
-        results.map(result => {
+        results.foreach(result => {
             // DNF - DNF - DNS
-            if (result.finish != true) {
+            if (result.finish !== true) {
                 // ignore these entries
             } else if (groupings["Overall"][result.gender].length < this.state.numberOv) {
                 groupings["Overall"][result.gender].push(result)
@@ -58,7 +58,7 @@ class TimeResultsTable extends Component {
                     }
                 }
             } else {
-                var exists = result.age_group in groupings
+                exists = result.age_group in groupings
                 if (exists === false) {
                     groups.push(result.age_group)
                     groupings[result.age_group] = {}
@@ -107,8 +107,6 @@ class TimeResultsTable extends Component {
                                                 groupings[group]["M"].map((result, index) => {
                                                     // Use variables for displaying rank strings so we can hide if not a finish time
                                                     var rankStr = index + 1
-                                                    // Use variables for displaying rank strings so we can hide if not a finish time
-                                                    var rankStr = result.ranking
                                                     // If not a finish time
                                                     if (result.finish !== true) {
                                                         rankStr = ''
@@ -154,8 +152,6 @@ class TimeResultsTable extends Component {
                                                 groupings[group]["F"].map((result, index) => {
                                                     // Use variables for displaying rank strings so we can hide if not a finish time
                                                     var rankStr = index + 1
-                                                    // Use variables for displaying rank strings so we can hide if not a finish time
-                                                    var rankStr = result.ranking
                                                     // If not a finish time
                                                     if (result.finish !== true) {
                                                         rankStr = ''

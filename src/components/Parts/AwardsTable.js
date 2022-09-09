@@ -56,7 +56,7 @@ class AwardsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
-        results.map(result => {
+        results.foreach(result => {
             // DNF - DNF - DNS
             if (result.ranking < 1 || result.occurence === 0 || result.type === 3 || result.type === 30 || result.type === 31) {
                 // ignore these entries
@@ -75,7 +75,7 @@ class AwardsTable extends Component {
                     }
                 }
             } else {
-                var exists = result.age_group in groupings
+                exists = result.age_group in groupings
                 if (exists === false) {
                     groups.push(result.age_group)
                     groupings[result.age_group] = {}
