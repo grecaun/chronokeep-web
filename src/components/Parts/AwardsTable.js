@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
 
 class AwardsTable extends Component {
