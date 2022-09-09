@@ -39,7 +39,7 @@ class TimeResultsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
-        results.foreach(result => {
+        results.forEach(result => {
             // DNF - DNF - DNS
             if (result.finish !== true) {
                 // ignore these entries

@@ -210,7 +210,6 @@ class Awards extends Component {
                                             <TimeAwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} numberAG={numAg} numberOV={numOv} overallIncluded={ovInc}/>
                                         )
                                     } else {
-                                        console.log("overall", numOv, "ag", numAg, "include", ovInc)
                                         return (
                                             <AwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} numberAG={numAg} numberOV={numOv} overallIncluded={ovInc}/>
                                         )

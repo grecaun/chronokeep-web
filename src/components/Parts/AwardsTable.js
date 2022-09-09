@@ -56,7 +56,7 @@ class AwardsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
-        results.foreach(result => {
+        results.forEach(result => {
             // DNF - DNF - DNS
             if (result.ranking < 1 || result.occurence === 0 || result.type === 3 || result.type === 30 || result.type === 31) {
                 // ignore these entries
