@@ -10,19 +10,22 @@ import DateString from '../Parts/DateString';
 class Awards extends Component {
     constructor(props) {
         super(props);
+        const params = new URLSearchParams(props.location.search);
         this.state = {
+            location: props.location,
             loading: true,
             error: false,
             slug: props.match.params.slug,
             year: props.match.params.year,
             found: null,
-            numAG: 3,
-            numOV: 3,
-            overallInc: false
+            numAG: Number(params.get("ag")) <= 0 ? 3 : Number(params.get("ag")),
+            numOV: Number(params.get("ov")) <= 0 ? 3 : Number(params.get("ov")),
+            overallInc: params.get("inc") === "true",
         }
         this.handleAGChange = this.handleAGChange.bind(this);
         this.handleOVChange = this.handleOVChange.bind(this);
         this.handleOverallChange = this.handleOverallChange.bind(this);
+        this.pushHistory = this.pushHistory.bind(this);
     }
 
     componentDidMount() {
@@ -71,21 +74,32 @@ class Awards extends Component {
         })
     }
 
+    pushHistory() {
+        const path = this.state.location.pathname + "?ov=" + this.state.numOV + "&ag=" + this.state.numAG + "&inc=" + this.state.overallInc
+        this.props.history.replace(path)
+    }
+
     handleAGChange(event) {
         this.setState({
             numAG: Number(event.target.value)
+        }, () => {
+            this.pushHistory();
         })
     }
 
     handleOVChange(event) {
         this.setState({
             numOV: Number(event.target.value)
+        }, () => {
+            this.pushHistory();
         })
     }
 
     handleOverallChange(event) {
         this.setState({
             overallInc: event.target.checked
+        }, () => {
+            this.pushHistory();
         })
     }
 
@@ -182,7 +196,7 @@ class Awards extends Component {
                         </div>
                         <div className="col">
                             <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox" id="overallIncluded" defaultValue={state.overallInc} onChange={this.handleOverallChange} />
+                                <input className="form-check-input" type="checkbox" id="overallIncluded" checked={state.overallInc} onChange={this.handleOverallChange} />
                                 <label className="form-check-label" htmlFor="overallIncluded">Include overall in age group awards?</label>
                             </div>
                         </div>

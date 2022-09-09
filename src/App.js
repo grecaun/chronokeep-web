@@ -17,13 +17,13 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-            <Route path='/results/:slug/:year/awards/qr' component={QRCode} />
-            <Route path='/results/:slug/awards/qr' component={QRCode} />
+            <Route path='/awards/:slug/:year/qr' component={QRCode} />
+            <Route path='/awards/:slug/qr' component={QRCode} />
+            <Route path='/awards/:slug/:year' component={Awards} />
+            <Route path='/awards/:slug' component={Awards} />
             <Route path='/results/:slug/:year/qr' component={QRCode} />
-            <Route path='/results/:slug/:year/awards' component={Awards} />
             <Route path='/results/:slug/:year/:bib' component={Person} />
             <Route path='/results/:slug/qr' component={QRCode} />
-            <Route path='/results/:slug/awards' component={Awards} />
             <Route path='/results/:slug/:year' component={Results} />
             <Route path='/results/:slug' component={Results} />
             <Route path='/login' component={Login} />
