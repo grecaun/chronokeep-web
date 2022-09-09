@@ -185,6 +185,21 @@ button.close {
   border: 0;
   -webkit-appearance: none;
 }
+.half-width {
+  width: auto;
+  display: inline;
+  margin: auto;
+  vertical-align: auto;
+}
+.awards-options {
+  text-align: center;
+  padding: 1rem;
+  padding-bottom: 2rem;
+}
+.awards-header {
+  font-size: 2rem;
+  margin-top: 1rem;
+}
 @media (max-width: 450px) {
   .col-xl {
     max-width: fit-content;

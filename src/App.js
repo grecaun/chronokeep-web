@@ -9,6 +9,7 @@ import Login from './components/Pages/Login';
 import Logout from './components/Pages/Logout';
 import Account from './components/Pages/Account';
 import QRCode from './components/Pages/QRCode';
+import Awards from './components/Pages/Awards';
 
 class App extends Component {
   render() {
@@ -16,9 +17,13 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
+            <Route path='/results/:slug/:year/awards/qr' component={QRCode} />
+            <Route path='/results/:slug/awards/qr' component={QRCode} />
             <Route path='/results/:slug/:year/qr' component={QRCode} />
+            <Route path='/results/:slug/:year/awards' component={Awards} />
             <Route path='/results/:slug/:year/:bib' component={Person} />
             <Route path='/results/:slug/qr' component={QRCode} />
+            <Route path='/results/:slug/awards' component={Awards} />
             <Route path='/results/:slug/:year' component={Results} />
             <Route path='/results/:slug' component={Results} />
             <Route path='/login' component={Login} />
