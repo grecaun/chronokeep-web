@@ -89,12 +89,6 @@ class AwardsTable extends Component {
                         }
                     }
                 } else {
-                    if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
-                        groupings["Masters"][result.gender].push(result)
-                    }
-                    if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
-                        groupings["Grand Masters"][result.gender].push(result)
-                    }
                     exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
@@ -107,6 +101,12 @@ class AwardsTable extends Component {
                             groupings[result.age_group][result.gender].push(result)
                         }
                     }
+                }
+                if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Masters"][result.gender].push(result)
+                }
+                if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Grand Masters"][result.gender].push(result)
                 }
             } 
         })
