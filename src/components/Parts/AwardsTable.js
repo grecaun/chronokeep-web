@@ -4,24 +4,28 @@ import FormatTime from './FormatTime';
 class AwardsTable extends Component {
     constructor(props) {
         super(props);
-
+        console.log(props.vars, "vars")
         this.state = {
             distance: props.distance,
             results: props.results,
             info: props.info,
             showTitle: props.showTitle,
-            numberAg: props.numberAG,
-            numberOv: props.numberOV,
-            overallIncluded: props.overallIncluded,
+            numberAG: props.vars.numberAG,
+            numberOV: props.vars.numberOV,
+            overallInc: props.vars.overallInc,
+            grandMasters: props.vars.grandMasters,
+            masters: props.vars.masters
         }
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (props.numberAG !== state.numberAg || props.numberOV !== state.numberOv || props.overallIncluded !== state.overallIncluded) {
+        if (props.numberAG !== state.numberAG || props.numberOV !== state.numberOV || props.overallInc !== state.overallInc) {
             return {
-                numberAg: props.numberAG,
-                numberOv: props.numberOV,
-                overallIncluded: props.overallIncluded,
+                numberAG: props.vars.numberAG,
+                numberOV: props.vars.numberOV,
+                overallInc: props.vars.overallInc,
+                grandMasters: props.vars.grandMasters,
+                masters: props.vars.masters
             }
         }
         return null;
@@ -56,38 +60,57 @@ class AwardsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
+        if (this.state.masters) {
+            groups.push("Masters")
+            groupings["Masters"] = {}
+            groupings["Masters"]["M"] = []
+            groupings["Masters"]["F"] = []
+        }
+        if (this.state.grandMasters) {
+            groups.push("Grand Masters")
+            groupings["Grand Masters"] = {}
+            groupings["Grand Masters"]["M"] = []
+            groupings["Grand Masters"]["F"] = []
+        }
         results.forEach(result => {
             // DNF - DNF - DNS
-            if (result.ranking < 1 || result.occurence === 0 || result.type === 3 || result.type === 30 || result.type === 31) {
-                // ignore these entries
-            } else if (groupings["Overall"][result.gender].length < this.state.numberOv) {
-                groupings["Overall"][result.gender].push(result)
-                if (this.state.overallIncluded === true) {
-                    var exists = result.age_group in groupings
+            if (result.ranking > 0 && result.occurence > 0 && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                if (groupings["Overall"][result.gender].length < this.state.numberOV) {
+                    groupings["Overall"][result.gender].push(result)
+                    if (this.state.overallInc === true) {
+                        var exists = result.age_group in groupings
+                        if (exists === false) {
+                            groups.push(result.age_group)
+                            groupings[result.age_group] = {}
+                            groupings[result.age_group]["M"] = []
+                            groupings[result.age_group]["F"] = []
+                        }
+                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
+                            groupings[result.age_group][result.gender].push(result)
+                        }
+                    }
+                } else {
+                    exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
                         groupings[result.age_group]["M"] = []
                         groupings[result.age_group]["F"] = []
-                    }
-                    if (groupings[result.age_group][result.gender].length < this.state.numberAg) {
                         groupings[result.age_group][result.gender].push(result)
+                    } else {
+                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
+                            groupings[result.age_group][result.gender].push(result)
+                        }
                     }
                 }
-            } else {
-                exists = result.age_group in groupings
-                if (exists === false) {
-                    groups.push(result.age_group)
-                    groupings[result.age_group] = {}
-                    groupings[result.age_group]["M"] = []
-                    groupings[result.age_group]["F"] = []
-                    groupings[result.age_group][result.gender].push(result)
-                } else {
-                    if (groupings[result.age_group][result.gender].length < this.state.numberAg) {
-                        groupings[result.age_group][result.gender].push(result)
-                    }
+                console.log(this.state.masters, "--masters--", result.age, "--age--", (result.age < 60 || !this.state.grandMasters), "--no grandmasters--", groupings["Masters"][result.gender].length < this.state.numberOV)
+                if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Masters"][result.gender].push(result)
                 }
-            }
+                if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Grand Masters"][result.gender].push(result)
+                }
+            } 
         })
         groups.sort((a, b) => {
             const avalues = a.split("-")

@@ -10,18 +10,22 @@ class TimeResultsTable extends Component {
             index: props.index,
             info: props.info,
             showTitle: props.showTitle,
-            numberAg: props.numberAG,
-            numberOv: props.numberOV,
-            overallIncluded: props.overallIncluded,
+            numberAG: props.vars.numberAG,
+            numberOV: props.vars.numberOV,
+            overallInc: props.vars.overallInc,
+            grandMasters: props.vars.grandMasters,
+            masters: props.vars.masters
         }
     }
 
     static getDerivedStateFromProps(props, state) {
-        if (props.numberAG !== state.numberAg || props.numberOV !== state.numberOv || props.overallIncluded !== state.overallIncluded) {
+        if (props.numberAG !== state.numberAG || props.numberOV !== state.numberOV || props.overallInc !== state.overallInc) {
             return {
-                numberAg: props.numberAG,
-                numberOv: props.numberOV,
-                overallIncluded: props.overallIncluded,
+                numberAG: props.vars.numberAG,
+                numberOV: props.vars.numberOV,
+                overallInc: props.vars.overallInc,
+                grandMasters: props.vars.grandMasters,
+                masters: props.vars.masters
             }
         }
         return null;
@@ -39,36 +43,53 @@ class TimeResultsTable extends Component {
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
         groupings["Overall"]["F"] = []
+        if (this.state.masters) {
+            groups.push("Masters")
+            groupings["Masters"] = {}
+            groupings["Masters"]["M"] = []
+            groupings["Masters"]["F"] = []
+        }
+        if (this.state.grandMasters) {
+            groups.push("Grand Masters")
+            groupings["Grand Masters"] = {}
+            groupings["Grand Masters"]["M"] = []
+            groupings["Grand Masters"]["F"] = []
+        }
         results.forEach(result => {
-            // DNF - DNF - DNS
-            if (result.finish !== true) {
-                // ignore these entries
-            } else if (groupings["Overall"][result.gender].length < this.state.numberOv) {
-                groupings["Overall"][result.gender].push(result)
-                if (this.state.overallIncluded === true) {
-                    var exists = result.age_group in groupings
+            if (result.finish === true) {
+                if (groupings["Overall"][result.gender].length < this.state.numberOV) {
+                    groupings["Overall"][result.gender].push(result)
+                    if (this.state.overallInc === true) {
+                        var exists = result.age_group in groupings
+                        if (exists === false) {
+                            groups.push(result.age_group)
+                            groupings[result.age_group] = {}
+                            groupings[result.age_group]["M"] = []
+                            groupings[result.age_group]["F"] = []
+                        }
+                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
+                            groupings[result.age_group][result.gender].push(result)
+                        }
+                    }
+                } else {
+                    exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
                         groupings[result.age_group]["M"] = []
                         groupings[result.age_group]["F"] = []
-                    }
-                    if (groupings[result.age_group][result.gender].length < this.state.numberAg) {
                         groupings[result.age_group][result.gender].push(result)
+                    } else {
+                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
+                            groupings[result.age_group][result.gender].push(result)
+                        }
                     }
                 }
-            } else {
-                exists = result.age_group in groupings
-                if (exists === false) {
-                    groups.push(result.age_group)
-                    groupings[result.age_group] = {}
-                    groupings[result.age_group]["M"] = []
-                    groupings[result.age_group]["F"] = []
-                    groupings[result.age_group][result.gender].push(result)
-                } else {
-                    if (groupings[result.age_group][result.gender].length < this.state.numberAg) {
-                        groupings[result.age_group][result.gender].push(result)
-                    }
+                if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Masters"][result.gender].push(result)
+                }
+                if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
+                    groupings["Grand Masters"][result.gender].push(result)
                 }
             }
         })

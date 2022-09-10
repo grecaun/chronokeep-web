@@ -194,7 +194,12 @@ button.close {
 .awards-options {
   text-align: center;
   padding: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 0rem;
+}
+.awards-options-bottom {
+  text-align: center;
+  padding: 1rem;
+  padding-bottom: 1.5rem;
 }
 .awards-header {
   font-size: 2rem;

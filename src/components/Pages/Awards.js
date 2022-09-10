@@ -21,10 +21,14 @@ class Awards extends Component {
             numAG: Number(params.get("ag")) <= 0 ? 3 : Number(params.get("ag")),
             numOV: Number(params.get("ov")) <= 0 ? 3 : Number(params.get("ov")),
             overallInc: params.get("inc") === "true",
+            grandMasters: params.get("gmas") === "true",
+            masters: params.get("mas") === "true",
         }
         this.handleAGChange = this.handleAGChange.bind(this);
         this.handleOVChange = this.handleOVChange.bind(this);
         this.handleOverallChange = this.handleOverallChange.bind(this);
+        this.handleMastersChange = this.handleMastersChange.bind(this);
+        this.handleGrandMastersChange = this.handleGrandMastersChange.bind(this);
         this.pushHistory = this.pushHistory.bind(this);
     }
 
@@ -75,7 +79,7 @@ class Awards extends Component {
     }
 
     pushHistory() {
-        const path = this.state.location.pathname + "?ov=" + this.state.numOV + "&ag=" + this.state.numAG + "&inc=" + this.state.overallInc
+        const path = this.state.location.pathname + "?ov=" + this.state.numOV + "&ag=" + this.state.numAG + "&inc=" + this.state.overallInc + "&gmas=" + this.state.grandMasters + "&mas=" + this.state.masters
         this.props.history.replace(path)
     }
 
@@ -98,6 +102,22 @@ class Awards extends Component {
     handleOverallChange(event) {
         this.setState({
             overallInc: event.target.checked
+        }, () => {
+            this.pushHistory();
+        })
+    }
+
+    handleMastersChange(event) {
+        this.setState({
+            masters: event.target.checked
+        }, () => {
+            this.pushHistory();
+        })
+    }
+
+    handleGrandMastersChange(event) {
+        this.setState({
+            grandMasters: event.target.checked
         }, () => {
             this.pushHistory();
         })
@@ -194,10 +214,24 @@ class Awards extends Component {
                                 <option value="10">Ten</option>
                             </select>
                         </div>
+                    </div>
+                    <div className='awards-options-bottom row align-items-center'>
                         <div className="col">
                             <div className="form-check form-check-inline">
                                 <input className="form-check-input" type="checkbox" id="overallIncluded" checked={state.overallInc} onChange={this.handleOverallChange} />
-                                <label className="form-check-label" htmlFor="overallIncluded">Include overall in age group awards?</label>
+                                <label className="form-check-label" htmlFor="overallIncluded">Include overall in age groups?</label>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="masters" checked={state.masters} onChange={this.handleMastersChange} />
+                                <label className="form-check-label" htmlFor="masters">Display Masters Group?</label>
+                            </div>
+                        </div>
+                        <div className="col">
+                            <div className="form-check form-check-inline">
+                                <input className="form-check-input" type="checkbox" id="grandMasters" checked={state.grandMasters} onChange={this.handleGrandMastersChange} />
+                                <label className="form-check-label" htmlFor="grandMasters">Display Grand Masters Group?</label>
                             </div>
                         </div>
                     </div>
@@ -216,16 +250,20 @@ class Awards extends Component {
                         <div id="results-parent">
                             {
                                 distances.map((distance, index) => {
-                                    const numAg = state.numAG
-                                    const numOv = state.numOV
-                                    const ovInc = state.overallInc
+                                    const vars = {
+                                        numberAG: state.numAG,
+                                        numberOV: state.numOV,
+                                        overallInc: state.overallInc,
+                                        grandMasters: state.grandMasters,
+                                        masters: state.masters
+                                    }
                                     if (state.event.type === "time") {
                                         return (
-                                            <TimeAwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} numberAG={numAg} numberOV={numOv} overallIncluded={ovInc}/>
+                                            <TimeAwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} vars={vars}/>
                                         )
                                     } else {
                                         return (
-                                            <AwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} numberAG={numAg} numberOV={numOv} overallIncluded={ovInc}/>
+                                            <AwardsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} vars={vars}/>
                                         )
                                     }
                                 })
