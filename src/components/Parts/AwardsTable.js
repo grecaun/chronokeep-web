@@ -4,7 +4,6 @@ import FormatTime from './FormatTime';
 class AwardsTable extends Component {
     constructor(props) {
         super(props);
-        console.log(props.vars, "vars")
         this.state = {
             distance: props.distance,
             results: props.results,
