@@ -92,6 +92,10 @@ class ResultsTable extends Component {
                                 if (results.type === 14) {
                                     rankStr = `${rankStr}l`
                                 }
+                                if (result.gender === "U" || result.gender === "u" || result.gender === "O" || result.gender === "o") {
+                                    arankStr = grankStr = ""
+                                    result.gender = ""
+                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>

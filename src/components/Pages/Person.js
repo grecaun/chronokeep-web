@@ -111,6 +111,10 @@ class Person extends Component {
         results.sort((a, b) => {
             return a.seconds - b.seconds;
         })
+        if (state.person.gender === "U" || state.person.gender === "O") {
+            finish.gender_ranking = 0;
+            finish.age_ranking = 0;
+        }
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
         return (
             <div>
@@ -156,13 +160,13 @@ class Person extends Component {
                                 <div className="h5">{finish.ranking}</div>
                             </div>
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" : "Unknown"}</div>
-                                <div className="h5">{finish.gender_ranking}</div>
+                                <div className="h5 border-bottom">{finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" : finish.gender === "NB" ? "Non-Binary" : "Not Specified"}</div>
+                                <div className="h5">{finish.gender_ranking > 0 ? finish.gender_ranking : ""}</div>
                             </div>
                             { finish.gender !== "" && finish.age_group !== "" &&
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{`${finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" : "Unknown"} ${finish.age_group}`}</div>
-                                <div className="h5">{finish.age_ranking}</div>
+                                <div className="h5 border-bottom">{`${finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" :finish.gender === "NB" ? "Non-Binary" : "Not Specified"} ${finish.age_group}`}</div>
+                                <div className="h5">{finish.age_ranking > 0 ? finish.age_ranking : ""}</div>
                             </div>
                             }
                         </div>
@@ -192,10 +196,10 @@ class Person extends Component {
                     </div>
                 </div>
                 {state.event.type === "time" &&
-                    <PersonTime results={results} />
+                    <PersonTime results={results} gender={state.person.gender} />
                 }
                 {state.event.type !== "time" &&
-                    <PersonDistance results={results} />
+                    <PersonDistance results={results} gender={state.person.gender} />
                 }
                 <Footer />
             </div>

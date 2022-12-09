@@ -7,6 +7,7 @@ class PersonTime extends Component {
 
         this.state = {
             results: props.results,
+            gender: props.gender,
         }
     }
 

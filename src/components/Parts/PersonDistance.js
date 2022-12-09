@@ -7,11 +7,13 @@ class PersonDistance extends Component {
 
         this.state = {
             results: props.results,
+            gender: props.gender,
         }
     }
 
     render() {
         const results = this.state.results;
+        const gender = this.state.gender;
         if (results.length > 0) {
             return (
                 <div className="container-lg lg-max-width m-4 mx-auto shadow p-5">
@@ -35,8 +37,8 @@ class PersonDistance extends Component {
                                 <tr key={`segment${index}`}>
                                     <td>{res.segment}</td>
                                     <td className="overflow-hidden-sm">{res.ranking > 0 ? res.ranking : ''}</td>
-                                    <td className="overflow-hidden-sm">{res.age_ranking > 0 ? res.age_ranking : ''}</td>
-                                    <td className="overflow-hidden-sm">{res.gender_ranking > 0 ? res.gender_ranking : ''}</td>
+                                    <td className="overflow-hidden-sm">{(gender === "U" || gender === "u" || gender === "O" || gender === "o") ? "" : res.age_ranking > 0 ? res.age_ranking : ''}</td>
+                                    <td className="overflow-hidden-sm">{(gender === "U" || gender === "u" || gender === "O" || gender === "o") ? "" : res.gender_ranking > 0 ? res.gender_ranking : ''}</td>
                                     <td>{FormatTime(res.chip_seconds, res.chip_milliseconds, res)}</td>
                                 </tr>
                             );

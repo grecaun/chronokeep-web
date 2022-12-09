@@ -55,6 +55,10 @@ class TimeResultsTable extends Component {
                                 if (segName === "Finish") {
                                     segName = "Lap " + result.occurence;
                                 }
+                                if (result.gender === "U" || result.gender === "u" || result.gender === "O" || result.gender === "o") {
+                                    arankStr = grankStr = ""
+                                    result.gender = ""
+                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
