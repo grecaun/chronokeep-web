@@ -159,14 +159,16 @@ class Person extends Component {
                                 <div className="h5 border-bottom">Overall</div>
                                 <div className="h5">{finish.ranking}</div>
                             </div>
+                            { finish.gender_ranking > 0 &&
                             <div className="col-sm-4 text-center">
                                 <div className="h5 border-bottom">{finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" : finish.gender === "NB" ? "Non-Binary" : "Not Specified"}</div>
-                                <div className="h5">{finish.gender_ranking > 0 ? finish.gender_ranking : ""}</div>
+                                <div className="h5">{finish.gender_ranking}</div>
                             </div>
-                            { finish.gender !== "" && finish.age_group !== "" &&
+                            }
+                            { finish.gender !== "" && finish.age_group !== "" && finish.age_ranking > 0 &&
                             <div className="col-sm-4 text-center">
                                 <div className="h5 border-bottom">{`${finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" :finish.gender === "NB" ? "Non-Binary" : "Not Specified"} ${finish.age_group}`}</div>
-                                <div className="h5">{finish.age_ranking > 0 ? finish.age_ranking : ""}</div>
+                                <div className="h5">{finish.age_ranking}</div>
                             </div>
                             }
                         </div>
