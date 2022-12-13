@@ -140,7 +140,7 @@ class Person extends Component {
                             { finish !== null &&
                             <div className="col-sm-8 text-center">
                                 <div className="h2 border-bottom">Time</div>
-                                <div className="h2">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
+                                <div className="h2">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
                             </div>
                             }
                             { state.distance !== null &&
@@ -190,8 +190,8 @@ class Person extends Component {
                             }
                             { finish !== null && finish.type === 0 &&
                             <div className="col col-cst text-center">
-                                <div className="h5 border-bottom">Gun Time</div>
-                                <div className="h5">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
+                                <div className="h5 border-bottom">Chip Time</div>
+                                <div className="h5">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
                             </div>
                             }
                         </div>
