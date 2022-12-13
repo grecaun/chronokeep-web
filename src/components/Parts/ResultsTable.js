@@ -56,7 +56,7 @@ class ResultsTable extends Component {
                             <th className="overflow-hidden-lg col-sm text-center">Pl</th>
                             <th className="overflow-hidden-sm col-sm text-center">Gender</th>
                             <th className="overflow-hidden-sm col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-lg col-lg text-center">Chip Time</th>
+                            <th className="overflow-hidden-lg col-lg text-center"><Link to="#disclaimer" className="nav-link m-0 p-0">Chip Time*</Link></th>
                             <th className="col-lg text-center">Time</th>
                         </tr>
                     </thead>

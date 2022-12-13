@@ -124,7 +124,7 @@ class Results extends Component {
                     }
                 </div>
                 { distances.length > 0 &&
-                <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">
+                <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
                         <ul className="nav nav-tabs nav-fill">
                             { distances.length > 1 &&
@@ -155,8 +155,9 @@ class Results extends Component {
                     </div>
                 </div>
                 }
+                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>*Results are ranked based upon the Time field and not the Chip Time.</div>
                 { distances.length === 0 &&
-                <div className="container-lg lg-max-width shadow-sm p-5 border border-light">
+                <div className="container-lg lg-max-width shadow-sm p-5 mb-3 border border-light">
                     <div className="text-center">
                         <h2>No results to display.</h2>
                     </div>
