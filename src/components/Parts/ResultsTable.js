@@ -54,9 +54,9 @@ class ResultsTable extends Component {
                             <th className="col-xl">Name</th>
                             <th className="overflow-hidden-lg col-sm text-center">Age</th>
                             <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-lg col-sm text-center">Gender</th>
-                            <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-sm col-lg text-center">Chip Time</th>
+                            <th className="overflow-hidden-sm col-sm text-center">Gender</th>
+                            <th className="overflow-hidden-sm col-sm text-center">Pl</th>
+                            <th className="overflow-hidden-lg col-lg text-center">Chip Time</th>
                             <th className="col-lg text-center">Time</th>
                         </tr>
                     </thead>
@@ -103,9 +103,9 @@ class ResultsTable extends Component {
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.age}</td>
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.gender}</td>
-                                        <td className="overflow-hidden-lg text-center">{grankStr}</td>
-                                        <td className="overflow-hidden-sm text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
+                                        <td className="overflow-hidden-sm text-center">{result.gender}</td>
+                                        <td className="overflow-hidden-sm text-center">{grankStr}</td>
+                                        <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
                                         <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
                                     </tr>
                                 );
