@@ -124,38 +124,40 @@ class Results extends Component {
                     }
                 </div>
                 { distances.length > 0 &&
-                <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
-                    <div className="p-0">
-                        <ul className="nav nav-tabs nav-fill">
-                            { distances.length > 1 &&
-                                distances.map((distance, index) => {
-                                    return (
-                                        <li className="nav-item" key={`distance${index}`}>
-                                            <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
-                                        </li>
-                                    );
-                                })
-                            }
-                        </ul>
-                        <div id="results-parent">
-                            {
-                                distances.map((distance, index) => {
-                                    if (state.event.type === "time") {
+                <div>
+                    <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
+                        <div className="p-0">
+                            <ul className="nav nav-tabs nav-fill">
+                                { distances.length > 1 &&
+                                    distances.map((distance, index) => {
                                         return (
-                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
-                                        )
-                                    } else {
-                                         return (
-                                             <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
-                                         )
-                                    }
-                                })
-                            }
+                                            <li className="nav-item" key={`distance${index}`}>
+                                                <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </ul>
+                            <div id="results-parent">
+                                {
+                                    distances.map((distance, index) => {
+                                        if (state.event.type === "time") {
+                                            return (
+                                                <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
+                                            )
+                                        } else {
+                                            return (
+                                                <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
+                                            )
+                                        }
+                                    })
+                                }
+                            </div>
                         </div>
                     </div>
+                    <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>*Results are ranked based upon the Time and not the Chip Time.</div>
                 </div>
                 }
-                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>*Results are ranked based upon the Time and not the Chip Time.</div>
                 { distances.length === 0 &&
                 <div className="container-lg lg-max-width shadow-sm p-5 mb-3 border border-light">
                     <div className="text-center">
