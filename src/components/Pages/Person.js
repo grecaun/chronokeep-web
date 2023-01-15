@@ -128,7 +128,7 @@ class Person extends Component {
                 </div>
                 <div className="container-sm sm-max-width m-5 mt-0 p-4 mx-auto shadow">
                     <div className="p-2">
-                        <div className="text-center text-important display-4 m-0">{`${state.person.first} ${state.person.last}`}</div>
+                        <div className="text-center text-important display-4 m-0">{`${state.person.anonymous === false ? state.person.first : "Bib"} ${state.person.anonymous === false ? state.person.last : state.person.bib}`}</div>
                         <div className="text-center text-important text-secondary m-0">{`${state.person.gender} ${state.person.age}`}</div>
                     </div>
                     <div className="h3 m-2 mt-0 text-center text-important text-secondary mx-auto">{state.person.distance}</div>
