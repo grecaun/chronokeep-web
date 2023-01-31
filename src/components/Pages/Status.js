@@ -28,7 +28,7 @@ class Status extends Component {
         }
         fetch(BASE_URL + 'results', requestOptions)
         .then(response => {
-            if (response.status == 200) {
+            if (response.status === 200) {
                 this.setState({
                     status: response.status,
                     response: true
