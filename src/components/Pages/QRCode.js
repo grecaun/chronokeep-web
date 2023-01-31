@@ -9,14 +9,19 @@ class QRCode extends Component {
     constructor(props) {
         super(props);
         const href = window.location.href.slice(0, window.location.href.length - 3)
-        const pageName = window.location.href.split("/")[3]
+        var pageName = window.location.href.split("/")[3]
+        var year = props.match.params.year
+        if (year === 'status') {
+            pageName = 'status'
+            year = null
+        }
         this.state = {
             value: href,
             loading: true,
             error: false,
             slug: props.match.params.slug,
-            year: props.match.params.year,
-            yearSet: props.match.params.year ? true : false,
+            year: year,
+            yearSet: year ? true : false,
             found: null,
             pageName: pageName,
         }
@@ -105,13 +110,14 @@ class QRCode extends Component {
         }
         const codeName = state.yearSet ? `${state.year.year} ${state.event.name}` :  `${state.event.name}`;
         document.title = `Chronokeep - ${codeName} QRCode`;
+        console.log(`PageName: ` + state.pageName)
         return (
             <div>
                 <Header page={"qrcode"} />
                 <div className="qr-holder">
                     <div className="qr-buffer" />
                     <h1 className="qr-label display-4">{codeName}</h1>
-                    <h1 className="qr-label display-4">{state.pageName === "awards" ? "Awards" : "Results"} By</h1>
+                    <h1 className="qr-label display-4">{state.pageName === "awards" ? "Awards" : state.pageName === "status" ? "Status" : "Results"} By</h1>
                     <QR {...{
                         ...qrValues
                     }} />

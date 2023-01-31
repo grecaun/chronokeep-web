@@ -10,6 +10,7 @@ import Logout from './components/Pages/Logout';
 import Account from './components/Pages/Account';
 import QRCode from './components/Pages/QRCode';
 import Awards from './components/Pages/Awards';
+import Status from './components/Pages/Status';
 
 class App extends Component {
   render() {
@@ -22,8 +23,11 @@ class App extends Component {
             <Route path='/awards/:slug/:year' component={Awards} />
             <Route path='/awards/:slug' component={Awards} />
             <Route path='/results/:slug/:year/qr' component={QRCode} />
+            <Route path='/results/:slug/:year/status/qr' component={QRCode} />
+            <Route path='/results/:slug/:year/status' component={Status} />
             <Route path='/results/:slug/:year/:bib' component={Person} />
             <Route path='/results/:slug/qr' component={QRCode} />
+            <Route path='/results/:slug/status' component={Status} />
             <Route path='/results/:slug/:year' component={Results} />
             <Route path='/results/:slug' component={Results} />
             <Route path='/login' component={Login} />
