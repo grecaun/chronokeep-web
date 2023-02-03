@@ -236,6 +236,9 @@ button.close {
   text-align: center;
   margin: 1rem;
 }
+.status-row {
+  margin: 0;
+}
 @media (max-width: 450px) {
   .col-xl {
     max-width: fit-content;
