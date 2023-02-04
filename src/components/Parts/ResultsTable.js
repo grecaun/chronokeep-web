@@ -19,7 +19,23 @@ class ResultsTable extends Component {
         const distance = this.state.distance;
         const info = this.state.info;
         const showTitle = this.state.showTitle;
-        const sorted = results.sort((a, b) => {
+        var resMap = new Map();
+        results.forEach(res => {
+            if (resMap.has(res.bib)) {
+                var tmp = resMap.get(res.bib);
+                // if res comes later than tmp, replace tmp
+                if (tmp.seconds < res.seconds) {
+                    resMap.set(res.bib, res)
+                }
+            } else {
+                resMap.set(res.bib, res)
+            }
+        })
+        var res = []
+        resMap.forEach((value) => {
+            res.push(value);
+        })
+        const sorted = res.sort((a, b) => {
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
