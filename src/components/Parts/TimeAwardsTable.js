@@ -42,20 +42,23 @@ class TimeResultsTable extends Component {
         const groupings = {}
         groupings["Overall"] = {}
         groupings["Overall"]["M"] = []
-        groupings["Overall"]["F"] = []
+        groupings["Overall"]["W"] = []
         if (this.state.masters) {
             groups.push("Masters")
             groupings["Masters"] = {}
             groupings["Masters"]["M"] = []
-            groupings["Masters"]["F"] = []
+            groupings["Masters"]["W"] = []
         }
         if (this.state.grandMasters) {
             groups.push("Grand Masters")
             groupings["Grand Masters"] = {}
             groupings["Grand Masters"]["M"] = []
-            groupings["Grand Masters"]["F"] = []
+            groupings["Grand Masters"]["W"] = []
         }
         results.forEach(result => {
+            if (result.gender === "F" || result.gender === "f") {
+                result.gender = "W"
+            }
             if (result.finish === true) {
                 if (groupings["Overall"][result.gender].length < this.state.numberOV) {
                     groupings["Overall"][result.gender].push(result)
@@ -65,7 +68,7 @@ class TimeResultsTable extends Component {
                             groups.push(result.age_group)
                             groupings[result.age_group] = {}
                             groupings[result.age_group]["M"] = []
-                            groupings[result.age_group]["F"] = []
+                            groupings[result.age_group]["W"] = []
                         }
                         if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
                             groupings[result.age_group][result.gender].push(result)
@@ -77,7 +80,7 @@ class TimeResultsTable extends Component {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
                         groupings[result.age_group]["M"] = []
-                        groupings[result.age_group]["F"] = []
+                        groupings[result.age_group]["W"] = []
                         groupings[result.age_group][result.gender].push(result)
                     } else {
                         if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
@@ -152,7 +155,7 @@ class TimeResultsTable extends Component {
                                     </table>
                                 </div>
                                 }
-                                { groupings[group]["F"].length > 0 &&
+                                { groupings[group]["W"].length > 0 &&
                                 <div className="table-responsive-sm m-3" key={group + "-f"} id={group + "-f"}>
                                     <table className="table table-sm">
                                         <thead>
@@ -170,7 +173,7 @@ class TimeResultsTable extends Component {
                                         </thead>
                                         <tbody>
                                             {
-                                                groupings[group]["F"].map((result, index) => {
+                                                groupings[group]["W"].map((result, index) => {
                                                     // Use variables for displaying rank strings so we can hide if not a finish time
                                                     var rankStr = index + 1
                                                     // If not a finish time

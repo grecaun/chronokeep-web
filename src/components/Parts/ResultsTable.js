@@ -112,6 +112,9 @@ class ResultsTable extends Component {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
+                                if (result.gender === "F" || result.gender === "f") {
+                                    result.gender = "W"
+                                }
                                 if (result.anonymous === true) {
                                     return (
                                         <tr key={result.bib}>

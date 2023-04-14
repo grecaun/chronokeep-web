@@ -115,6 +115,9 @@ class Person extends Component {
             finish.gender_ranking = 0;
             finish.age_ranking = 0;
         }
+        if (state.person.gender === "F" || state.person.gender === "f") {
+            state.person.gender = "W"
+        }
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
         return (
             <div>
