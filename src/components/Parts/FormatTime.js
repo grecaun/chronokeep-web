@@ -1,4 +1,4 @@
-const FormatTime = (seconds, milliseconds, result, chip) => {
+const FormatTime = (seconds, milliseconds, result, not_blank) => {
     // Calculate the string to display for Time (Chip to Chip time)
     const hour = Math.floor(seconds / 3600)
     var minutes = Math.floor((seconds % 3600) / 60 )
@@ -10,19 +10,19 @@ const FormatTime = (seconds, milliseconds, result, chip) => {
     // Only care about tenths of a second
     const mill = Math.floor(milliseconds / 100)
     // Check if not a finish time and we're outputting the chip time
-    if (result.finish !== true && chip === true) {
+    if (result.finish !== true && not_blank === true) {
         return result.segment
     }
     // Check for DNF
     if (result.type === 3 || result.type === 30) {
-        if (chip === true) {
+        if (not_blank === true) {
             return 'DNF'
         }
         return ''
     }
     // Check for DNS
     if (result.type === 31) {
-        if (chip === true) {
+        if (not_blank === true) {
             return 'DNS'
         }
         return ''
