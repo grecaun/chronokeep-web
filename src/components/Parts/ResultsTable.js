@@ -125,8 +125,8 @@ class ResultsTable extends Component {
                                             <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                             <td className="overflow-hidden-sm text-center">{result.gender}</td>
                                             <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                            <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
-                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
+                                            <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
+                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
                                         </tr>
                                     );
                                 }
@@ -139,8 +139,8 @@ class ResultsTable extends Component {
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                         <td className="overflow-hidden-sm text-center">{result.gender}</td>
                                         <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                        <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result, true)}</td>
-                                        <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
+                                        <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
+                                        <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
                                     </tr>
                                 );
                             })
