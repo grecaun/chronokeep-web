@@ -111,9 +111,10 @@ class Person extends Component {
         results.sort((a, b) => {
             return a.seconds - b.seconds;
         })
-        if (state.person.gender === "U" || state.person.gender === "O") {
+        if (state.person.gender === "U" || state.person.gender === "O" || state.person.gender === "NS" || result.gender === "NOT SPECIFIED") {
             finish.gender_ranking = 0;
             finish.age_ranking = 0;
+            state.person.gender = "";
         }
         if (state.person.gender === "F" || state.person.gender === "f") {
             state.person.gender = "Woman"

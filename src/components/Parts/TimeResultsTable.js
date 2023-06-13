@@ -71,7 +71,7 @@ class TimeResultsTable extends Component {
                                 }
                                 // We only want the first two characters for display here.
                                 result.gender = result.gender.substring(0,2)
-                                if (result.gender === "U" || result.gender === "O" || result.gender === "UN" || result.gender === "OT") {
+                                if (result.gender === "U" || result.gender === "O" || result.gender === "UN" || result.gender === "OT" || result.gender === "NS") {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
