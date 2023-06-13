@@ -58,12 +58,28 @@ class TimeResultsTable extends Component {
                                 if (segName === "Finish") {
                                     segName = "Lap " + result.occurence;
                                 }
-                                if (result.gender === "U" || result.gender === "u" || result.gender === "O" || result.gender === "o") {
+                                // Modify the gender field. 
+                                // Make string into the upper case string for easier checks.
+                                result.gender = result.gender.toLocaleUpperCase();
+                                // Check for NB or NS before consolidating down to 2 characters.
+                                if (result.gender === "NON-BINARY" || result.gender === "NON BINARY" || result.gender === "NONBINARY") {
+                                    result.gender = "NB"
+                                }
+                                if (result.gender === "NOT SPECIFIED") {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
-                                if (result.gender === "F" || result.gender === "f") {
+                                // We only want the first two characters for display here.
+                                result.gender = result.gender.substring(0,2)
+                                if (result.gender === "U" || result.gender === "O" || result.gender === "UN" || result.gender === "OT") {
+                                    arankStr = grankStr = ""
+                                    result.gender = ""
+                                }
+                                if (result.gender === "F" || result.gender === "WO") {
                                     result.gender = "W"
+                                }
+                                if (result.gender === "M" || result.gender === "MA") {
+                                    result.gender = "M"
                                 }
                                 if (result.anonymous === true) {
                                     return (
