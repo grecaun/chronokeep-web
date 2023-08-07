@@ -116,7 +116,7 @@ class Person extends Component {
             finish.age_ranking = 0;
             state.person.gender = "";
         }
-        if (state.person.gender === "F" || state.person.gender === "f") {
+        if (state.person.gender === "F" || state.person.gender === "f" || state.person.gender === "W" || state.person.gender === "w") {
             state.person.gender = "Woman"
         }
         if (state.person.gender === "M" || state.person.gender === "m") {
@@ -168,13 +168,13 @@ class Person extends Component {
                             </div>
                             { finish.gender_ranking > 0 &&
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" : finish.gender === "NB" ? "Non-Binary" : "Not Specified"}</div>
+                                <div className="h5 border-bottom">{state.person.gender}</div>
                                 <div className="h5">{finish.gender_ranking}</div>
                             </div>
                             }
                             { finish.gender !== "" && finish.age_group !== "" && finish.age_ranking > 0 &&
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{`${finish.gender === "M" ? "Male" : finish.gender === "F" ? "Female" :finish.gender === "NB" ? "Non-Binary" : "Not Specified"} ${finish.age_group}`}</div>
+                                <div className="h5 border-bottom">{`${state.person.gender} ${finish.age_group}`}</div>
                                 <div className="h5">{finish.age_ranking}</div>
                             </div>
                             }
