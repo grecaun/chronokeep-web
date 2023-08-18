@@ -35,65 +35,78 @@ class TimeResultsTable extends Component {
         const results = this.state.results;
         const distance = this.state.distance;
         const showTitle = this.state.showTitle;
-        results.sort((a, b) => {
+        const genders = [];
+        const lastDict = {};
+        results.forEach(result => {
+            if (!genders.includes(result.gender)) {
+                console.log("Gender is " + result.gender);
+                genders.push(result.gender);
+            }
+            if ((result.bib in lastDict) === false || (lastDict[result.bib].occurence < result.occurence)) {
+                lastDict[result.bib] = result
+            }
+        })
+        const finishResults = Object.values(lastDict);
+        finishResults.sort((a, b) => {
             return a.ranking - b.ranking
         })
         const groups = ["Overall"]
         const groupings = {}
         groupings["Overall"] = {}
-        groupings["Overall"]["M"] = []
-        groupings["Overall"]["W"] = []
+        genders.forEach(gender => {
+            groupings["Overall"][gender] = []
+        })
         if (this.state.masters) {
             groups.push("Masters")
             groupings["Masters"] = {}
-            groupings["Masters"]["M"] = []
-            groupings["Masters"]["W"] = []
+            genders.forEach(gender => {
+                groupings["Masters"][gender] = []
+            })
         }
         if (this.state.grandMasters) {
             groups.push("Grand Masters")
             groupings["Grand Masters"] = {}
-            groupings["Grand Masters"]["M"] = []
-            groupings["Grand Masters"]["W"] = []
+            genders.forEach(gender => {
+                groupings["Grand Masters"][gender] = []
+            })
         }
-        results.forEach(result => {
-            if (result.gender === "F" || result.gender === "f") {
-                result.gender = "W"
-            }
-            if (result.finish === true) {
-                if (groupings["Overall"][result.gender].length < this.state.numberOV) {
-                    groupings["Overall"][result.gender].push(result)
-                    if (this.state.overallInc === true) {
-                        var exists = result.age_group in groupings
-                        if (exists === false) {
-                            groups.push(result.age_group)
-                            groupings[result.age_group] = {}
-                            groupings[result.age_group]["M"] = []
-                            groupings[result.age_group]["W"] = []
-                        }
-                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
-                            groupings[result.age_group][result.gender].push(result)
-                        }
-                    }
-                } else {
-                    exists = result.age_group in groupings
+        console.log(finishResults)
+        finishResults.forEach(result => {
+            if (groupings["Overall"][result.gender].length < this.state.numberOV) {
+                groupings["Overall"][result.gender].push(result)
+                if (this.state.overallInc === true) {
+                    var exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
-                        groupings[result.age_group]["M"] = []
-                        groupings[result.age_group]["W"] = []
+                        genders.forEach(gender => {
+                            groupings[result.age_group][gender] = []
+                        })
+                    }
+                    if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
                         groupings[result.age_group][result.gender].push(result)
-                    } else {
-                        if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
-                            groupings[result.age_group][result.gender].push(result)
-                        }
                     }
                 }
-                if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
-                    groupings["Masters"][result.gender].push(result)
+            } else {
+                exists = result.age_group in groupings
+                if (exists === false) {
+                    groups.push(result.age_group)
+                    groupings[result.age_group] = {}
+                    genders.forEach(gender => {
+                        groupings[result.age_group][gender] = []
+                    })
+                    groupings[result.age_group][result.gender].push(result)
+                } else {
+                    if (groupings[result.age_group][result.gender].length < this.state.numberAG) {
+                        groupings[result.age_group][result.gender].push(result)
+                    }
                 }
-                if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
-                    groupings["Grand Masters"][result.gender].push(result)
-                }
+            }
+            if (this.state.masters && result.age >= 40 && (result.age < 60 || !this.state.grandMasters) && groupings["Masters"][result.gender].length < this.state.numberOV) {
+                groupings["Masters"][result.gender].push(result)
+            }
+            if (this.state.grandMasters && result.age >= 60 && groupings["Grand Masters"][result.gender].length < this.state.numberOV) {
+                groupings["Grand Masters"][result.gender].push(result)
             }
         })
         groups.sort((a, b) => {
@@ -110,96 +123,67 @@ class TimeResultsTable extends Component {
                     groups.map(group => {
                         return (
                             <div key={group}>
-                                { groupings[group]["M"].length > 0 &&
-                                <div className="table-responsive-sm m-3" key={group + "-m"} id={group + "-m"}>
-                                    <table className="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th className="table-distance-header text-important text-center" colSpan="10">Male {group}</th>
-                                            </tr>
-                                            <tr>
-                                                <th className="overflow-hidden-sm col-md text-center">Bib</th>
-                                                <th className="col-sm text-center">Place</th>
-                                                <th className="col-lg">Name</th>
-                                                <th className="overflow-hidden-lg col-sm text-center">Age</th>
-                                                <th className="col-lg text-center">Time</th>
-                                                <th className="col-lg text-center"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                groupings[group]["M"].map((result, index) => {
-                                                    // Use variables for displaying rank strings so we can hide if not a finish time
-                                                    var rankStr = index + 1
-                                                    // If not a finish time
-                                                    if (result.finish !== true) {
-                                                        rankStr = ''
-                                                    }
-                                                    var segName = result.segment;
-                                                    if (segName === "Finish") {
-                                                        segName = "Lap " + result.occurence;
-                                                    }
-                                                    return (
-                                                        <tr key={result.bib}>
-                                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                            <td className="text-center">{rankStr}</td>
-                                                            <td>{`${result.first} ${result.last}`}</td>
-                                                            <td className="overflow-hidden-lg text-center">{result.age}</td>
-                                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                                            <td className="text-center">{segName}</td>
+                                { genders.map(gender => {
+                                    var displGender = gender.toUpperCase();
+                                    if (displGender === "F" || displGender === "W" || displGender === "WOMAN") {
+                                        displGender = "Women";
+                                    }
+                                    if (displGender === "M" || displGender === "MAN") {
+                                        displGender = "Men";
+                                    }
+                                    if (displGender === gender.toUpperCase()) {
+                                        displGender = gender;
+                                    }
+                                    return (
+                                        <div key={group+gender}>
+                                            { groupings[group][gender].length > 0 && 
+                                            <div className="table-responsive-sm m-3" key={group + "-" + gender} id={group + "-" + gender}>
+                                                <table className="table table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th className="table-distance-header text-important text-center" colSpan="10">{displGender} {group}</th>
                                                         </tr>
-                                                    );
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                                }
-                                { groupings[group]["W"].length > 0 &&
-                                <div className="table-responsive-sm m-3" key={group + "-f"} id={group + "-f"}>
-                                    <table className="table table-sm">
-                                        <thead>
-                                            <tr>
-                                                <th className="table-distance-header text-important text-center" colSpan="10">Female {group}</th>
-                                            </tr>
-                                            <tr>
-                                                <th className="overflow-hidden-sm col-md text-center">Bib</th>
-                                                <th className="col-sm text-center">Place</th>
-                                                <th className="col-lg">Name</th>
-                                                <th className="overflow-hidden-lg col-sm text-center">Age</th>
-                                                <th className="col-lg text-center">Time</th>
-                                                <th className="col-lg text-center"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                groupings[group]["W"].map((result, index) => {
-                                                    // Use variables for displaying rank strings so we can hide if not a finish time
-                                                    var rankStr = index + 1
-                                                    // If not a finish time
-                                                    if (result.finish !== true) {
-                                                        rankStr = ''
-                                                    }
-                                                    var segName = result.segment;
-                                                    if (segName === "Finish") {
-                                                        segName = "Lap " + result.occurence;
-                                                    }
-                                                    return (
-                                                        <tr key={result.bib}>
-                                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                            <td className="text-center">{rankStr}</td>
-                                                            <td>{`${result.first} ${result.last}`}</td>
-                                                            <td className="overflow-hidden-lg text-center">{result.age}</td>
-                                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                                            <td className="text-center">{segName}</td>
+                                                        <tr>
+                                                            <th className="overflow-hidden-sm col-md text-center">Bib</th>
+                                                            <th className="col-sm text-center">Place</th>
+                                                            <th className="col-lg">Name</th>
+                                                            <th className="overflow-hidden-lg col-sm text-center">Age</th>
+                                                            <th className="col-lg text-center">Time</th>
+                                                            <th className="col-lg text-center"></th>
                                                         </tr>
-                                                    );
-                                                })
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            groupings[group][gender].map((result, index) => {
+                                                                // Use variables for displaying rank strings so we can hide if not a finish time
+                                                                var rankStr = index + 1
+                                                                // If not a finish time
+                                                                if (result.finish !== true) {
+                                                                    rankStr = ''
+                                                                }
+                                                                var segName = result.segment;
+                                                                if (segName === "Finish") {
+                                                                    segName = "Lap " + result.occurence;
+                                                                }
+                                                                return (
+                                                                    <tr key={result.bib}>
+                                                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                                                        <td className="text-center">{rankStr}</td>
+                                                                        <td>{`${result.first} ${result.last}`}</td>
+                                                                        <td className="overflow-hidden-lg text-center">{result.age}</td>
+                                                                        <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
+                                                                        <td className="text-center">{segName}</td>
+                                                                    </tr>
+                                                                );
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             }
-                                        </tbody>
-                                    </table>
-                                </div>
-                                }
+                                        </div>
+                                    )
+                                })}
                             </div>
                         )
                     })
