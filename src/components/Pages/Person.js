@@ -123,10 +123,20 @@ class Person extends Component {
             state.person.gender = "Man"
         }
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
+        var ranking_gender = state.person.gender.toUpperCase();
+        if (ranking_gender === "W" || ranking_gender === "F" || ranking_gender === "WOMAN") {
+            ranking_gender = "Women"
+        }
+        if (ranking_gender === "M" || ranking_gender === "MAN") {
+            ranking_gender = "Men"
+        }
+        if (ranking_gender === state.person.gender.toUpperCase()) {
+            ranking_gender = state.person.gender;
+        }
         return (
             <div>
                 <Header page={"person"} />
-                <div className="container-sm sm-max-width m-2 p-4 mx-auto">
+                <div className="container-sm m-2 p-4 mx-auto">
                     <div className="p-2">
                         <div className="text-center text-important display-4 m-0">{`${state.year.year} ${state.event.name}`}</div>
                         <div className="text-center text-important text-secondary m-0 mt-2">{DateString(state.year.date_time)}</div>
@@ -136,7 +146,7 @@ class Person extends Component {
                 <div className="container-sm sm-max-width m-5 mt-0 p-4 mx-auto shadow">
                     <div className="p-2">
                         <div className="text-center text-important display-4 m-0">{`${state.person.anonymous === false ? state.person.first : "Bib"} ${state.person.anonymous === false ? state.person.last : state.person.bib}`}</div>
-                        <div className="text-center text-important text-secondary m-0">{`${state.person.gender} ${state.person.age}`}</div>
+                        <div className="text-center text-important text-secondary m-0">{`${state.person.gender === "" ? "" : state.person.gender + " - "}${state.person.age}`}</div>
                     </div>
                     <div className="h3 m-2 mt-0 text-center text-important text-secondary mx-auto">{state.person.distance}</div>
                     <div className="bib-box h4 m-2 p-2 mx-auto">{state.person.bib}</div>
@@ -168,13 +178,13 @@ class Person extends Component {
                             </div>
                             { finish.gender_ranking > 0 &&
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{state.person.gender}</div>
+                                <div className="h5 border-bottom">{ranking_gender}</div>
                                 <div className="h5">{finish.gender_ranking}</div>
                             </div>
                             }
                             { finish.gender !== "" && finish.age_group !== "" && finish.age_ranking > 0 &&
                             <div className="col-sm-4 text-center">
-                                <div className="h5 border-bottom">{`${state.person.gender} ${finish.age_group}`}</div>
+                                <div className="h5 border-bottom">{`${ranking_gender} ${finish.age_group}`}</div>
                                 <div className="h5">{finish.age_ranking}</div>
                             </div>
                             }
