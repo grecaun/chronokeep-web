@@ -6,7 +6,7 @@
    viewBox="0 0 512.000000 512.000000"
    preserveAspectRatio="xMidYMid meet"
    id="svg14"
-   sodipodi:docname="safari-pinned-tab.svg"
+   sodipodi:docname="updated.svg"
    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
    inkscape:export-filename="white_logo.png"
    inkscape:export-xdpi="200"
@@ -84,53 +84,5 @@
        id="path7"
        style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:1.16475"
        inkscape:label="Needle" />
-    <path
-       d="m 2530,3455 v -215 h 55 55 v 215 215 h -55 -55 z"
-       id="path2"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 3165,3439 c -26,-44 -48,-87 -49,-96 -1,-14 64,-62 84,-63 3,0 30,41 59,91 58,100 59,93 -11,129 l -36,20 z"
-       id="path3"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 1898,3488 c -21,-12 -38,-26 -38,-32 0,-16 93,-176 103,-176 5,0 27,10 49,22 29,16 38,27 34,41 -8,33 -89,167 -100,167 -6,0 -28,-10 -48,-22 z"
-       id="path4"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 1416,3015 c -36,-55 -37,-73 -8,-93 55,-38 144,-83 156,-79 6,3 21,23 34,45 l 22,40 -47,30 c -27,16 -69,41 -94,56 l -46,26 z"
-       id="path5"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 3628,2984 c -43,-24 -78,-51 -78,-59 0,-19 40,-85 52,-85 10,0 129,68 162,93 19,14 18,15 -4,55 -13,23 -31,42 -39,42 -9,0 -51,-21 -93,-46 z"
-       id="path6"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 1228,2353 c -2,-10 -1,-36 2,-58 l 5,-40 h 205 205 l 3,58 3,57 h -209 c -192,0 -210,-2 -214,-17 z"
-       id="path8"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 3516,2354 c -10,-26 -7,-69 7,-87 11,-16 33,-17 212,-15 l 200,3 3,58 3,57 h -209 c -182,0 -211,-2 -216,-16 z"
-       id="path9"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 1475,1735 c -44,-25 -84,-50 -88,-54 -11,-11 39,-91 56,-91 14,0 163,85 171,98 6,9 -41,92 -52,92 -4,0 -43,-20 -87,-45 z"
-       id="path10"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 3592,1768 c -18,-23 -44,-80 -38,-85 2,-3 42,-27 88,-53 91,-54 96,-54 129,11 l 19,38 -89,50 c -49,28 -91,51 -93,51 -3,0 -10,-6 -16,-12 z"
-       id="path11"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 2532,1168 3,-213 h 50 50 l 3,213 2,212 h -55 -55 z"
-       id="path12"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 3147,1324 -38,-25 41,-77 c 58,-107 62,-111 105,-88 20,11 40,24 45,31 11,13 -85,185 -103,185 -7,0 -29,-12 -50,-26 z"
-       id="path13"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
-    <path
-       d="m 1922,1273 c -69,-119 -67,-109 -25,-138 21,-14 43,-25 50,-25 11,0 60,75 97,147 l 16,32 -37,26 c -21,14 -43,25 -50,25 -7,0 -30,-30 -51,-67 z"
-       id="path14"
-       style="display:none;fill:#ffffff;fill-opacity:1" />
   </g>
 </svg>
