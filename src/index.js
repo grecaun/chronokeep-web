@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './style.css';
 import { BrowserRouter } from 'react-router-dom';
 import ReactDomClient from 'react-dom/client';
