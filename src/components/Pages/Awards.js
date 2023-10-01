@@ -18,8 +18,8 @@ class Awards extends Component {
             slug: props.match.params.slug,
             year: props.match.params.year,
             found: null,
-            numAG: Number(params.get("ag")) <= 0 ? 3 : Number(params.get("ag")),
-            numOV: Number(params.get("ov")) <= 0 ? 3 : Number(params.get("ov")),
+            numAG: Number(params.get("ag")) < 0 ? 3 : Number(params.get("ag")),
+            numOV: Number(params.get("ov")) < 0 ? 3 : Number(params.get("ov")),
             overallInc: params.get("inc") === "true",
             grandMasters: params.get("gmas") === "true",
             masters: params.get("mas") === "true",
@@ -187,6 +187,7 @@ class Awards extends Component {
                         <div className='col'>
                             <label htmlFor="numberOVWinners">Number of Overall Awards</label>
                             <select className="form-select" aria-label="Default select count" defaultValue={state.numOV} id="numberOVWinners" onChange={this.handleOVChange}>
+                                <option value="0">Zero</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -202,6 +203,7 @@ class Awards extends Component {
                         <div className='col'>
                             <label htmlFor="numberAGWinners">Number of Age Group Awards</label>
                             <select className="form-select" aria-label="Default select count" defaultValue={state.numAG} id="numberAGWinners" onChange={this.handleAGChange}>
+                                <option value="0">Zero</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
