@@ -277,7 +277,7 @@ class Awards extends Component {
                 { distances.length === 0 &&
                 <div className="container-lg lg-max-width shadow-sm p-5 border border-light">
                     <div className="text-center">
-                        <h2>No results to display.</h2>
+                        <h2>No awards to display.</h2>
                     </div>
                 </div>
                 }
