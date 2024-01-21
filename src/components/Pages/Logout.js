@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import Header from '../Parts/Header';
 import Footer from '../Parts/Footer';
 import Loading from '../Parts/Loading';
-import ErrorMsg from '../Parts/ErrorMsg';
 
 import { authenticationService } from '../Auth/_services/authentication.service';
 
@@ -59,11 +58,7 @@ class Logout extends Component {
         if (state.error === true) {
             document.title = `Chronokeep - Error`
             return (
-                <div>
-                    <Header page={"logout"} />
-                    <ErrorMsg status={state.status} data={state.found} />
-                    <Footer />
-                </div>
+                <Redirect to={{ pathname: '/' }} />
             )
         }
         if (state.loading === true) {

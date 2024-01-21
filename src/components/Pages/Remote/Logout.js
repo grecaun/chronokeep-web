@@ -4,7 +4,6 @@ import { Redirect } from 'react-router-dom';
 import Header from '../../Parts/Header';
 import Footer from '../../Parts/Footer';
 import Loading from '../../Parts/Loading';
-import ErrorMsg from '../../Parts/ErrorMsg';
 
 import { authenticationService } from '../../Auth/_services/authentication.service';
 
