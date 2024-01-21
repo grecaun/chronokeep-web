@@ -123,7 +123,6 @@ class Status extends Component {
                                         let num = parseInt(res.bib)
                                         if (num === "NaN") {
                                             nonIntegerBib = true;
-                                            console.log(res.bib)
                                             break;
                                         }
                                         if (min === -1 || num <= min) {

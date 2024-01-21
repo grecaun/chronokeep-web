@@ -56,7 +56,6 @@ class AwardsTable extends Component {
         })
         const genders = [];
         results.forEach(result => {
-            console.log("Gender is " + result.gender);
             if (!genders.includes(result.gender)) {
                 genders.push(result.gender);
             }

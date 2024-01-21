@@ -4,9 +4,11 @@ import { authenticationService } from './authentication.service';
 
 export const userService = {
     getAPIKeys,
+    deleteAPIKey,
     addAPIKey,
     updateAPIKey,
-    deleteAPIKey,
+    addRemoteKey,
+    updateRemoteKey,
     getAccountInfo,
     updateAccountInfo,
     addAccount,
@@ -36,7 +38,6 @@ function fetchWithRefresh(url, requestOptions, auth) {
                     }
                     // send a refresh request if the token is set
                     if (currentUser && currentUser.refresh_token) {
-                        console.log("Refreshing token.");
                         return authenticationService.refresh(currentUser.refresh_token, auth)
                             .then(
                                 // if we get data back then send our request again
@@ -62,6 +63,10 @@ function fetchWithRefresh(url, requestOptions, auth) {
         );
 }
 
+/*
+ * General API functions
+ */
+
 function getAPIKeys(email, auth) {
     var currentUser = authenticationService.currentUserValue;
     var url = API_URL;
@@ -77,51 +82,7 @@ function getAPIKeys(email, auth) {
     if (email !== null) {
         requestOptions.body = JSON.stringify({ email: email });
     }
-    return fetchWithRefresh(url + 'key', requestOptions);
-}
-
-function updateAPIKey(value, name, type, allowedHosts, validUntil, auth) {
-    var key = {
-        value: value,
-        name: name,
-        type: type,
-        allowed_hosts: allowedHosts,
-        valid_until: validUntil
-    };
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
-    if (auth === "REMOTE") {
-        currentUser = authenticationService.currentRemoteUserValue;
-        url = REMOTE_URL;
-    }
-    const requestOptions = {
-        method: 'PUT',
-        headers: authHeader(currentUser),
-        body: JSON.stringify({ key: key })
-    };
-    return fetchWithRefresh(url + 'key/update', requestOptions)
-}
-
-function addAPIKey(name, type, allowedHosts, validUntil, auth) {
-    var key = {
-        name: name,
-        type: type,
-        allowed_hosts: allowedHosts,
-        valid_until: validUntil
-    };
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
-    if (auth === "REMOTE") {
-        currentUser = authenticationService.currentRemoteUserValue;
-        url = REMOTE_URL;
-    }
-    console.log("auth is set to " + auth + " url is set to " + url);
-    const requestOptions = {
-        method: 'POST',
-        headers: authHeader(currentUser),
-        body: JSON.stringify({ key: key })
-    };
-    return fetchWithRefresh(url + 'key/add', requestOptions)
+    return fetchWithRefresh(url + 'key', requestOptions, auth);
 }
 
 function deleteAPIKey(value, auth) {
@@ -136,8 +97,88 @@ function deleteAPIKey(value, auth) {
         headers: authHeader(currentUser),
         body: JSON.stringify({ key: value })
     }
-    return fetchWithRefresh(url + 'key/delete', requestOptions)
+    return fetchWithRefresh(url + 'key/delete', requestOptions, auth)
 }
+
+/*
+ * Result API functions.
+ */
+
+function updateAPIKey(value, name, type, allowedHosts, validUntil) {
+    var key = {
+        value: value,
+        name: name,
+        type: type,
+        allowed_hosts: allowedHosts,
+        valid_until: validUntil
+    };
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(currentUser),
+        body: JSON.stringify({ key: key })
+    };
+    return fetchWithRefresh(url + 'key/update', requestOptions, "API")
+}
+
+function addAPIKey(name, type, allowedHosts, validUntil) {
+    var key = {
+        name: name,
+        type: type,
+        allowed_hosts: allowedHosts,
+        valid_until: validUntil
+    };
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(currentUser),
+        body: JSON.stringify({ key: key })
+    };
+    return fetchWithRefresh(url + 'key/add', requestOptions, "API")
+}
+
+/*
+ * Remote API functions
+ */
+
+function updateRemoteKey(value, name, type,  validUntil) {
+    var key = {
+        value: value,
+        name: name,
+        type: type,
+        valid_until: validUntil
+    };
+    const currentUser = authenticationService.currentRemoteUserValue;
+    const url = REMOTE_URL;
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(currentUser),
+        body: JSON.stringify({ key: key })
+    };
+    return fetchWithRefresh(url + 'key/update', requestOptions, "REMOTE")
+}
+
+function addRemoteKey(name, type, validUntil) {
+    var key = {
+        name: name,
+        type: type,
+        valid_until: validUntil
+    };
+    const currentUser = authenticationService.currentRemoteUserValue;
+    const url = REMOTE_URL;
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(currentUser),
+        body: JSON.stringify({ key: key })
+    };
+    return fetchWithRefresh(url + 'key/add', requestOptions, "REMOTE")
+}
+
+/*
+ * Account functions.
+ */
 
 function getAccountInfo(auth) {
     var currentUser = authenticationService.currentUserValue;
@@ -151,7 +192,7 @@ function getAccountInfo(auth) {
         headers: authHeader(currentUser),
         body: '{ }'
     };
-    return fetchWithRefresh(url + 'account', requestOptions);
+    return fetchWithRefresh(url + 'account', requestOptions, auth);
 }
 
 function updateAccountInfo(name, email, type, auth) {
@@ -171,7 +212,7 @@ function updateAccountInfo(name, email, type, auth) {
         headers: authHeader(currentUser),
         body: JSON.stringify({ account: account })
     };
-    return fetchWithRefresh(url + 'account/update', requestOptions);
+    return fetchWithRefresh(url + 'account/update', requestOptions, auth);
 }
 
 function addAccount(name, email, type, password, auth) {
@@ -191,7 +232,7 @@ function addAccount(name, email, type, password, auth) {
         headers: authHeader(currentUser),
         body: JSON.stringify({ account: account, password: password })
     };
-    return fetchWithRefresh(url + 'account/add', requestOptions);
+    return fetchWithRefresh(url + 'account/add', requestOptions, auth);
 }
 
 function changePassword(oldPassword, newPassword, email, auth) {
@@ -206,7 +247,7 @@ function changePassword(oldPassword, newPassword, email, auth) {
         headers: authHeader(currentUser),
         body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, email: email })
     }
-    return fetchWithRefresh(url + 'account/password', requestOptions)
+    return fetchWithRefresh(url + 'account/password', requestOptions, auth)
         .then(() => {
             return authenticationService.logout(auth);
         });
@@ -224,7 +265,7 @@ function changeEmail(oldEmail, newEmail, auth) {
         headers: authHeader(currentUser),
         body: JSON.stringify({ old_email: oldEmail, new_email: newEmail })
     }
-    return fetchWithRefresh(url + 'account/email', requestOptions)
+    return fetchWithRefresh(url + 'account/email', requestOptions, auth)
         .then(() => {
             return authenticationService.logout(auth);
         });

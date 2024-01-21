@@ -49,9 +49,6 @@ function refresh(token, auth = "API") {
     return fetch(url + 'account/refresh', requestOptions)
     .then(handleResponseNoLogout)
     .then(user => {
-        if (user.access_token) {
-            console.log(`token: ${user.access_token}`)
-        }
         localStorage.setItem(storageUser, JSON.stringify(user.data));
         if (auth === "REMOTE") {
             currentRemoteUserSubject.next(user.data);

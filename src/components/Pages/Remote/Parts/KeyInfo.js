@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Formik, Field, Form } from 'formik';
-import { userService } from '../Auth/_services/user.service';
-import save from '../../img/sd-card.svg';
-import trash from '../../img/trash.svg';
-import gear from '../../img/gear.svg';
-import Submitting from './Submitting';
+import { userService } from '../../../Auth/_services/user.service';
+import save from '../../../../img/sd-card.svg';
+import trash from '../../../../img/trash.svg';
+import gear from '../../../../img/gear.svg';
+import Submitting from '../../../Parts/Submitting';
 
 class KeyInfo extends Component {
     constructor(props) {
@@ -40,23 +40,20 @@ class KeyInfo extends Component {
                     initialValues={{
                         name: key.name,
                         type: key.type,
-                        allowedHosts: key.allowed_hosts,
                         validUntil: key.valid_until === null ? '' : key.valid_until,
                     }}
-                    onSubmit={({ name, type, allowedHosts, validUntil }, { setValues, setStatus, setSubmitting }) => {
+                    onSubmit={({ name, type, validUntil }, { setValues, setStatus, setSubmitting }) => {
                         setStatus();
-                        userService.updateAPIKey(key.value, name, type, allowedHosts, validUntil)
+                        userService.updateRemoteKey(key.value, name, type, validUntil)
                             .then(
                                 data => {
                                     setValues({
                                         name: data.data.key.name,
                                         type: data.data.key.type,
-                                        allowedHosts: data.data.key.allowed_hosts,
                                         validUntil: data.data.key.valid_until === null ? '' : data.data.key.valid_until,
                                     })
                                     key.name = data.data.key.name;
                                     key.type = data.data.key.type;
-                                    key.allowed_hosts = data.data.key.allowed_hosts;
                                     key.validUntil = data.data.key.valid_until;
                                     setSubmitting(false);
                                     this.setState({
@@ -82,20 +79,16 @@ class KeyInfo extends Component {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
+                                                <label className='chronokeep-label form-label-sm' htmlFor='name'>Name</label>
                                                 <Field name="name" type="text" disabled={isDisabled} id={`name${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
                                                 <Field as="select" name="type" id={`type${key.value}`} disabled={isDisabled} className="form-select form-select-sm">
-                                                    <option value="read">Read</option>
-                                                    <option value="write">Write</option>
-                                                    <option value="delete">Delete</option>
+                                                    <option value="read">Read Only</option>
+                                                    <option value="write">Timing System</option>
+                                                    <option value="delete">Admin</option>
                                                 </Field>
-                                            </div>
-                                            <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="allowedHosts">Allowed Hosts</label>
-                                                <Field name="allowedHosts" type="text" disabled={isDisabled} id={`hosts${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="validUntil">Valid Until</label>

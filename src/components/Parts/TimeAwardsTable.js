@@ -39,7 +39,6 @@ class TimeResultsTable extends Component {
         const lastDict = {};
         results.forEach(result => {
             if (!genders.includes(result.gender)) {
-                console.log("Gender is " + result.gender);
                 genders.push(result.gender);
             }
             if ((result.bib in lastDict) === false || (lastDict[result.bib].occurence < result.occurence)) {
@@ -70,7 +69,6 @@ class TimeResultsTable extends Component {
                 groupings["Grand Masters"][gender] = []
             })
         }
-        console.log(finishResults)
         finishResults.forEach(result => {
             if (groupings["Overall"][result.gender].length < this.state.numberOV) {
                 groupings["Overall"][result.gender].push(result)

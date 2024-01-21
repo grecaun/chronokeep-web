@@ -110,7 +110,6 @@ class QRCode extends Component {
         }
         const codeName = state.yearSet ? `${state.year.year} ${state.event.name}` :  `${state.event.name}`;
         document.title = `Chronokeep - ${codeName} QRCode`;
-        console.log(`PageName: ` + state.pageName)
         return (
             <div>
                 <Header page={"qrcode"} />

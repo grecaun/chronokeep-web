@@ -4,9 +4,9 @@ import AccountInfo from '../../Parts/AccountInfo';
 import ErrorMsg from '../../Parts/ErrorMsg';
 import Footer from '../../Parts/Footer';
 import Header from '../../Parts/Header';
-import KeyInfo from '../../Parts/KeyInfo';
+import KeyInfo from './Parts/KeyInfo';
 import Loading from '../../Parts/Loading';
-import NewKey from '../../Parts/NewKey';
+import NewKey from './Parts/NewKey';
 import Modal from '../../Parts/Modal';
 import { Redirect } from 'react-router';
 
@@ -66,7 +66,6 @@ class Account extends Component {
     }
 
     remove(key, child) {
-        console.log("removing key?")
         this.setState({
             show: true,
             deleteKey: key,

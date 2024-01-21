@@ -45,10 +45,6 @@ class PersonTime extends Component {
                                     seconds -= 1
                                 }
                             }
-                            console.log(last)
-                            console.log(seconds)
-                            console.log(milliseconds)
-                            console.log("break")
                             last = res
                             return(
                                 <tr key={`segment${index}`}>

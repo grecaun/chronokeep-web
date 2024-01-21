@@ -65,7 +65,6 @@ class Account extends Component {
     }
 
     remove(key, child) {
-        console.log("removing key?")
         this.setState({
             show: true,
             deleteKey: key,

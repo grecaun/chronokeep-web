@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Formik, Field, Form } from 'formik';
-import { userService } from '../Auth/_services/user.service';
-import save from '../../img/sd-card.svg';
-import Submitting from './Submitting';
+import { userService } from '../../../Auth/_services/user.service';
+import save from '../../../../img/sd-card.svg';
+import Submitting from '../../../Parts/Submitting';
 
 class NewKey extends Component {
     constructor(props) {
@@ -21,19 +21,17 @@ class NewKey extends Component {
                     initialValues={{
                         name: '',
                         type: 'read',
-                        allowedHosts: '',
                         validUntil: '',
                     }}
-                    onSubmit={({ name, type, allowedHosts, validUntil }, { setValues, setStatus, setSubmitting }) => {
+                    onSubmit={({ name, type, validUntil }, { setValues, setStatus, setSubmitting }) => {
                         setStatus();
-                        userService.addAPIKey(name, type, allowedHosts, validUntil)
+                        userService.addRemoteKey(name, type, validUntil)
                             .then(
                                 data => {
                                     parent.add(data.data.key);
                                     setValues({
                                         name: '',
                                         type: 'read',
-                                        allowedHosts: '',
                                         validUntil: '',
                                     });
                                     setSubmitting(false);
@@ -53,20 +51,16 @@ class NewKey extends Component {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
+                                                <label className='chronokeep-label form-label-sm' htmlFor='name'>Name</label>
                                                 <Field name="name" type="text" id={`name-new`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
                                                 <Field as="select" name="type" id={`type-new`} className="form-select form-select-sm">
-                                                    <option value="read">Read</option>
-                                                    <option value="write">Write</option>
-                                                    <option value="delete">Delete</option>
+                                                    <option value="read">Read Only</option>
+                                                    <option value="write">Timing System</option>
+                                                    <option value="delete">Admin</option>
                                                 </Field>
-                                            </div>
-                                            <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="allowedHosts">Allowed Hosts</label>
-                                                <Field name="allowedHosts" type="text" id={`hosts-new`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="validUntil">Valid Until</label>
