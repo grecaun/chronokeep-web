@@ -9,6 +9,7 @@ import Loading from '../../Parts/Loading';
 import NewKey from './Parts/NewKey';
 import Modal from '../../Parts/Modal';
 import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
 
 
 class Account extends Component {
@@ -125,7 +126,7 @@ class Account extends Component {
             document.title = `Chronokeep - Error`
             return (
                 <div>
-                    <Header page={"account"} />
+                    <Header page={"remote"} />
                     <ErrorMsg status={state.status} data={state.found} />
                     <Footer />
                 </div>
@@ -134,7 +135,7 @@ class Account extends Component {
         if (state.loading === true) {
             return (
                 <div>
-                    <Header page={"account"} />
+                    <Header page={"remote"} />
                     <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
                         <h1 className="text-important display-5">Loading Account</h1>
                         <Loading />
@@ -147,8 +148,11 @@ class Account extends Component {
         const account = state.account;
         return (
             <div>
-                <Header page={"account"} />
+                <Header page={"remote"} />
                 <div className="account-container">
+                    <div className="mx-auto fit-width mt-3">
+                        <Link to={'/remote/logout'} className="btn btn-danger btn-chronokeep">Logout</Link>
+                    </div>
                     { account && 
                         <AccountInfo account={account} location={this.props.location} />
                     }

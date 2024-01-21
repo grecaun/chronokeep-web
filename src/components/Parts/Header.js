@@ -32,6 +32,7 @@ class Header extends Component {
               { authenticationService.currentUserValue &&
                 <Link to={'/account'} className={page === "account" ? "nav-link active" : "nav-link"}>Account</Link>
               }
+              <Link to={'/remote'} className={page === "remote" ? "nav-link active" : "nav-link"}>Remote</Link>
             </div>
             <div className="navbar-nav ms-auto">
               {accountLink}
