@@ -10,11 +10,13 @@ class NewKey extends Component {
 
         this.state = {
             parent: props.parent,
+            path: props.location == null ? "API" : props.location.pathname.toUpperCase().replace('/', ''),
         }
     }
 
     render() {
         const parent = this.state.parent;
+        const path = this.state.path;
         return (
             <div className="key-info text-center">
                 <Formik
@@ -26,7 +28,7 @@ class NewKey extends Component {
                     }}
                     onSubmit={({ name, type, allowedHosts, validUntil }, { setValues, setStatus, setSubmitting }) => {
                         setStatus();
-                        userService.addAPIKey(name, type, allowedHosts, validUntil)
+                        userService.addAPIKey(name, type, allowedHosts, validUntil, path)
                             .then(
                                 data => {
                                     parent.add(data.data.key);

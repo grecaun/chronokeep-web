@@ -19,8 +19,8 @@ class AccountInfo extends Component {
             show: false,
             changePassword: false,
             changeEmail: false,
+            path: props.location == null ? "API" : props.location.pathname.toUpperCase().replace('/', ''),
         }
-
         this.handleClose = this.handleClose.bind(this);
     }
 
@@ -35,9 +35,10 @@ class AccountInfo extends Component {
     saveInfo = () => {
         const account = this.state.account;
         const actions = this.state.actions;
+        const path = this.state.path;
         if (this.state.changeEmail) {
             const username = this.state.email
-            userService.changeEmail(account.email, username)
+            userService.changeEmail(account.email, username, path)
                 .then(
                     () => {
                         // changing email should log the user out
@@ -59,7 +60,8 @@ class AccountInfo extends Component {
         if (this.state.changePassword) {
             const password = this.state.password;
             const oldPassword = this.state.oldPassword;
-            userService.changePassword(oldPassword, password, account.email)
+            const path = this.state.path;
+            userService.changePassword(oldPassword, password, account.email, path)
                 .then(
                     () => {
                         // changing password should log the user out
@@ -92,6 +94,7 @@ class AccountInfo extends Component {
         const nameDisabled = this.state.nameDisabled;
         const emailDisabled = this.state.emailDisabled;
         const changePasswordClass = this.state.passwordHidden ? 'display-none' : 'display-block';
+        const path = this.state.path;
         return (
             <div className="account-info card chronokeep-card">
                 <h4 className="card-header chronokeep-card-header text-center">Account Info</h4>
@@ -106,7 +109,7 @@ class AccountInfo extends Component {
                         })}
                         onSubmit={({ name }, { setStatus, setSubmitting }) => {
                             setStatus();
-                            userService.updateAccountInfo(name, account.email, account.type)
+                            userService.updateAccountInfo(name, account.email, account.type, path)
                                 .then(
                                     data => {
                                         setSubmitting(false);

@@ -3,15 +3,15 @@ import { Redirect } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-import { authenticationService } from '../Auth/_services/authentication.service';
-import Header from '../Parts/Header';
-import Footer from '../Parts/Footer';
+import { authenticationService } from '../../Auth/_services/authentication.service';
+import Header from '../../Parts/Header';
+import Footer from '../../Parts/Footer';
 
 class Login extends Component {
     constructor(props) {
         super(props);
         
-        if (authenticationService.currentUserValue) {
+        if (authenticationService.currentRemoteUserValue) {
             this.props.history.push('/');
         }
         this.state = {
@@ -43,7 +43,7 @@ class Login extends Component {
                         })}
                         onSubmit={({ username, password }, { setStatus, setSubmitting }) => {
                             setStatus();
-                            authenticationService.login(username, password, "API")
+                            authenticationService.login(username, password, "REMOTE")
                                 .then(
                                     () => {
                                         const { from } = this.props.location.state || { from: { pathname: "/" } }

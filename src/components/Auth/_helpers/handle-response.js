@@ -1,13 +1,13 @@
 import { authenticationService } from '../_services/authentication.service';
 
-export function handleResponse(response) {
+export function handleResponse(response, auth = "API") {
     return response.text().then(text => {
         const dataVal = text && JSON.parse(text);
         const data = { data: dataVal, status: response.status }
         if (!response.ok) {
             if ([401, 403].indexOf(response.status) !== -1) {
                 // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-                authenticationService.logout();
+                authenticationService.logout(auth);
             }
             const message = (data.data && data.data.message) || response.statusText;
             const error = { message: message, status: response.status }

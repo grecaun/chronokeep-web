@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Header from '../Parts/Header';
-import Footer from '../Parts/Footer';
-import Loading from '../Parts/Loading';
-import ErrorMsg from '../Parts/ErrorMsg';
+import Header from '../../Parts/Header';
+import Footer from '../../Parts/Footer';
+import Loading from '../../Parts/Loading';
+import ErrorMsg from '../../Parts/ErrorMsg';
 
-import { authenticationService } from '../Auth/_services/authentication.service';
+import { authenticationService } from '../../Auth/_services/authentication.service';
 
 class Logout extends Component {
     constructor(props) {
@@ -19,7 +19,7 @@ class Logout extends Component {
     }
 
     componentDidMount() {
-        authenticationService.logout("API")
+        authenticationService.logout("REMOTE")
             .then(response => {
                 if (response.status !== 200) {
                     this.setState({
@@ -57,13 +57,8 @@ class Logout extends Component {
         document.title = `Chronokeep - Logout`
         const state = this.state;
         if (state.error === true) {
-            document.title = `Chronokeep - Error`
             return (
-                <div>
-                    <Header page={"logout"} />
-                    <ErrorMsg status={state.status} data={state.found} />
-                    <Footer />
-                </div>
+                <Redirect to={{ pathname: '/' }} />
             )
         }
         if (state.loading === true) {

@@ -14,11 +14,12 @@ export const userService = {
     changePassword,
 };
 
-const BASE_URL = process.env.REACT_APP_CHRONOKEEP_API_URL;
+const API_URL = process.env.REACT_APP_CHRONOKEEP_API_URL;
+const REMOTE_URL = process.env.REACT_APP_CHRONOKEEP_REMOTE_URL;
 
 // the backbone of the authentication protocols
 // checks if our token has expired and refreshes as necessary
-function fetchWithRefresh(url, requestOptions) {
+function fetchWithRefresh(url, requestOptions, auth) {
     return fetch(url, requestOptions).then(handleResponseNoLogout)
         .then(
             // if we found data, return it
@@ -29,22 +30,27 @@ function fetchWithRefresh(url, requestOptions) {
             error => {
                 // only try to refresh the token if we're given a 401 unauthorized or 403 forbidden response
                 if ([401, 403].indexOf(error.status) !== -1) {
-                    const currentUser = authenticationService.currentUserValue;
+                    var currentUser = authenticationService.currentUserValue;
+                    if (auth === "REMOTE") {
+                        currentUser = authenticationService.currentRemoteUserValue;
+                    }
                     // send a refresh request if the token is set
                     if (currentUser && currentUser.refresh_token) {
                         console.log("Refreshing token.");
-                        return authenticationService.refresh(currentUser.refresh_token)
+                        return authenticationService.refresh(currentUser.refresh_token, auth)
                             .then(
                                 // if we get data back then send our request again
                                 _data => {
-                                    requestOptions.headers = authHeader();
-                                    return fetch(url, requestOptions).then(handleResponse);
+                                    requestOptions.headers = authHeader(currentUser);
+                                    return fetch(url, requestOptions).then(() => {
+                                        handleResponse(auth)
+                                    });
                                 },
                                 // if there was an error return the error
                                 error => {
                                     // log out the user if unauthorized or forbidden is returned
                                     if ([401, 403].indexOf(error.status) !== -1) {
-                                        authenticationService.logout();
+                                        authenticationService.logout(auth);
                                     }
                                     return Promise.reject(error);
                                 }
@@ -56,19 +62,25 @@ function fetchWithRefresh(url, requestOptions) {
         );
 }
 
-function getAPIKeys(email) {
+function getAPIKeys(email, auth) {
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'POST',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: '{ }'
     };
     if (email !== null) {
         requestOptions.body = JSON.stringify({ email: email });
     }
-    return fetchWithRefresh(BASE_URL + 'key', requestOptions);
+    return fetchWithRefresh(url + 'key', requestOptions);
 }
 
-function updateAPIKey(value, name, type, allowedHosts, validUntil) {
+function updateAPIKey(value, name, type, allowedHosts, validUntil, auth) {
     var key = {
         value: value,
         name: name,
@@ -76,95 +88,144 @@ function updateAPIKey(value, name, type, allowedHosts, validUntil) {
         allowed_hosts: allowedHosts,
         valid_until: validUntil
     };
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'PUT',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ key: key })
     };
-    return fetchWithRefresh(BASE_URL + 'key/update', requestOptions)
+    return fetchWithRefresh(url + 'key/update', requestOptions)
 }
 
-function addAPIKey(name, type, allowedHosts, validUntil, email) {
+function addAPIKey(name, type, allowedHosts, validUntil, auth) {
     var key = {
         name: name,
         type: type,
         allowed_hosts: allowedHosts,
         valid_until: validUntil
     };
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
+    console.log("auth is set to " + auth + " url is set to " + url);
     const requestOptions = {
         method: 'POST',
-        headers: authHeader(),
-        body: JSON.stringify({ email: email, key: key })
+        headers: authHeader(currentUser),
+        body: JSON.stringify({ key: key })
     };
-    return fetchWithRefresh(BASE_URL + 'key/add', requestOptions)
+    return fetchWithRefresh(url + 'key/add', requestOptions)
 }
 
-function deleteAPIKey(value) {
+function deleteAPIKey(value, auth) {
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'DELETE',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ key: value })
     }
-    return fetchWithRefresh(BASE_URL + 'key/delete', requestOptions)
+    return fetchWithRefresh(url + 'key/delete', requestOptions)
 }
 
-function getAccountInfo() {
+function getAccountInfo(auth) {
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'POST',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: '{ }'
     };
-    return fetchWithRefresh(BASE_URL + 'account', requestOptions);
+    return fetchWithRefresh(url + 'account', requestOptions);
 }
 
-function updateAccountInfo(name, email, type) {
+function updateAccountInfo(name, email, type, auth) {
     var account = {
         name: name,
         email: email,
         type: type,
     };
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'PUT',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ account: account })
     };
-    return fetchWithRefresh(BASE_URL + 'account/update', requestOptions);
+    return fetchWithRefresh(url + 'account/update', requestOptions);
 }
 
-function addAccount(name, email, type, password) {
+function addAccount(name, email, type, password, auth) {
     var account = {
         name: name,
         email: email,
         type: type,
     };
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'POST',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ account: account, password: password })
     };
-    return fetchWithRefresh(BASE_URL + 'account/add', requestOptions);
+    return fetchWithRefresh(url + 'account/add', requestOptions);
 }
 
-function changePassword(oldPassword, newPassword, email) {
+function changePassword(oldPassword, newPassword, email, auth) {
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'PUT',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, email: email })
     }
-    return fetchWithRefresh(BASE_URL + 'account/password', requestOptions)
+    return fetchWithRefresh(url + 'account/password', requestOptions)
         .then(() => {
-            return authenticationService.logout();
+            return authenticationService.logout(auth);
         });
 }
 
-function changeEmail(oldEmail, newEmail) {
+function changeEmail(oldEmail, newEmail, auth) {
+    var currentUser = authenticationService.currentUserValue;
+    var url = API_URL;
+    if (auth === "REMOTE") {
+        currentUser = authenticationService.currentRemoteUserValue;
+        url = REMOTE_URL;
+    }
     const requestOptions = {
         method: 'PUT',
-        headers: authHeader(),
+        headers: authHeader(currentUser),
         body: JSON.stringify({ old_email: oldEmail, new_email: newEmail })
     }
-    return fetchWithRefresh(BASE_URL + 'account/email', requestOptions)
+    return fetchWithRefresh(url + 'account/email', requestOptions)
         .then(() => {
-            return authenticationService.logout();
+            return authenticationService.logout(auth);
         });
 }

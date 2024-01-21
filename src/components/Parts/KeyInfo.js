@@ -14,8 +14,8 @@ class KeyInfo extends Component {
             isDisabled: true,
             key: props.keyItem,
             parent: props.parent,
+            path: props.location == null ? "API" : props.location.pathname.toUpperCase().replace('/', ''),
         }
-
         this.delete = this.delete.bind(this);
     }
     
@@ -35,6 +35,7 @@ class KeyInfo extends Component {
     render() {
         const isDisabled = this.state.isDisabled;
         const key = this.state.key;
+        const path = this.state.path;
         return (
             <div className="key-info text-center" key={key.value}>
                 <Formik
@@ -46,7 +47,7 @@ class KeyInfo extends Component {
                     }}
                     onSubmit={({ name, type, allowedHosts, validUntil }, { setValues, setStatus, setSubmitting }) => {
                         setStatus();
-                        userService.updateAPIKey(key.value, name, type, allowedHosts, validUntil)
+                        userService.updateAPIKey(key.value, name, type, allowedHosts, validUntil, path)
                             .then(
                                 data => {
                                     setValues({

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { userService } from '../Auth/_services/user.service';
-import AccountInfo from '../Parts/AccountInfo';
-import ErrorMsg from '../Parts/ErrorMsg';
-import Footer from '../Parts/Footer';
-import Header from '../Parts/Header';
-import KeyInfo from '../Parts/KeyInfo';
-import Loading from '../Parts/Loading';
-import NewKey from '../Parts/NewKey';
-import Modal from '../Parts/Modal';
+import { userService } from '../../Auth/_services/user.service';
+import AccountInfo from '../../Parts/AccountInfo';
+import ErrorMsg from '../../Parts/ErrorMsg';
+import Footer from '../../Parts/Footer';
+import Header from '../../Parts/Header';
+import KeyInfo from '../../Parts/KeyInfo';
+import Loading from '../../Parts/Loading';
+import NewKey from '../../Parts/NewKey';
+import Modal from '../../Parts/Modal';
 import { Redirect } from 'react-router';
 
 
@@ -36,15 +36,16 @@ class Account extends Component {
     }
 
     componentDidMount() {
-        userService.getAccountInfo("API")
+        userService.getAccountInfo("REMOTE")
             .then(
                 data => {
-                    const sortedKeys = data.data.keys.sort((a, b) => {
-                        if (a.name !== b.name) {
-                            return ('' + b.name).localeCompare(a.name)
-                        }
-                        return ('' + a.value).localeCompare(b.value)
-                    })
+                    const sortedKeys = data.data.keys == null ? []
+                        : data.data.keys.sort((a, b) => {
+                            if (a.name !== b.name) {
+                                return ('' + b.name).localeCompare(a.name)
+                            }
+                            return ('' + a.value).localeCompare(b.value)
+                        });
                     this.setState({
                         status: data.status,
                         found: data.data,
@@ -76,7 +77,7 @@ class Account extends Component {
     deleteKey = () => {
         const key = this.state.deleteKey;
         const child = this.state.childKey;
-        userService.deleteAPIKey(key.value, "API")
+        userService.deleteAPIKey(key.value, "REMOTE")
            .then(
                 // delete was successful
                 () => {
@@ -116,10 +117,10 @@ class Account extends Component {
     }
 
     render() {
-        document.title = `Chronokeep - Account`
+        document.title = `Chronokeep - Remote`
         const state = this.state;
         if (state.error === true && [401, 403].indexOf(state.status) !== -1) {
-            return <Redirect to={{ pathname: '/login', state: { from: '/account' } }} />
+            return <Redirect to={{ pathname: '/remote/login', state: { from: '/remote' } }} />
         }
         if (state.error === true) {
             document.title = `Chronokeep - Error`
@@ -150,17 +151,17 @@ class Account extends Component {
                 <Header page={"account"} />
                 <div className="account-container">
                     { account && 
-                        <AccountInfo account={account} />
+                        <AccountInfo account={account} location={this.props.location} />
                     }
-                    { keys && keys.length > 0 && 
+                    { keys && 
                         <div className="key-info-container">
                             <h4 className="text-center">Keys</h4>
                             <Modal show={state.show} handleClose={this.hideModal} save={this.deleteKey} title="Warning" text="Deletion of this key is permanent." saveText="Delete" />
-                            <NewKey parent={this} />
+                            <NewKey parent={this} location={this.props.location} />
                             {
                                 keys.map(key => {
                                     return (
-                                        <KeyInfo keyItem={key} key={key.value} parent={this} />
+                                        <KeyInfo keyItem={key} key={key.value} parent={this} location={this.props.location} />
                                     )
                                 })
                             }

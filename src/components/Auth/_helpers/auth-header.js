@@ -1,8 +1,5 @@
-import { authenticationService } from '../_services/authentication.service';
-
-export function authHeader() {
+export function authHeader(currentUser) {
     // return authorization header with jwt token
-    const currentUser = authenticationService.currentUserValue;
     if (currentUser && currentUser.access_token) {
         return { 
             "Content-Type": "application/json",
