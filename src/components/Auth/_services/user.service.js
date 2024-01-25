@@ -42,10 +42,15 @@ function fetchWithRefresh(url, requestOptions, auth) {
                             .then(
                                 // if we get data back then send our request again
                                 _data => {
+                                    currentUser = authenticationService.currentUserValue;
+                                    if (auth === "REMOTE") {
+                                        currentUser = authenticationService.currentRemoteUserValue;
+                                    }
                                     requestOptions.headers = authHeader(currentUser);
-                                    return fetch(url, requestOptions).then(() => {
-                                        handleResponse(auth)
-                                    });
+                                    return fetch(url, requestOptions).then(
+                                        (response) => {
+                                            return handleResponse(response, auth)
+                                        });
                                 },
                                 // if there was an error return the error
                                 error => {
