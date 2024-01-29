@@ -51,10 +51,8 @@ function refresh(token, auth = "API") {
     .then(user => {
         localStorage.setItem(storageUser, JSON.stringify(user.data));
         if (auth === "REMOTE") {
-            console.log("refreshing remote user")
             currentRemoteUserSubject.next(user.data);
         } else {
-            console.log("refreshing user")
             currentUserSubject.next(user.data);
         }
         return user.data;
