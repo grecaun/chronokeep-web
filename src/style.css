@@ -184,6 +184,7 @@ button.close {
   background-color: transparent;
   border: 0;
   -webkit-appearance: none;
+  appearance: none;
 }
 .half-width {
   width: auto;
