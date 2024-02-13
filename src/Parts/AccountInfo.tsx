@@ -31,8 +31,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
         path: ""
     }
 
-    constructor(props: any) {
-        super(props);
+    componentDidMount() {
         var location = this.props.location;
         this.setState({
             account: this.props.account,
@@ -116,6 +115,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                 <Modal show={this.state.show} handleClose={this.handleClose} save={this.saveInfo} title="Warning" text="" id="accountModal" saveText="Confirm" />
                 <div className="card-body">
                     <Formik
+                        enableReinitialize={true}
                         initialValues={{
                             name: account.name
                         }}
@@ -139,7 +139,6 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                                         setSubmitting(false);
                                         setStatus(error.message);
                                         this.setState({
-                                            account: account,
                                             nameDisabled: true
                                         });
                                     }
@@ -169,7 +168,6 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                                                 <div className="col-auto">
                                                     <button type="button" key="edit-name" onClick={()=>{
                                                         this.setState({
-                                                            account: account,
                                                             nameDisabled: !nameDisabled
                                                         });
                                                     }} className="btn btn-danger btn-chronokeep">
@@ -186,6 +184,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                             )}
                     </Formik>
                     <Formik
+                        enableReinitialize={true}
                         initialValues={{
                             username: account.email
                         }}
@@ -225,7 +224,6 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                                                 <div className="col-auto">
                                                     <button type="button" key="edit-email" onClick={()=>{
                                                         this.setState({
-                                                            account: account,
                                                             emailDisabled: !emailDisabled
                                                         });
                                                     }} className="btn btn-danger btn-chronokeep">
@@ -242,6 +240,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                             )}
                     </Formik>
                     <Formik
+                        enableReinitialize={true}
                         initialValues={{
                             oldPassword: '',
                             password: '',

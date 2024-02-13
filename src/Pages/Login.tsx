@@ -31,8 +31,9 @@ class Login extends Component<LoginProps, LoginState> {
             <div>
                 <Header page={this.props.page} />
                 <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                    <h2>Login</h2>
+                    <div className="text-center text-important display-5 m-0 mb-3 mt-2">Login</div>
                     <Formik
+                        enableReinitialize={true}
                         initialValues={{
                             username: '',
                             password: ''

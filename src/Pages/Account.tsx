@@ -27,7 +27,7 @@ class Account extends Component<PageProps, AccountPageState> {
         deleteKey: null,
         childKey: null,
         status: 0,
-        loading: false,
+        loading: true,
         error: false,
         message: null,
     }

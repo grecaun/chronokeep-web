@@ -20,6 +20,12 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
             valid_until: null
         }
     }
+
+    componentDidMount() {
+        this.setState({
+            key: this.props.keyItem
+        })
+    }
     
     error(message: string) {
         const key = this.state.key;
@@ -37,9 +43,23 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
     render() {
         const isDisabled = this.state.isDisabled;
         const key = this.state.key;
+        const isAccountPage = this.props.page === 'account';
+        var types = {
+            read: { value: "read", text: "Read" },
+            write: { value: "write", text: "Write" },
+            delete: { value: "delete", text: "Delete" },
+        };
+        if (!isAccountPage) {
+            types = {
+                read: { value: "read", text: "Read Only" },
+                write: { value: "write", text: "Timing System" },
+                delete: { value: "delete", text: "Admin" },
+            };
+        }
         return (
             <div className="key-info text-center" key={key.value}>
                 <Formik
+                    enableReinitialize={true}
                     initialValues={{
                         name: key.name,
                         type: key.type,
@@ -55,6 +75,7 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                             allowed_hosts: allowedHosts,
                             valid_until: validUntil
                         }
+                        console.log("newKey is ", newKey);
                         userService.updateAPIKey(newKey, this.props.page === 'account' ? "API" : "REMOTE")
                             .then(
                                 data => {
@@ -98,15 +119,17 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
                                                 <Field as="select" name="type" id={`type${key.value}`} disabled={isDisabled} className="form-select form-select-sm">
-                                                    <option value="read">Read</option>
-                                                    <option value="write">Write</option>
-                                                    <option value="delete">Delete</option>
+                                                    <option value={types.read.value}>{types.read.text}</option>
+                                                    <option value={types.write.value}>{types.write.text}</option>
+                                                    <option value={types.delete.value}>{types.delete.text}</option>
                                                 </Field>
                                             </div>
+                                        { isAccountPage &&
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="allowedHosts">Allowed Hosts</label>
                                                 <Field name="allowedHosts" type="text" disabled={isDisabled} id={`hosts${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
+                                        }
                                             <div className="col-md-auto">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="validUntil">Valid Until</label>
                                                 <Field name="validUntil" type="text" disabled={isDisabled} id={`valid${key.value}`} className="chronokeep-input form-control form-control-sm" />
