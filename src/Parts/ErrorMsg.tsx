@@ -11,9 +11,6 @@ class ErrorMsg extends Component<ErrorProps> {
                 <div className="container-lg lg-max-width mx-auto text-center p-5">
                     <div className="display-1 text-important">{status}</div>
                     <div className="h3">You appear to be off course.</div>
-                    { message !== null &&
-                    <div className="h6">{message}</div>
-                    }
                 </div>
             );
         }

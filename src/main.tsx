@@ -3,7 +3,6 @@ import './style.css'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, } from "react-router-dom";
-
 import { PrivateRemoteRoute, PrivateRoute } from './Auth/PrivateRoute';
 import QRCode from './Pages/QRCode';
 import Awards from './Pages/Awards';
@@ -14,6 +13,7 @@ import Login from './Pages/Login';
 import Logout from './Pages/Logout';
 import Account from './Pages/Account';
 import Events from './Pages/Events';
+import Error from './Pages/Error';
 
 const router = createBrowserRouter([
   { path: '/awards/:slug/:year?', element: <Awards /> },
@@ -27,7 +27,7 @@ const router = createBrowserRouter([
   { path: '/login', element: <Login page='account' /> },
   { path: '/logout', element: <Logout page='account' /> },
   { path: '/account', element: <PrivateRoute />, children: [{ path: "", element: <Account page='account' /> }] },
-  { path: '/', element: <Events /> },
+  { path: '/', element: <Events />, errorElement: <Error /> },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
