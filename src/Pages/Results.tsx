@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { ParamProps } from '../Interfaces/props';
 import { ResultsState } from '../Interfaces/states';
 import { EventYear } from '../Interfaces/types';
+import { ErrorResponse, GetResultsResponse } from '../Interfaces/responses';
 
 class Results extends Component<ParamProps, ResultsState> {
     state: ResultsState = {
@@ -25,7 +26,7 @@ class Results extends Component<ParamProps, ResultsState> {
     }
 
     componentDidMount() {
-        const params = this.props.params
+        const params = this.props.params as { slug: string, year: string | null }
         const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
         const requestOptions = {
             method: 'POST',
@@ -50,20 +51,28 @@ class Results extends Component<ParamProps, ResultsState> {
             return response.json();
         })
         .then(data => {
-            this.setState({
-                loading: false,
-                message: data.message ? data.message : null,
-                count: data.count,
-                event: data.event,
-                years: data.years,
-                year: data.event_year,
-                results: data.results
-            });
+            if (Object.prototype.hasOwnProperty.call(data, 'count')) {
+                const dta = data as GetResultsResponse
+                this.setState({
+                    loading: false,
+                    count: dta.count,
+                    event: dta.event,
+                    years: dta.years,
+                    results: dta.results,
+                    year: dta.event_year
+                });
+            } else {
+                const err = data as ErrorResponse
+                this.setState({
+                    loading: false,
+                    error: true,
+                    message: err.message
+                })
+            }
         })
         .catch(error => {
             this.setState({
-                error: true,
-                message: error.toString()
+                error: true
             });
             console.error("There was an error!", error)
         })
@@ -71,7 +80,7 @@ class Results extends Component<ParamProps, ResultsState> {
 
     render() {
         document.title = `Chronokeep - Results`
-        const params = this.props.params
+        const params = this.props.params as { slug: string, year: string | null }
         const state = this.state
         if (state.error === true) {
             document.title = `Chronokeep - Error`
@@ -116,7 +125,7 @@ class Results extends Component<ParamProps, ResultsState> {
                         <div className="col-md-2 nav flex-md-column justify-content-center p-0">
                             {
                                 years.map((year, index) => {
-                                    var className = "nav-link text-center text-important text-secondary"
+                                    let className = "nav-link text-center text-important text-secondary"
                                     if (year.year === state.year!.year) {
                                         className = "nav-link disabled text-center text-important text-dark"
                                     }
@@ -173,8 +182,9 @@ class Results extends Component<ParamProps, ResultsState> {
     }
 }
 
-export default (props: any) => (
+const ResultsPage = () => (
     <Results
-        {...props}
         params={useParams()}
     />);
+
+export default ResultsPage;

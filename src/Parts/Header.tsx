@@ -8,7 +8,7 @@ import { PageProps } from '../Interfaces/props';
 class Header extends Component<PageProps> {
   render() {
     const page = this.props.page;
-    var accountLink = <Link to={'/login'} className={page === "login" ? "nav-link active me-auto" : "nav-link me-auto"}>Login</Link>
+    let accountLink = <Link to={'/login'} className={page === "login" ? "nav-link active me-auto" : "nav-link me-auto"}>Login</Link>
     if (authenticationService.currentUserValue) {
       accountLink = <Link to={'/logout'} className="nav-link me-auto">Logout</Link>
     }

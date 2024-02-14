@@ -47,7 +47,7 @@ class TimeResultsTable extends Component<AwardsProps> {
             if (groupings["Overall"][result.gender].length < this.props.numberOV) {
                 groupings["Overall"][result.gender].push(result)
                 if (this.props.overallInc === true) {
-                    var exists = result.age_group in groupings
+                    const exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
@@ -60,7 +60,7 @@ class TimeResultsTable extends Component<AwardsProps> {
                     }
                 }
             } else {
-                exists = result.age_group in groupings
+                const exists = result.age_group in groupings
                 if (exists === false) {
                     groups.push(result.age_group)
                     groupings[result.age_group] = {}
@@ -96,7 +96,7 @@ class TimeResultsTable extends Component<AwardsProps> {
                         return (
                             <div key={group}>
                                 { genders.map(gender => {
-                                    var displGender = gender.toUpperCase();
+                                    let displGender = gender.toUpperCase();
                                     if (displGender === "F" || displGender === "W" || displGender === "WOMAN") {
                                         displGender = "Women";
                                     }
@@ -128,12 +128,12 @@ class TimeResultsTable extends Component<AwardsProps> {
                                                         {
                                                             groupings[group][gender].map((result, index) => {
                                                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                                                var rankStr = (index + 1).toString()
+                                                                let rankStr = (index + 1).toString()
                                                                 // If not a finish time
                                                                 if (result.finish !== true) {
                                                                     rankStr = ''
                                                                 }
-                                                                var segName = result.segment;
+                                                                let segName = result.segment;
                                                                 if (segName === "Finish") {
                                                                     segName = "Lap " + result.occurence;
                                                                 }

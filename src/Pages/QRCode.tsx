@@ -7,6 +7,7 @@ import ErrorMsg from '../Parts/ErrorMsg';
 import { useParams } from 'react-router-dom';
 import { ParamProps } from '../Interfaces/props';
 import { QRState } from '../Interfaces/states';
+import { ErrorResponse, GetResultsResponse } from '../Interfaces/responses';
 
 class QRCode extends Component<ParamProps, QRState> {
     state: QRState = {
@@ -30,8 +31,8 @@ class QRCode extends Component<ParamProps, QRState> {
     }
 
     componentDidMount() {
-        const params = this.props.params
-        var year: string | undefined = params.year
+        const params = this.props.params as { slug: string, year: string, bib: string }
+        let year: string | undefined = params.year
         if (year === 'status') {
             year = undefined
         }
@@ -66,17 +67,25 @@ class QRCode extends Component<ParamProps, QRState> {
             return response.json();
         })
         .then(data => {
-            this.setState({
-                loading: false,
-                message: data.message ? data.message : '',
-                event: data.event,
-                year: data.event_year.year,
-            });
+            if (Object.prototype.hasOwnProperty.call(data, 'event_year')) {
+                const dta = data as GetResultsResponse
+                this.setState({
+                    loading: false,
+                    event: dta.event,
+                    year: dta.event_year.year,
+                });
+            } else {
+                const err = data as ErrorResponse
+                this.setState({
+                    loading: false,
+                    error: true,
+                    message: err.message
+                })
+            }
         })
         .catch(error => {
             this.setState({
-                error: true,
-                message: error.toString()
+                error: true
             });
             console.error("There was an error!", error)
         })
@@ -125,8 +134,9 @@ class QRCode extends Component<ParamProps, QRState> {
     }
 }
 
-export default (props: any) => (
+const QRPage = () => (
     <QRCode
-        {...props}
         params={useParams()}
     />);
+
+export default QRPage;

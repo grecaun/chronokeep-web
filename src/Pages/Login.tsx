@@ -6,8 +6,9 @@ import * as Yup from 'yup';
 import { authenticationService } from '../Auth/_services/authentication.service';
 import Header from '../Parts/Header';
 import Footer from '../Parts/Footer';
-import { LoginProps } from '../Interfaces/props';
+import { LoginProps, PageProps } from '../Interfaces/props';
 import { LoginState } from '../Interfaces/states';
+import { ErrorWithStatus } from '../Interfaces/responses';
 
 class Login extends Component<LoginProps, LoginState> {
     state: LoginState = {
@@ -19,10 +20,9 @@ class Login extends Component<LoginProps, LoginState> {
         if (state.success 
             || (authenticationService.currentUserValue && this.props.page === 'account') 
             || (authenticationService.currentRemoteUserValue && this.props.page === 'remote')) {
-            var location = this.props.location;
-            var destination: string = '/';
-            if (location.state !== null && location.state.from != null) {
-                destination =  location.state.from;
+            let destination: string = '/';
+            if (this.props.location.state != null && this.props.location.state.from != null) {
+                destination =  this.props.location.state.from;
             }
             return <Navigate to={destination} replace={true} />
         }
@@ -53,7 +53,10 @@ class Login extends Component<LoginProps, LoginState> {
                                     },
                                     error => {
                                         setSubmitting(false);
-                                        setStatus(error.message);
+                                        if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                                            const err = error as ErrorWithStatus
+                                            setStatus(err.message);
+                                        }
                                     }
                                 );
                         }}
@@ -95,8 +98,10 @@ class Login extends Component<LoginProps, LoginState> {
     }
 }
 
-export default (props: any) => (
+const LoginPage = (props: PageProps) => (
     <Login
         {...props}
         location={useLocation()}
     />);
+
+export default LoginPage;

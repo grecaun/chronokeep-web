@@ -8,6 +8,7 @@ import Loading from '../Parts/Loading';
 import { authenticationService } from '../Auth/_services/authentication.service';
 import { PageProps } from '../Interfaces/props';
 import { BaseState } from '../Interfaces/states';
+import { ErrorResponse } from '../Interfaces/responses';
 
 class Logout extends Component<PageProps, BaseState> {
     state: BaseState = {
@@ -30,10 +31,11 @@ class Logout extends Component<PageProps, BaseState> {
                 return null;
             })
             .then(data => {
-                if (data !== null) {
+                if (data !== null && Object.prototype.hasOwnProperty.call(data, 'message')) {
+                    const err = data as ErrorResponse
                     this.setState({
                         loading: false,
-                        message: data.message ? data.message : null
+                        message: err.message
                     });
                 } else {
                     this.setState({
@@ -43,8 +45,7 @@ class Logout extends Component<PageProps, BaseState> {
             })
             .catch(error => {
                 this.setState({
-                    error: true,
-                    message: error.toString()
+                    error: true
                 });
                 console.error("There was an error!", error)
             })

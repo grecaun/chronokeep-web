@@ -15,4 +15,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  parserOptions: {
+    project: ["tsconfig.json"]
+  }
 }

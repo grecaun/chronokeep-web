@@ -10,19 +10,18 @@ class ResultsTable extends Component<ResultsTableProps> {
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
-        var resMap = new Map();
+        const resMap: Map<string, TimeResult> = new Map();
         results.forEach(res => {
             if (resMap.has(res.bib)) {
-                var tmp = resMap.get(res.bib);
-                // if res comes later than tmp, replace tmp
-                if (tmp.seconds < res.seconds) {
+                // if res comes later than current value, replace current value
+                if (resMap.get(res.bib)!.seconds < res.seconds) {
                     resMap.set(res.bib, res)
                 }
             } else {
                 resMap.set(res.bib, res)
             }
         })
-        var res: TimeResult[] = []
+        const res: TimeResult[] = []
         resMap.forEach((value) => {
             res.push(value);
         })
@@ -71,9 +70,9 @@ class ResultsTable extends Component<ResultsTableProps> {
                         {
                             sorted.map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                var rankStr = result.ranking.toString()
-                                var arankStr = result.age_ranking.toString()
-                                var grankStr = result.gender_ranking.toString()
+                                let rankStr = result.ranking.toString()
+                                let arankStr = result.age_ranking.toString()
+                                let grankStr = result.gender_ranking.toString()
                                 // If ranking is set to -1, or it is a start time then ignore output
                                 // otherwise display the current ranking for that value
                                 if (result.ranking < 1 || result.occurence === 0) {

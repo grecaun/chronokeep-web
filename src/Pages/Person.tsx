@@ -11,6 +11,7 @@ import PersonDistance from '../Parts/PersonDistance';
 import { PersonState } from '../Interfaces/states';
 import { TimeResult } from '../Interfaces/types';
 import { ParamProps } from '../Interfaces/props';
+import { ErrorResponse, GetBibResultsResponse } from '../Interfaces/responses';
 
 class Person extends Component<ParamProps, PersonState> {
     state: PersonState = {
@@ -46,7 +47,7 @@ class Person extends Component<ParamProps, PersonState> {
     }
 
     componentDidMount() {
-        const params = this.props.params;
+        const params = this.props.params as { slug: string, year: string, bib: string };
         const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
         const requestOptions = {
             method: 'POST',
@@ -71,18 +72,27 @@ class Person extends Component<ParamProps, PersonState> {
             return response.json();
         })
         .then(data => {
-            this.setState({
-                loading: false,
-                event: data.event,
-                year: data.year,
-                results: data.results,
-                person: data.person
-            })
+            if (Object.prototype.hasOwnProperty.call(data, 'results')) {
+                const dta = data as GetBibResultsResponse
+                this.setState({
+                    loading: false,
+                    event: dta.event,
+                    year: dta.year,
+                    results: dta.results,
+                    person: dta.person
+                })
+            } else {
+                const err = data as ErrorResponse
+                this.setState({
+                    loading: false,
+                    error: true,
+                    message: err.message
+                })
+            }
         })
         .catch(error => {
             this.setState({
-                error: true,
-                message: error.toString()
+                error: true
             });
             console.error("There was an error!", error)
         })
@@ -113,10 +123,10 @@ class Person extends Component<ParamProps, PersonState> {
                 </div>
             );
         }
-        var results: TimeResult[] = []
-        var start: TimeResult | null = null
-        var finish: TimeResult | null = null
-        for (var res of state.results) {
+        const results: TimeResult[] = []
+        let start: TimeResult | null = null
+        let finish: TimeResult | null = null
+        for (const res of state.results) {
             if (res.segment === "Start") {
                 start = res
             } else if (res.finish && state.event.type !== "time") {
@@ -146,7 +156,7 @@ class Person extends Component<ParamProps, PersonState> {
             state.person.gender = "Man"
         }
         document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
-        var ranking_gender = state.person.gender.toUpperCase();
+        let ranking_gender = state.person.gender.toUpperCase();
         if (ranking_gender === "W" || ranking_gender === "F" || ranking_gender === "WOMAN") {
             ranking_gender = "Women"
         }
@@ -249,8 +259,9 @@ class Person extends Component<ParamProps, PersonState> {
     }
 }
 
-export default (props: any) => (
+const PersonPage = () => (
     <Person
-        {...props}
         params={useParams()}
     />);
+
+export default PersonPage;

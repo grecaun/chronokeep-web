@@ -16,18 +16,11 @@ import Account from './Pages/Account';
 import Events from './Pages/Events';
 
 const router = createBrowserRouter([
-  { path: '/awards/:slug/:year/qr', element: <QRCode /> },
-  { path: '/awards/:slug/qr', element: <QRCode /> },
-  { path: '/awards/:slug/:year', element: <Awards /> },
-  { path: '/awards/:slug', element: <Awards /> },
-  { path: '/results/:slug/:year/qr', element: <QRCode /> },
-  { path: '/results/:slug/:year/status/qr', element: <QRCode /> },
-  { path: '/results/:slug/:year/status', element: <Status /> },
+  { path: '/awards/:slug/:year?', element: <Awards /> },
+  { path: '/results/:slug/:year?/status?/qr', element: <QRCode /> },
+  { path: '/results/:slug/:year?/status', element: <Status /> },
   { path: '/results/:slug/:year/:bib', element: <Person /> },
-  { path: '/results/:slug/qr', element: <QRCode /> },
-  { path: '/results/:slug/status', element: <Status /> },
-  { path: '/results/:slug/:year', element: <Results /> },
-  { path: '/results/:slug', element: <Results /> },
+  { path: '/results/:slug/:year?', element: <Results /> },
   { path: '/remote/login', element: <Login page='remote' /> },
   { path: '/remote/logout', element: <Logout page='remote' /> },
   { path: '/remote', element: <PrivateRemoteRoute />, children: [{ path: "", element: <Account page='remote' /> }] },

@@ -6,6 +6,7 @@ import ErrorMsg from '../Parts/ErrorMsg';
 import { useParams } from 'react-router-dom';
 import { ParamProps } from '../Interfaces/props';
 import { ResultsState } from '../Interfaces/states';
+import { ErrorResponse, GetResultsResponse } from '../Interfaces/responses';
 
 class Status extends Component<ParamProps, ResultsState> {
     state: ResultsState = {
@@ -21,11 +22,10 @@ class Status extends Component<ParamProps, ResultsState> {
     }
 
     componentDidMount() {
-        const params = this.props.params;
         const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
         const requestOptions = {
             method: 'POST',
-            body: JSON.stringify({ slug: params.slug, year: params.year }),
+            body: JSON.stringify({ slug: this.props.params.slug, year: this.props.params.year }),
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + import.meta.env.VITE_CHRONOKEEP_ACCESS_TOKEN
@@ -46,20 +46,27 @@ class Status extends Component<ParamProps, ResultsState> {
             return response.json();
         })
         .then(data => {
-            this.setState({
-                loading: false,
-                message: data.message ? data.message : null,
-                count: data.count,
-                event: data.event,
-                years: data.years,
-                year: data.event_year,
-                results: data.results
-            });
+            if (Object.prototype.hasOwnProperty.call(data, 'count')) {
+                const dta = data as GetResultsResponse
+                this.setState({
+                    loading: false,
+                    count: dta.count,
+                    event: dta.event,
+                    years: dta.years,
+                    year: dta.event_year,
+                    results: dta.results
+                });
+            } else {
+                const errResponse = data as ErrorResponse
+                this.setState({
+                    loading: false,
+                    message: errResponse.message
+                })
+            }
         })
         .catch(error => {
             this.setState({
-                error: true,
-                message: error.toString()
+                error: true
             });
             console.error("There was an error!", error)
         })
@@ -119,11 +126,11 @@ class Status extends Component<ParamProps, ResultsState> {
                             {
                                 distances.map((distance, index) => {
                                     const map: { [index: number]: number } = {}
-                                    var min = -1;
-                                    var max = -1;
-                                    var nonIntegerBib = false;
-                                    for (let res of state.results[distance]) {
-                                        let num = parseInt(res.bib)
+                                    let min = -1;
+                                    let max = -1;
+                                    let nonIntegerBib = false;
+                                    for (const res of state.results[distance]) {
+                                        const num = parseInt(res.bib)
                                         if (Number.isNaN(num)) {
                                             nonIntegerBib = true;
                                             break;
@@ -142,7 +149,7 @@ class Status extends Component<ParamProps, ResultsState> {
                                             map[num] = 1
                                         }
                                     }
-                                    var loops = Math.ceil((max - min) / 10)
+                                    const loops = Math.ceil((max - min) / 10)
                                     if (nonIntegerBib === true) {
                                         return(
                                             <div key={`distance${index}`}>
@@ -155,9 +162,9 @@ class Status extends Component<ParamProps, ResultsState> {
                                                 { distances.length > 1 &&
                                                     <div className="table-distance-header text-important text-center">{distance}</div>
                                                 }
-                                                { [...Array(loops)].map((_, i) => {
+                                                { [...Array<number>(loops)].map((_, i) => {
                                                     const start = min + (i*10)
-                                                    let stat_map: { [index: number]: number } = {}
+                                                    const stat_map: { [index: number]: number } = {}
                                                     for (let x = 0; x < 10; x ++) {
                                                         if ((start+x) in map) {
                                                             stat_map[x] = map[start+x]
@@ -165,7 +172,7 @@ class Status extends Component<ParamProps, ResultsState> {
                                                             stat_map[x] = 0
                                                         }
                                                     }
-                                                    var last_row = ''
+                                                    let last_row = ''
                                                     if (loops - 1 === i) {
                                                         last_row = 'row-last'
                                                     }
@@ -204,8 +211,9 @@ class Status extends Component<ParamProps, ResultsState> {
     }
 }
 
-export default (props: any) => (
+const StatusPage = () => (
     <Status
-        {...props}
         params={useParams()}
     />);
+
+export default StatusPage;

@@ -6,7 +6,7 @@ import { TimeResult } from '../Interfaces/types';
 class PersonTime extends Component<PersonResultsProps> {
     render() {
         const results = this.props.results;
-        var last: TimeResult | null = null;
+        let last: TimeResult | null = null;
         if (results.length > 0) {
             return (
                 <div className="container-lg lg-max-width m-4 mx-auto shadow p-5">
@@ -24,12 +24,12 @@ class PersonTime extends Component<PersonResultsProps> {
                         <tbody>
                         {
                         results.map((res, index) => {
-                            var segName = res.segment;
+                            let segName = res.segment;
                             if (segName === "Finish") {
                                 segName = "Lap " + res.occurence;
                             }
-                            var seconds = res.chip_seconds;
-                            var milliseconds = res.chip_milliseconds;
+                            let seconds = res.chip_seconds;
+                            let milliseconds = res.chip_milliseconds;
                             if (last != null) {
                                 milliseconds = res.chip_milliseconds - last.chip_milliseconds
                                 seconds = res.chip_seconds - last.chip_seconds

@@ -5,12 +5,13 @@ import save from '/img/sd-card.svg';
 import Submitting from './Submitting';
 import { NewKeyProps } from '../Interfaces/props';
 import { Key } from '../Interfaces/types';
+import { ErrorWithStatus, ErrorResponse, ModifyKeyResponse } from '../Interfaces/responses';
 
 class NewKey extends Component<NewKeyProps> {
     render() {
         const parent = this.props.parent;
         const isAccountPage = this.props.page === 'account';
-        var types = {
+        let types = {
             read: { value: "read", text: "Read" },
             write: { value: "write", text: "Write" },
             delete: { value: "delete", text: "Delete" },
@@ -44,18 +45,29 @@ class NewKey extends Component<NewKeyProps> {
                         userService.addAPIKey(newKey, this.props.page === 'remote' ? "REMOTE" : "API")
                             .then(
                                 data => {
-                                    parent.add(data.data.key);
-                                    setValues({
-                                        name: '',
-                                        type: 'read',
-                                        allowedHosts: '',
-                                        validUntil: '',
-                                    });
+                                    if (Object.prototype.hasOwnProperty.call(data.data, 'key')) {
+                                        const keyResponse = data.data as ModifyKeyResponse
+                                        parent.add(keyResponse.key);
+                                        setValues({
+                                            name: '',
+                                            type: 'read',
+                                            allowedHosts: '',
+                                            validUntil: '',
+                                        }).catch(e => {
+                                            console.log("error setting values ", e)
+                                        });
+                                    } else {
+                                        const errResponse = data.data as ErrorResponse
+                                        setStatus(errResponse.message)
+                                    }
                                     setSubmitting(false);
                                 },
                                 error => {
                                     setSubmitting(false);
-                                    setStatus(error.message);
+                                    if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                                        const e = error as ErrorWithStatus
+                                        setStatus(e.message);
+                                    }
                                 }
                             )
                     }}

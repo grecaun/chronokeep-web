@@ -18,7 +18,7 @@ export interface AccountInfoState {
                     }>, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<{
                         username: string;
                     }>>,
-                setStatus: (status?: any) => void,
+                setStatus: (status?: string) => void,
                 setSubmitting: (isSubmitting: boolean) => void } | null
     password_actions: { setValues: (values: React.SetStateAction<{
                         oldPassword: string;
@@ -29,7 +29,7 @@ export interface AccountInfoState {
                         password: string;
                         repeatPassword: string;
                     }>>,
-        setStatus: (status?: any) => void,
+        setStatus: (status?: string) => void,
         setSubmitting: (isSubmitting: boolean) => void } | null
     path: string
 }

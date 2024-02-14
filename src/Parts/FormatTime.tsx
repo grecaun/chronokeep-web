@@ -3,10 +3,10 @@ import { TimeResult } from "../Interfaces/types"
 const FormatTime = (seconds: number, milliseconds: number, result: TimeResult, not_blank: boolean = false) => {
     // Calculate the string to display for Time (Chip to Chip time)
     const hour = Math.floor(seconds / 3600)
-    var minutes = Math.floor((seconds % 3600) / 60).toString()
+    let minutes = Math.floor((seconds % 3600) / 60).toString()
     // Change minutes into a string starting with 0 if its less than 10, i.e. 09
     minutes = Number(minutes) < 10 ? `0${minutes}`.toString() : minutes
-    var sec = (seconds % 60).toString()
+    let sec = (seconds % 60).toString()
     // Change seconds into a string starting with 0 if its less than 10, i.e. 09
     sec = Number(sec) < 10 ? `0${sec}`.toString() : sec
     // Only care about tenths of a second

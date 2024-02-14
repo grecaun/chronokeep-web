@@ -4,8 +4,7 @@ import { ReactElement } from 'react';
 import { authenticationService } from './_services/authentication.service';
 
 export function PrivateRoute(): ReactElement {
-    var currentUser = authenticationService.currentUserValue;
-    if (!currentUser) {
+    if (!authenticationService.currentUserValue) {
         // not logged in, so redirect to login page with the return url
         return <Navigate to='/login' state={{ from: '/account' }} />
     }
@@ -13,8 +12,7 @@ export function PrivateRoute(): ReactElement {
 }
 
 export function PrivateRemoteRoute(): ReactElement {
-    const currentUser = authenticationService.currentRemoteUserValue;
-    if (!currentUser) {
+    if (!authenticationService.currentRemoteUserValue) {
         // not logged in, so redirect to login page with the return url
         return <Navigate to='/remote/login' state={{ from: '/remote' }} />
     }

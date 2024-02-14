@@ -1,5 +1,6 @@
 import { Account, Key, TimeResult } from "./types";
 import AccountPage from "../Pages/Account"
+import { Location, SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
     results: TimeResult[],
@@ -8,15 +9,15 @@ export interface PersonResultsProps {
 
 export interface AccountProps {
     account: Account
-    location: any
+    location: Location
 }
 
 export interface ParamProps {
-    params: any 
+    params: { slug?: string, year?: string, bib?: string }
 }
 
 export interface SearchParamProps extends ParamProps {
-    search_params: any
+    search_params: [URLSearchParams, SetURLSearchParams]
 }
 
 export interface EmptyProps {}
@@ -41,7 +42,7 @@ export interface PageProps {
 }
 
 export interface LoginProps extends PageProps {
-    location: any
+    location: { state: { from: string | null } | null }
 }
 
 export interface ResultsTableProps {

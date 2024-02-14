@@ -2,6 +2,7 @@ import { authHeader } from '../_helpers/auth-header';
 import { handleResponse, handleResponseNoLogout } from '../_helpers/handle-response';
 import { authenticationService } from './authentication.service';
 import { AuthTokens, Key } from '../../Interfaces/types';
+import { ErrorWithStatus } from '../../Interfaces/responses';
 
 export const userService = {
     getAPIKeys,
@@ -20,7 +21,7 @@ const REMOTE_URL = import.meta.env.VITE_CHRONOKEEP_REMOTE_URL;
 
 // the backbone of the authentication protocols
 // checks if our token has expired and refreshes as necessary
-function fetchWithRefresh(url: string, requestOptions: any, auth: string) {
+function fetchWithRefresh(url: string, requestOptions: RequestInit, auth: string) {
     return fetch(url, requestOptions).then(handleResponseNoLogout)
         .then(
             // if we found data, return it
@@ -29,37 +30,43 @@ function fetchWithRefresh(url: string, requestOptions: any, auth: string) {
             },
             // if there's an error, our token might have expired, try refreshing it
             error => {
-                // only try to refresh the token if we're given a 401 unauthorized or 403 forbidden response
-                if ([401, 403].indexOf(error.status) !== -1) {
-                    var currentUser = authenticationService.currentUserValue;
-                    if (auth === "REMOTE") {
-                        currentUser = authenticationService.currentRemoteUserValue;
-                    }
-                    // send a refresh request if the token is set
-                    if (currentUser && currentUser.refresh_token) {
-                        return authenticationService.refresh(currentUser.refresh_token, auth)
-                            .then(
-                                // if we get data back then send our request again
-                                _data => {
-                                    currentUser = authenticationService.currentUserValue;
-                                    if (auth === "REMOTE") {
-                                        currentUser = authenticationService.currentRemoteUserValue;
+                if (Object.prototype.hasOwnProperty.call(error, 'status')) {
+                    const err = error as ErrorWithStatus
+                    // only try to refresh the token if we're given a 401 unauthorized or 403 forbidden response
+                    if ([401, 403].indexOf(err.status) !== -1) {
+                        let currentUser = authenticationService.currentUserValue;
+                        if (auth === "REMOTE") {
+                            currentUser = authenticationService.currentRemoteUserValue;
+                        }
+                        // send a refresh request if the token is set
+                        if (currentUser && currentUser.refresh_token) {
+                            return authenticationService.refresh(currentUser.refresh_token, auth)
+                                .then(
+                                    // if we get data back then send our request again
+                                    () => {
+                                        currentUser = authenticationService.currentUserValue;
+                                        if (auth === "REMOTE") {
+                                            currentUser = authenticationService.currentRemoteUserValue;
+                                        }
+                                        requestOptions.headers = authHeader(currentUser!);
+                                        return fetch(url, requestOptions).then(
+                                            (response) => {
+                                                return handleResponse(response, auth)
+                                            });
+                                    },
+                                    // if there was an error return the error
+                                    error => {
+                                        if (Object.prototype.hasOwnProperty.call(error, 'status')) {
+                                            const err = error as ErrorWithStatus
+                                            // log out the user if unauthorized or forbidden is returned
+                                            if ([401, 403].indexOf(err.status) !== -1) {
+                                                authenticationService.logout(auth).catch(()=>{});
+                                            }
+                                        }
+                                        return Promise.reject(error);
                                     }
-                                    requestOptions.headers = authHeader(currentUser!);
-                                    return fetch(url, requestOptions).then(
-                                        (response) => {
-                                            return handleResponse(response, auth)
-                                        });
-                                },
-                                // if there was an error return the error
-                                error => {
-                                    // log out the user if unauthorized or forbidden is returned
-                                    if ([401, 403].indexOf(error.status) !== -1) {
-                                        authenticationService.logout(auth);
-                                    }
-                                    return Promise.reject(error);
-                                }
-                            )
+                                )
+                        }
                     }
                 }
                 return Promise.reject(error);
@@ -72,8 +79,8 @@ function fetchWithRefresh(url: string, requestOptions: any, auth: string) {
  */
 
 function getAPIKeys(email: string, auth: string) {
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -90,8 +97,8 @@ function getAPIKeys(email: string, auth: string) {
 }
 
 function deleteAPIKey(value: string, auth: string) {
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -109,8 +116,8 @@ function deleteAPIKey(value: string, auth: string) {
  */
 
 function updateAPIKey(key: Key, auth: string) {
-    var currentUser: AuthTokens | null = authenticationService.currentUserValue;
-    var url: string = API_URL;
+    let currentUser: AuthTokens | null = authenticationService.currentUserValue;
+    let url: string = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -124,8 +131,8 @@ function updateAPIKey(key: Key, auth: string) {
 }
 
 function addAPIKey(key: Key, auth: string) {
-    var currentUser: AuthTokens | null = authenticationService.currentUserValue;
-    var url: string = API_URL;
+    let currentUser: AuthTokens | null = authenticationService.currentUserValue;
+    let url: string = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -143,8 +150,8 @@ function addAPIKey(key: Key, auth: string) {
  */
 
 function getAccountInfo(auth: string) {
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -158,13 +165,13 @@ function getAccountInfo(auth: string) {
 }
 
 function updateAccountInfo(name: string, email: string, type: string, auth: string) {
-    var account = {
+    const account = {
         name: name,
         email: email,
         type: type,
     };
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -178,13 +185,13 @@ function updateAccountInfo(name: string, email: string, type: string, auth: stri
 }
 
 function addAccount(name: string, email: string, type: string, password: string, auth: string) {
-    var account = {
+    const account = {
         name: name,
         email: email,
         type: type,
     };
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -198,8 +205,8 @@ function addAccount(name: string, email: string, type: string, password: string,
 }
 
 function changePassword(oldPassword: string, newPassword: string, email: string, auth: string) {
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;
@@ -216,8 +223,8 @@ function changePassword(oldPassword: string, newPassword: string, email: string,
 }
 
 function changeEmail(oldEmail: string, newEmail: string, auth: string) {
-    var currentUser = authenticationService.currentUserValue;
-    var url = API_URL;
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
     if (auth === "REMOTE") {
         currentUser = authenticationService.currentRemoteUserValue;
         url = REMOTE_URL;

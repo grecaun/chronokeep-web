@@ -8,6 +8,7 @@ import Submitting from './Submitting';
 import { KeyState } from '../Interfaces/states';
 import { KeyInfoProps } from '../Interfaces/props';
 import { Key } from '../Interfaces/types';
+import { ErrorResponse, ModifyKeyResponse, ErrorWithStatus } from '../Interfaces/responses';
 
 class KeyInfo extends Component<KeyInfoProps, KeyState> {
     state: KeyState = {
@@ -44,7 +45,7 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
         const isDisabled = this.state.isDisabled;
         const key = this.state.key;
         const isAccountPage = this.props.page === 'account';
-        var types = {
+        let types = {
             read: { value: "read", text: "Read" },
             write: { value: "write", text: "Write" },
             delete: { value: "delete", text: "Delete" },
@@ -79,25 +80,36 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                         userService.updateAPIKey(newKey, this.props.page === 'account' ? "API" : "REMOTE")
                             .then(
                                 data => {
-                                    setValues({
-                                        name: data.data.key.name,
-                                        type: data.data.key.type,
-                                        allowedHosts: data.data.key.allowed_hosts,
-                                        validUntil: data.data.key.valid_until === null ? '' : data.data.key.valid_until,
-                                    })
-                                    key.name = data.data.key.name;
-                                    key.type = data.data.key.type;
-                                    key.allowed_hosts = data.data.key.allowed_hosts;
-                                    key.valid_until = data.data.key.valid_until;
+                                    if (Object.prototype.hasOwnProperty.call(data.data, 'key')) {
+                                        const keyResponse = data.data as ModifyKeyResponse
+                                        setValues({
+                                            name: keyResponse.key.name,
+                                            type: keyResponse.key.type,
+                                            allowedHosts: keyResponse.key.allowed_hosts,
+                                            validUntil: keyResponse.key.valid_until === null ? '' : keyResponse.key.valid_until,
+                                        }).catch(() => {});
+                                        key.name = keyResponse.key.name;
+                                        key.type = keyResponse.key.type;
+                                        key.allowed_hosts = keyResponse.key.allowed_hosts;
+                                        key.valid_until = keyResponse.key.valid_until;
+                                        this.setState({
+                                            key: key,
+                                        })
+                                    } else {
+                                        const errResponse = data.data as ErrorResponse
+                                        setStatus(errResponse.message)
+                                    }
                                     setSubmitting(false);
                                     this.setState({
                                         isDisabled: true,
-                                        key: key,
                                     })
                                 },
                                 error => {
                                     setSubmitting(false);
-                                    setStatus(error.message);
+                                    if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                                        const e = error as ErrorWithStatus
+                                        setStatus(e.message);
+                                    }
                                     this.setState({
                                         isDisabled: true,
                                     })

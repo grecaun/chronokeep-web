@@ -7,6 +7,7 @@ import ErrorMsg from '../Parts/ErrorMsg';
 import { EmptyProps } from '../Interfaces/props';
 import { EventsState } from '../Interfaces/states';
 import { Event } from '../Interfaces/types';
+import { ErrorResponse, GetEventsResponse } from '../Interfaces/responses';
 
 class Events extends Component<EmptyProps, EventsState> {
     state: EventsState = {
@@ -17,7 +18,7 @@ class Events extends Component<EmptyProps, EventsState> {
         message: null
     }
     
-    async componentDidMount() {
+    componentDidMount() {
         const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
         const requestOptions = {
             headers: {
@@ -25,43 +26,41 @@ class Events extends Component<EmptyProps, EventsState> {
                 "Authorization": "Bearer " + import.meta.env.VITE_CHRONOKEEP_ACCESS_TOKEN
             }
         }
-        try {
-            var response = await fetch(BASE_URL + 'event/all', requestOptions);
-            var data = await response.json();
+        fetch(BASE_URL + 'event/all', requestOptions)
+        .then(response => {
             if (response.status === 200) {
-                this.setState(
-                {
-                    error: false,
-                    status: response.status,
-                    loading: false,
-                    message: null,
-                    events: data.events
+                this.setState({
+                    status: response.status
                 });
             } else {
                 this.setState({
                     error: true,
-                    status: response.status,
-                    loading: false,
-                    message: data.message ? data.message : '',
-                    events: []
+                    status: response.status
                 });
             }
-        } catch(e) {
-            var msg: string = "unknown error";
-            if (typeof e === 'string') {
-                msg = e;
-            } else if (e instanceof Error) {
-                msg = e.message;
+            return response.json();
+        })
+        .then(data => {
+            if (Object.prototype.hasOwnProperty.call(data, 'events')) {
+                const dta = data as GetEventsResponse
+                this.setState({
+                    loading: false,
+                    events: dta.events
+                });
+            } else {
+                const err = data as ErrorResponse
+                this.setState({
+                    error: true,
+                    message: err.message
+                })
             }
+        })
+        .catch(error => {
             this.setState({
-                error: true,
-                status: 500,
-                loading: false,
-                message: msg,
-                events: []
+                error: true
             });
-            console.error("There was an error!", msg)
-        }
+            console.error("There was an error!", error)
+        })
     }
         
         render() {

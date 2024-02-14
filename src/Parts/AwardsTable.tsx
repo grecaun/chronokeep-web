@@ -59,7 +59,7 @@ class AwardsTable extends Component<AwardsProps> {
                 if (groupings["Overall"][result.gender].length < this.props.numberOV) {
                     groupings["Overall"][result.gender].push(result)
                     if (this.props.overallInc === true) {
-                        var exists = result.age_group in groupings
+                        const exists = result.age_group in groupings
                         if (exists === false) {
                             groups.push(result.age_group)
                             groupings[result.age_group] = {}
@@ -72,7 +72,7 @@ class AwardsTable extends Component<AwardsProps> {
                         }
                     }
                 } else {
-                    exists = result.age_group in groupings
+                    const exists = result.age_group in groupings
                     if (exists === false) {
                         groups.push(result.age_group)
                         groupings[result.age_group] = {}
@@ -110,7 +110,7 @@ class AwardsTable extends Component<AwardsProps> {
                             <div key={group}>
                             { 
                                 genders.map(gender => {
-                                    var displGender = gender.toUpperCase();
+                                    let displGender = gender.toUpperCase();
                                     if (displGender === "F" || displGender === "W" || displGender === "WOMAN") {
                                         displGender = "Women";
                                     }
@@ -142,7 +142,7 @@ class AwardsTable extends Component<AwardsProps> {
                                                         {
                                                             groupings[group][gender].map((result, index) => {
                                                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                                                var rankStr = (index + 1).toString()
+                                                                let rankStr = (index + 1).toString()
                                                                 // If ranking is set to -1, or it is a start time then ignore output
                                                                 // otherwise display the current ranking for that value
                                                                 if (result.ranking < 1 || result.occurence === 0) {

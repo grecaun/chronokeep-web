@@ -9,6 +9,8 @@ import gear from '/img/gear.svg';
 import { useLocation } from 'react-router-dom';
 import { AccountInfoState } from '../Interfaces/states';
 import { AccountProps } from '../Interfaces/props';
+import { ErrorResponse, ErrorWithStatus, GetAccountResponse } from '../Interfaces/responses';
+import { Account } from '../Interfaces/types';
 
 class AccountInfo extends Component<AccountProps, AccountInfoState> {
     state: AccountInfoState = {
@@ -32,10 +34,9 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
     }
 
     componentDidMount() {
-        var location = this.props.location;
         this.setState({
             account: this.props.account,
-            path: location == null ? "API" : location.pathname.toUpperCase().replace('/', '')
+            path: this.props.location == null ? "API" : this.props.location.pathname.toUpperCase().replace('/', '')
         });
     }
 
@@ -60,14 +61,17 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                         return;
                     },
                     error => {
-                        this.state.email_actions?.setStatus(error.message);
-                        this.state.email_actions?.setValues({
-                            username: account.email,
-                        })
-                        this.setState({
-                            account: account,
-                            emailDisabled: true,
-                        });
+                        if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                            const e = error as ErrorWithStatus
+                            this.state.email_actions?.setStatus(e.message);
+                            this.state.email_actions?.setValues({
+                                username: account.email,
+                            }).catch(() => {});
+                            this.setState({
+                                account: account,
+                                emailDisabled: true,
+                            });
+                        }
                     }
                 )
         }
@@ -83,7 +87,10 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                     },
                     error => {
                         this.state.password_actions?.setSubmitting(false);
-                        this.state.password_actions?.setStatus(error.message);
+                        if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                            const err = error as ErrorResponse
+                            this.state.password_actions?.setStatus(err.message);
+                        }
                         this.setState({
                             account: account,
                             emailDisabled: true,
@@ -127,17 +134,28 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                             userService.updateAccountInfo(name, account.email, account.type, path)
                                 .then(
                                     data => {
+                                        if (Object.prototype.hasOwnProperty.call(data.data, 'account')){
+                                            const dta = data.data as GetAccountResponse
+                                            name = dta.account.name;
+                                            account.name = name;
+                                            this.setState({
+                                                account: account
+                                            });
+                                        } else {
+                                            const errResponse = data.data as ErrorResponse
+                                            setStatus(errResponse.message)
+                                        }
                                         setSubmitting(false);
-                                        name = data.data.account.name;
-                                        account.name = name;
                                         this.setState({
-                                            account: account,
                                             nameDisabled: true
                                         });
                                     },
                                     error => {
                                         setSubmitting(false);
-                                        setStatus(error.message);
+                                        if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                                            const e = error as ErrorWithStatus
+                                            setStatus(e.message);
+                                        }
                                         this.setState({
                                             nameDisabled: true
                                         });
@@ -288,7 +306,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
                                 </div>
                                 <div className="text-center">
                                     <button type="button" key="changePassword" id="changePassword" onClick={() => {
-                                        var passwordButton = document.getElementById("changePassword")
+                                        const passwordButton = document.getElementById("changePassword")
                                         if (passwordButton!.innerHTML === "Change Password") {
                                             this.setState({
                                                 passwordHidden: false,
@@ -314,8 +332,10 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
     }
 }
 
-export default (props: any) => (
+const AccountInfoPart = (props: {account: Account}) => (
     <AccountInfo
         {...props}
         location={useLocation()}
     />);
+
+export default AccountInfoPart;

@@ -13,6 +13,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { Key } from '../Interfaces/types'
 import { PageProps } from '../Interfaces/props';
 import { AccountPageState } from '../Interfaces/states';
+import { ErrorResponse, ErrorWithStatus, GetAccountResponse } from '../Interfaces/responses';
 
 class Account extends Component<PageProps, AccountPageState> {
     state: AccountPageState = {
@@ -44,27 +45,44 @@ class Account extends Component<PageProps, AccountPageState> {
         userService.getAccountInfo(this.props.page === "account" ? "API" : "REMOTE")
             .then(
                 data => {
-                    const sortedKeys = data.data.keys.sort((a: Key, b: Key) => {
-                        if (a.name !== b.name) {
-                            return ('' + b.name).localeCompare(a.name)
-                        }
-                        return ('' + a.value).localeCompare(b.value)
-                    })
-                    this.setState({
-                        status: data.status,
-                        message: data.data.message ? data.data.message : null,
-                        account: data.data.account,
-                        keys: sortedKeys,
-                        events: data.data.events,
-                        loading: false,
-                    })
+                    if (Object.prototype.hasOwnProperty.call(data.data, 'keys')) {
+                        const dta = data.data as GetAccountResponse
+                        const sortedKeys = dta.keys.sort((a: Key, b: Key) => {
+                            if (a.name !== b.name) {
+                                return ('' + b.name).localeCompare(a.name)
+                            }
+                            return ('' + a.value).localeCompare(b.value)
+                        })
+                        this.setState({
+                            status: data.status,
+                            account: dta.account,
+                            keys: sortedKeys,
+                            events: dta.events ? dta.events : [],
+                            loading: false,
+                        })
+                    } else {
+                        const err = data.data as ErrorResponse
+                        this.setState({
+                            loading: false,
+                            error: true,
+                            message: err.message,
+                            status: data.status
+                        })
+                    }
                 },
                 error => {
-                    this.setState({
-                        error: true,
-                        message: error.message ? error.message: "unknown error",
-                        status: error.status
-                    })
+                    if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                        const err = error as ErrorWithStatus
+                        this.setState({
+                            error: true,
+                            message: err.message,
+                            status: err.status
+                        })
+                    } else {
+                        this.setState({
+                            error: true
+                        })
+                    }
                 }
             )
     }
@@ -85,7 +103,7 @@ class Account extends Component<PageProps, AccountPageState> {
                 () => {
                     const keys = this.state.keys;
                     const newKeys = []
-                    var i = 0;
+                    let i = 0;
                     while (i < keys.length) {
                         if (keys[i].value !== key!.value) {
                             newKeys.push(keys[i])
@@ -104,7 +122,10 @@ class Account extends Component<PageProps, AccountPageState> {
                         show: false,
                         deleteKey: null,
                     })
-                    console.log("error", error.message)
+                    if (Object.prototype.hasOwnProperty.call(error, 'message')) {
+                        const err = error as ErrorWithStatus
+                        console.log("error", err.message)
+                    }
                 });
     }
 
