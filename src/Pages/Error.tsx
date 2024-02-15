@@ -1,5 +1,7 @@
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+import { isRouteErrorResponse, useLocation, useRouteError } from "react-router-dom";
 import ErrorMsg from "../Parts/ErrorMsg";
+import Header from "../Parts/Header";
+import Footer from "../Parts/Footer";
 
 function Error() {
     const err = useRouteError();
@@ -12,8 +14,14 @@ function Error() {
                 msg = data.message;
             }
         }
+        const location = useLocation();
+        const pageName = location.pathname.split("/")[1];
         return (
-            <ErrorMsg status={err.status} message={msg} />
+            <div>
+                <Header page={pageName} />
+                <ErrorMsg status={err.status} message={msg} />
+                <Footer />
+            </div>
         )
     }
 }

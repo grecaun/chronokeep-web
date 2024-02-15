@@ -19,6 +19,7 @@ import DefaultPage from './Pages/DefaultPage';
 const router = createBrowserRouter([
   {
     element: <DefaultPage />,
+    errorElement: <Error />,
     children:
     [  
       {
@@ -89,8 +90,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/',
-        element: <Events />,
-        errorElement: <Error />
+        element: <Events />
       },
     ]
   },

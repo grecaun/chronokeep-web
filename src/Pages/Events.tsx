@@ -15,10 +15,7 @@ function Events() {
     }
     if (state.loading === true) {
         return (
-            <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                <h1 className="text-important display-5">Loading Events</h1>
-                <Loading />
-            </div>
+            <Loading />
         );
     }
     const sorted = state.events.sort((a: Event, b: Event) => Date.parse(b.recent_time) - Date.parse(a.recent_time))

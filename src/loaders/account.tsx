@@ -58,6 +58,6 @@ export function AccountLoader(page: string): { state: AccountPageState, setState
             });
         };
         fetchAccount().catch(() => {});
-    });
+    }, []);
     return { state, setState };
 }

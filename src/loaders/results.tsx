@@ -59,6 +59,6 @@ export function ResultsLoader(params: Params<string>, page: string): ResultsStat
             });
         };
         fetchResults().catch(() => {});
-    });
+    }, []);
     return state
 }

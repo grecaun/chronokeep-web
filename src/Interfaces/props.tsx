@@ -9,6 +9,7 @@ export interface PersonResultsProps {
 
 export interface AccountInfoProps extends PageProps {
     account: Account
+    setLoading: () => void
 }
 
 export interface ParamProps {

@@ -77,6 +77,6 @@ export function PersonLoader(params: Params<string>): PersonState {
             });
         };
         fetchPerson().catch(() => {});
-    });
+    }, []);
     return state;
 }

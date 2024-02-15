@@ -18,10 +18,7 @@ function QRCode(props: PageProps) {
     }
     if (state.loading) {
         return (
-            <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                <h1 className="text-important display-4">Verifying event exists.</h1>
-                <Loading />
-            </div>
+            <Loading message='Verifying event exists.' />
         );
     }
     const codeName = params.year !== undefined ? `${state.year!.year} ${state.event!.name}` : `${state.event!.name}`;

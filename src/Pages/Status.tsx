@@ -15,10 +15,7 @@ function Status() {
     }
     if (state.loading === true) {
         return (
-            <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                <h1 className="text-important display-4">Loading Status</h1>
-                <Loading />
-            </div>
+            <Loading />
         );
     }
     const distances = Object.keys(state.results)

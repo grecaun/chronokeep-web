@@ -60,11 +60,22 @@ function deleteKey(props: PageProps, state: AccountPageState, setState: React.Di
                     const err = error as ErrorWithStatus;
                     msg = err.message;
                 }
+                const keys = state.keys;
+                const newKeys = []
+                let i = 0;
+                while (i < keys.length) {
+                    if (keys[i].value !== key!.value) {
+                        newKeys.push(keys[i])
+                    }
+                    i++;
+                }
                 setState({
                     ...state,
                     show: false,
+                    keys: newKeys,
                     deleteKey: null,
                     childKey: null,
+                    error: true,
                     message: msg
                 })
             });
@@ -79,6 +90,13 @@ function add(key: Key, state: AccountPageState, setState: React.Dispatch<React.S
     })
 }
 
+function setLoading(state: AccountPageState, setState: React.Dispatch<React.SetStateAction<AccountPageState>>) {
+    setState({
+        ...state,
+        loading: true,
+    })
+}
+
 function Account(props: PageProps) {
     const {state, setState} = AccountLoader(props.page);
     
@@ -90,7 +108,7 @@ function Account(props: PageProps) {
             path = '/remote/login';
             from = '/remote';
         }
-        return <Navigate to={path} state={{ from: from }} />
+        return <Navigate to={path} />
     }
     if (state.error === true) {
         document.title = `Chronokeep - Error`
@@ -100,10 +118,7 @@ function Account(props: PageProps) {
     }
     if (state.loading === true) {
         return (
-            <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                <h1 className="text-important display-5">Loading Account</h1>
-                <Loading />
-            </div>
+            <Loading />
         )
     }
     const keys = state.keys;
@@ -117,7 +132,7 @@ function Account(props: PageProps) {
                 </div>
             }
             { account && 
-                <AccountInfo account={account} page={props.page} />
+                <AccountInfo account={account} page={props.page} setLoading={() => { setLoading(state, setState); }} />
             }
             { keys && keys.length > 0 && 
                 <div className="key-info-container">
@@ -134,7 +149,7 @@ function Account(props: PageProps) {
                 </div>
             }
         </div>
-    )
+    );
 }
 
 export default Account;

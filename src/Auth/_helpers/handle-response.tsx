@@ -4,9 +4,12 @@ import { authenticationService } from '../_services/authentication.service';
 
 export function handleResponse(response: Response, auth = "API") {
     return response.text().then(text => {
-        const dataVal = JSON.parse(text) as ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse;
+        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | null = null;
+        if (text.length > 0) {
+            dataVal = JSON.parse(text);
+        }
         const data: { 
-                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens,
+                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens | null,
                     status: number
                 } = { data: dataVal, status: response.status }
         if (!response.ok) {
@@ -25,9 +28,12 @@ export function handleResponse(response: Response, auth = "API") {
 
 export function handleResponseNoLogout(response: Response) {
     return response.text().then(text => {
-        const dataVal = JSON.parse(text) as ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse;
+        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | null = null;
+        if (text.length > 0) {
+            dataVal = JSON.parse(text);
+        }
         const data: { 
-                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens,
+                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens | null,
                     status: number
                 } = { data: dataVal, status: response.status }
         if (!response.ok) {

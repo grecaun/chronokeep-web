@@ -117,7 +117,7 @@ class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
         return (
             <div className="account-info card chronokeep-card">
                 <h4 className="card-header chronokeep-card-header text-center">Account Info</h4>
-                <Modal show={this.state.show} handleClose={this.handleClose} save={this.saveInfo} title="Warning" text="" id="accountModal" saveText="Confirm" />
+                <Modal show={this.state.show} handleClose={() => { this.handleClose(); }} save={() => { this.props.setLoading(); this.saveInfo(); }} title="Warning" text="" id="accountModal" saveText="Confirm" />
                 <div className="card-body">
                     <Formik
                         enableReinitialize={true}

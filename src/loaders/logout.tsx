@@ -51,6 +51,6 @@ export function LogoutLoader(page: string): BaseState {
             });
         };
         doLogout().catch(() => {});
-    })
+    }, [])
     return state;
 }
