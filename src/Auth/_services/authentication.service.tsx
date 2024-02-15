@@ -66,7 +66,7 @@ function refresh(token: string, auth: string = "API") {
     });
 }
 
-function logout(auth = "API") {
+function logout(auth: string) {
     let currentUser = currentUserSubject.value;
     let url = API_URL;
     let storageUser = 'currentUser';
@@ -74,6 +74,9 @@ function logout(auth = "API") {
         currentUser = currentRemoteUserSubject.value;
         url = REMOTE_URL;
         storageUser = 'currentRemoteUser';
+    }
+    if (!currentUser) {
+        return Promise.reject({ message: "unknown user", status: 401 })
     }
     // let the API know the user wants to log out
     const requestOptions = {

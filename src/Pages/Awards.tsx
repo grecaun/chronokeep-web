@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { SetURLSearchParams, useParams, useSearchParams } from 'react-router-dom';
+import { useState } from 'react';
+import { SetURLSearchParams, useLoaderData, useParams, useSearchParams } from 'react-router-dom';
 import AwardsTable from '../Parts/AwardsTable';
 import TimeAwardsTable from '../Parts/TimeAwardsTable';
 import Header from '../Parts/Header';
@@ -10,107 +10,90 @@ import DateString from '../Parts/DateString';
 
 import { AwardsState } from '../Interfaces/states';
 import { ErrorResponse, GetResultsResponse } from '../Interfaces/responses';
+import { SlugParams } from '../Interfaces/props';
 
-
-const useAwards = (): { state: AwardsState, setState: React.Dispatch<React.SetStateAction<AwardsState>> } => {
-    const params = useParams();
-    const [searchParams] = useSearchParams();
-    const [state, setState] = useState<AwardsState>({
+export async function awardsLoader(params: SlugParams): Promise<AwardsState> {
+    const state: AwardsState = {
         status: 0,
         loading: true,
         error: false,
         message: null,
-        numAG: Number(searchParams.get("ag")) < 0 ? 3 : Number(searchParams.get("ag")),
-        numOV: Number(searchParams.get("ov")) < 0 ? 3 : Number(searchParams.get("ov")),
-        overallInc: (searchParams.get("inc")) === "true",
-        grandMasters: (searchParams.get("gmas")) === "true",
-        masters: (searchParams.get("mas")) === "true",
+        numAG: -1,
+        numOV: -1,
+        overallInc: true,
+        grandMasters: false,
+        masters: false,
         count: 0,
         event: null,
         years: [],
         year: null,
         results: {}
-    })
+    };
+    const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
+    const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({ slug: params.slug, year: params.year }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + import.meta.env.VITE_CHRONOKEEP_ACCESS_TOKEN
+        }
+    };
+    try {
+        const response = await fetch(BASE_URL + 'results', requestOptions);
+        const data: GetResultsResponse | ErrorResponse = await (response.json() as Promise<GetResultsResponse | ErrorResponse>);
+        if (response.status === 200) {
+            const dta = data as GetResultsResponse;
+            state.status = response.status;
+            state.loading = false;
+            state.error = false;
+            state.message = null;
+            state.count = dta.count;
+            state.event = dta.event;
+            state.years = dta.years;
+            state.year = dta.event_year;
+            state.results = dta.results;
+        } else {
+            const err = data as ErrorResponse
+            state.status = response.status;
+            state.loading = false;
+            state.error = true;
+            state.message = err.message;
+        }
+    } catch(e) {
+        let msg: string = "unknown error";
+        if (typeof e === 'string') {
+            msg = e;
+        } else if (e instanceof Error) {
+            msg = e.message;
+        }
+        state.status = 503;
+        state.loading = false;
+        state.error = true;
+        state.message = msg;
+        console.log("There was an error!", e)
+    };
+    return state;
+}
 
-    useEffect(() => {
-        const fetchResults = async () => {
-            const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
-            const requestOptions = {
-                method: 'POST',
-                body: JSON.stringify({ slug: params.slug, year: params.year }),
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + import.meta.env.VITE_CHRONOKEEP_ACCESS_TOKEN
-                }
-            };
-            try {
-                const response = await fetch(BASE_URL + 'results', requestOptions);
-                const data: GetResultsResponse | ErrorResponse = await (response.json() as Promise<GetResultsResponse | ErrorResponse>);
-                if (response.status === 200) {
-                    const dta = data as GetResultsResponse;
-                    setState({
-                        status: response.status,
-                        loading: false,
-                        error: false,
-                        message: null,
-                        numAG: state.numAG,
-                        numOV: state.numOV,
-                        overallInc: state.overallInc,
-                        grandMasters: state.grandMasters,
-                        masters: state.masters,
-                        count: dta.count,
-                        event: dta.event,
-                        years: dta.years,
-                        year: dta.event_year,
-                        results: dta.results
-                    });
-                } else {
-                    const err = data as ErrorResponse
-                    setState({
-                        status: response.status,
-                        loading: false,
-                        error: true,
-                        message: err.message,
-                        numAG: state.numAG,
-                        numOV: state.numOV,
-                        overallInc: state.overallInc,
-                        grandMasters: state.grandMasters,
-                        masters: state.masters,
-                        count: state.count,
-                        event: state.event,
-                        years: state.years,
-                        year: state.year,
-                        results: state.results
-                    });
-                }
-            } catch(e) {
-                let msg: string = "unknown error";
-                if (typeof e === 'string') {
-                    msg = e;
-                } else if (e instanceof Error) {
-                    msg = e.message;
-                }
-                setState({
-                    status: 503,
-                    loading: false,
-                    error: true,
-                    message: msg,
-                    numAG: state.numAG,
-                    numOV: state.numOV,
-                    overallInc: state.overallInc,
-                    grandMasters: state.grandMasters,
-                    masters: state.masters,
-                    count: state.count,
-                    event: state.event,
-                    years: state.years,
-                    year: state.year,
-                    results: state.results
-                });
-                console.log("There was an error!", e)
-            }
-        };
-        fetchResults().catch(()=>{});
-    });
+const useAwards = (): { state: AwardsState, setState: React.Dispatch<React.SetStateAction<AwardsState>> } => {
+    const [searchParams] = useSearchParams();
+    const loadedState = useLoaderData() as AwardsState;
+    const [state, setState] = useState<AwardsState>({
+        status: loadedState.status,
+        loading: loadedState.loading,
+        error: loadedState.error,
+        message: loadedState.message,
+        numAG: searchParams.get("ag") ? 3 : Number(searchParams.get("ag")) < 0 ? 3 : Number(searchParams.get("ag")),
+        numOV: searchParams.get("ov") ? 3 : Number(searchParams.get("ov")) < 0 ? 3 : Number(searchParams.get("ov")),
+        overallInc: (searchParams.get("inc")) === "true",
+        grandMasters: (searchParams.get("gmas")) === "true",
+        masters: (searchParams.get("mas")) === "true",
+        count: loadedState.count,
+        event: loadedState.event,
+        years: loadedState.years,
+        year: loadedState.year,
+        results: loadedState.results
+    })
     return { state: state, setState: setState }
 }
 

@@ -20,11 +20,7 @@ class Login extends Component<LoginProps, LoginState> {
         if (state.success 
             || (authenticationService.currentUserValue && this.props.page === 'account') 
             || (authenticationService.currentRemoteUserValue && this.props.page === 'remote')) {
-            let destination: string = '/';
-            if (this.props.location.state != null && this.props.location.state.from != null) {
-                destination =  this.props.location.state.from;
-            }
-            return <Navigate to={destination} replace={true} />
+            return <Navigate to={`/${this.props.page}`} replace={true} />
         }
         document.title = `Chronokeep - Login`
         return (

@@ -13,7 +13,13 @@ export interface AccountProps {
 }
 
 export interface ParamProps {
-    params: { slug?: string, year?: string, bib?: string }
+    params: SlugParams
+}
+
+export interface SlugParams  {
+    slug?: string,
+    year?: string,
+    bib?: string
 }
 
 export interface SearchParamProps extends ParamProps {
@@ -42,7 +48,7 @@ export interface PageProps {
 }
 
 export interface LoginProps extends PageProps {
-    location: { state: { from: string | null } | null }
+    location: { state?: { from?: string } }
 }
 
 export interface ResultsTableProps {

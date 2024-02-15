@@ -36,6 +36,7 @@ class AwardsTable extends Component<AwardsProps> {
         });
         const groups = ["Overall"]
         const groupings: {[index: string]: {[index: string]: TimeResult[]}} = {}
+        groupings["Overall"] = {}
         genders.forEach(gender => {
             groupings["Overall"][gender] = [];
         })
@@ -79,11 +80,9 @@ class AwardsTable extends Component<AwardsProps> {
                         genders.forEach(gender => {
                             groupings[result.age_group][gender] = [];
                         })
+                    }
+                    if (groupings[result.age_group][result.gender].length < this.props.numberAG) {
                         groupings[result.age_group][result.gender].push(result)
-                    } else {
-                        if (groupings[result.age_group][result.gender].length < this.props.numberAG) {
-                            groupings[result.age_group][result.gender].push(result)
-                        }
                     }
                 }
                 if (this.props.masters && result.age >= 40 && (result.age < 60 || !this.props.grandMasters) && groupings["Masters"][result.gender].length < this.props.numberOV) {
