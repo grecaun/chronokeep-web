@@ -1,7 +1,5 @@
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
-import Header from "../Parts/Header";
 import ErrorMsg from "../Parts/ErrorMsg";
-import Footer from "../Parts/Footer";
 
 function Error() {
     const err = useRouteError();
@@ -15,11 +13,7 @@ function Error() {
             }
         }
         return (
-            <div>
-                <Header page={"events"} />
-                <ErrorMsg status={err.status} message={msg} />
-                <Footer />
-            </div>
+            <ErrorMsg status={err.status} message={msg} />
         )
     }
 }

@@ -81,7 +81,7 @@ function logout(auth: string) {
     // let the API know the user wants to log out
     const requestOptions = {
         method: 'POST',
-        headers: authHeader(currentUser!)
+        headers: authHeader(currentUser)
     };
     return fetch(url + 'account/logout', requestOptions)
     .then(response => {

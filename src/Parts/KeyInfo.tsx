@@ -34,11 +34,10 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
         document.getElementById(`err${key.value}`)!.innerHTML = message;
     }
 
-    delete = () => {
+    delete = (remove: (key: Key, childKey: KeyInfo) => void) => {
         const key = this.state.key;
-        const parent = this.props.parent;
         document.getElementById(`err${key.value}`)!.style.display = "none";
-        parent.remove(key, this);
+        remove(key, this);
     }
 
     render() {
@@ -76,7 +75,6 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                             allowed_hosts: allowedHosts,
                             valid_until: validUntil
                         }
-                        console.log("newKey is ", newKey);
                         userService.updateAPIKey(newKey, this.props.page === 'account' ? "API" : "REMOTE")
                             .then(
                                 data => {
@@ -159,7 +157,7 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                                                         }
                                                     </div>
                                                     <div className="col-auto">
-                                                        <button type="button" key={`del${key.value}`} id={`del${key.value}`} disabled={isDisabled} onClick={this.delete} className="btn btn-primary btn-chronokeep">
+                                                        <button type="button" key={`del${key.value}`} id={`del${key.value}`} disabled={isDisabled} onClick={() => { this.delete(this.props.remove) }} className="btn btn-primary btn-chronokeep">
                                                             <img src={trash} alt={`delete key ${key.value}`} />
                                                         </button>
                                                     </div>
@@ -168,7 +166,6 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                                                             this.setState({
                                                                 isDisabled: !isDisabled
                                                             })
-                                                            document.getElementById(`del${key.value}`)!.addEventListener("click", this.delete)
                                                         }} className="btn btn-primary btn-chronokeep">
                                                             <img src={gear} alt={`edit key ${key.value}`} />
                                                         </button>

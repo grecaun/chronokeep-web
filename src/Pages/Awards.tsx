@@ -1,101 +1,12 @@
-import { useState } from 'react';
-import { SetURLSearchParams, useLoaderData, useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { SetURLSearchParams, useParams, useSearchParams } from 'react-router-dom';
 import AwardsTable from '../Parts/AwardsTable';
 import TimeAwardsTable from '../Parts/TimeAwardsTable';
-import Header from '../Parts/Header';
-import Footer from '../Parts/Footer';
 import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
-
 import { AwardsState } from '../Interfaces/states';
-import { ErrorResponse, GetResultsResponse } from '../Interfaces/responses';
-import { SlugParams } from '../Interfaces/props';
-
-export async function awardsLoader(params: SlugParams): Promise<AwardsState> {
-    const state: AwardsState = {
-        status: 0,
-        loading: true,
-        error: false,
-        message: null,
-        numAG: -1,
-        numOV: -1,
-        overallInc: true,
-        grandMasters: false,
-        masters: false,
-        count: 0,
-        event: null,
-        years: [],
-        year: null,
-        results: {}
-    };
-    const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
-    const requestOptions = {
-        method: 'POST',
-        body: JSON.stringify({ slug: params.slug, year: params.year }),
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + import.meta.env.VITE_CHRONOKEEP_ACCESS_TOKEN
-        }
-    };
-    try {
-        const response = await fetch(BASE_URL + 'results', requestOptions);
-        const data: GetResultsResponse | ErrorResponse = await (response.json() as Promise<GetResultsResponse | ErrorResponse>);
-        if (response.status === 200) {
-            const dta = data as GetResultsResponse;
-            state.status = response.status;
-            state.loading = false;
-            state.error = false;
-            state.message = null;
-            state.count = dta.count;
-            state.event = dta.event;
-            state.years = dta.years;
-            state.year = dta.event_year;
-            state.results = dta.results;
-        } else {
-            const err = data as ErrorResponse
-            state.status = response.status;
-            state.loading = false;
-            state.error = true;
-            state.message = err.message;
-        }
-    } catch(e) {
-        let msg: string = "unknown error";
-        if (typeof e === 'string') {
-            msg = e;
-        } else if (e instanceof Error) {
-            msg = e.message;
-        }
-        state.status = 503;
-        state.loading = false;
-        state.error = true;
-        state.message = msg;
-        console.log("There was an error!", e)
-    };
-    return state;
-}
-
-const useAwards = (): { state: AwardsState, setState: React.Dispatch<React.SetStateAction<AwardsState>> } => {
-    const [searchParams] = useSearchParams();
-    const loadedState = useLoaderData() as AwardsState;
-    const [state, setState] = useState<AwardsState>({
-        status: loadedState.status,
-        loading: loadedState.loading,
-        error: loadedState.error,
-        message: loadedState.message,
-        numAG: searchParams.get("ag") ? 3 : Number(searchParams.get("ag")) < 0 ? 3 : Number(searchParams.get("ag")),
-        numOV: searchParams.get("ov") ? 3 : Number(searchParams.get("ov")) < 0 ? 3 : Number(searchParams.get("ov")),
-        overallInc: (searchParams.get("inc")) === "true",
-        grandMasters: (searchParams.get("gmas")) === "true",
-        masters: (searchParams.get("mas")) === "true",
-        count: loadedState.count,
-        event: loadedState.event,
-        years: loadedState.years,
-        year: loadedState.year,
-        results: loadedState.results
-    })
-    return { state: state, setState: setState }
-}
+import { ResultsLoader } from '../loaders/results';
 
 function pushHistory(state: AwardsState, setSearchParams: SetURLSearchParams): void {
     setSearchParams(params => {
@@ -111,93 +22,87 @@ function pushHistory(state: AwardsState, setSearchParams: SetURLSearchParams): v
 function handleAGChange(
     event: { target: HTMLSelectElement },
     setState: React.Dispatch<React.SetStateAction<AwardsState>>,
-    state: AwardsState,
-    setSearchParams: SetURLSearchParams
+    state: AwardsState
     ) {
     setState({
         ...state,
         numAG: Number(event.target.value)
     });
-    pushHistory(state, setSearchParams);
 }
 
 function handleOVChange(
     event: { target: HTMLSelectElement },
     setState: React.Dispatch<React.SetStateAction<AwardsState>>,
-    state: AwardsState,
-    setSearchParams: SetURLSearchParams
+    state: AwardsState
     ) {
     setState({
         ...state,
         numOV: Number(event.target.value)
     });
-    pushHistory(state, setSearchParams);
 }
 
 function handleOverallChange(
     event: { target: HTMLInputElement },
     setState: React.Dispatch<React.SetStateAction<AwardsState>>,
-    state: AwardsState,
-    setSearchParams: SetURLSearchParams
+    state: AwardsState
     ) {
     setState({
         ...state,
         overallInc: event.target.checked
     });
-    pushHistory(state, setSearchParams);
 }
 
 function handleMastersChange(
     event: { target: HTMLInputElement },
     setState: React.Dispatch<React.SetStateAction<AwardsState>>,
-    state: AwardsState,
-    setSearchParams: SetURLSearchParams
+    state: AwardsState
     ) {
     setState({
         ...state,
         masters: event.target.checked
     });
-    pushHistory(state, setSearchParams);
 }
 
 function handleGrandMastersChange(
     event: { target: HTMLInputElement },
     setState: React.Dispatch<React.SetStateAction<AwardsState>>,
-    state: AwardsState,
-    setSearchParams: SetURLSearchParams
+    state: AwardsState
     ) {
     setState({
         ...state,
         grandMasters: event.target.checked
     });
-    pushHistory(state, setSearchParams);
 }
 
 export default function Awards() {
-    const { state, setState } = useAwards();
+    const [searchParams] = useSearchParams();
     const params = useParams();
+    const state = ResultsLoader(params, 'awards');
+    const [awardsState, setAwardsState] = useState<AwardsState>({
+        numAG: searchParams.get("ag") === null ? 3 : Number(searchParams.get("ag")) < 0 ? 3 : Number(searchParams.get("ag")),
+        numOV: searchParams.get("ov") === null ? 3 : Number(searchParams.get("ov")) < 0 ? 3 : Number(searchParams.get("ov")),
+        overallInc: (searchParams.get("inc")) !== "false",
+        grandMasters: (searchParams.get("gmas")) === "true",
+        masters: (searchParams.get("mas")) === "true"
+    });
+    useEffect(() => {
+        pushHistory(awardsState, setSearchParams);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [awardsState]);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, setSearchParams] = useSearchParams();
     document.title = `Chronokeep - Awards`
     if (state.error === true) {
         document.title = `Chronokeep - Error`
         return (
-            <div>
-                <Header page={"awards"} />
-                <ErrorMsg status={state.status} message={state.message} />
-                <Footer />
-            </div>
+            <ErrorMsg status={state.status} message={state.message} />
         );
     }
     if (state.loading === true) {
         return (
-            <div>
-                <Header page={"awards"} />
-                <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
-                    <h1 className="text-important display-4">Loading Results</h1>
-                    <Loading />
-                </div>
-                <Footer />
+            <div className="mx-auto sm-max-width text-center container-md border border-light p-5 pt-4">
+                <h1 className="text-important display-4">Loading Awards</h1>
+                <Loading />
             </div>
         );
     }
@@ -212,7 +117,6 @@ export default function Awards() {
     document.title = `Chronokeep - ${state.year?.year} ${state.event?.name} Awards`
     return (
         <div>
-            <Header page={"awards"} />
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-1 h1">{`${state.year?.year} ${state.event?.name} Awards`}</p>
@@ -237,7 +141,7 @@ export default function Awards() {
                 <div className='awards-options row align-items-center'>
                     <div className='col'>
                         <label htmlFor="numberOVWinners">Number of Overall Awards</label>
-                        <select className="form-select" aria-label="Default select count" defaultValue={state.numOV} id="numberOVWinners" onChange={(event) => handleOVChange(event, setState, state, setSearchParams)}>
+                        <select className="form-select" aria-label="Default select count" defaultValue={awardsState.numOV} id="numberOVWinners" onChange={(event) => handleOVChange(event, setAwardsState, awardsState)}>
                             <option value="0">Zero</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
@@ -253,7 +157,7 @@ export default function Awards() {
                     </div>
                     <div className='col'>
                         <label htmlFor="numberAGWinners">Number of Age Group Awards</label>
-                        <select className="form-select" aria-label="Default select count" defaultValue={state.numAG} id="numberAGWinners" onChange={(event) => handleAGChange(event, setState, state, setSearchParams)}>
+                        <select className="form-select" aria-label="Default select count" defaultValue={awardsState.numAG} id="numberAGWinners" onChange={(event) => handleAGChange(event, setAwardsState, awardsState)}>
                             <option value="0">Zero</option>
                             <option value="1">One</option>
                             <option value="2">Two</option>
@@ -271,19 +175,19 @@ export default function Awards() {
                 <div className='awards-options-bottom row align-items-center'>
                     <div className="col">
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="checkbox" id="overallIncluded" checked={state.overallInc} onChange={(event) => handleOverallChange(event, setState, state, setSearchParams)} />
+                            <input className="form-check-input" type="checkbox" id="overallIncluded" checked={awardsState.overallInc} onChange={(event) => handleOverallChange(event, setAwardsState, awardsState)} />
                             <label className="form-check-label" htmlFor="overallIncluded">Include overall in age groups?</label>
                         </div>
                     </div>
                     <div className="col">
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="checkbox" id="masters" checked={state.masters} onChange={(event) => handleMastersChange(event, setState, state, setSearchParams)} />
+                            <input className="form-check-input" type="checkbox" id="masters" checked={awardsState.masters} onChange={(event) => handleMastersChange(event, setAwardsState, awardsState)} />
                             <label className="form-check-label" htmlFor="masters">Display Masters Group?</label>
                         </div>
                     </div>
                     <div className="col">
                         <div className="form-check form-check-inline">
-                            <input className="form-check-input" type="checkbox" id="grandMasters" checked={state.grandMasters} onChange={(event) => handleGrandMastersChange(event, setState, state, setSearchParams)} />
+                            <input className="form-check-input" type="checkbox" id="grandMasters" checked={awardsState.grandMasters} onChange={(event) => handleGrandMastersChange(event, setAwardsState, awardsState)} />
                             <label className="form-check-label" htmlFor="grandMasters">Display Grand Masters Group?</label>
                         </div>
                     </div>
@@ -311,11 +215,11 @@ export default function Awards() {
                                             info={info}
                                             key={index}
                                             showTitle={distances.length > 1}
-                                            numberAG={state.numAG}
-                                            numberOV={state.numOV}
-                                            overallInc={state.overallInc}
-                                            grandMasters={state.grandMasters}
-                                            masters={state.masters}
+                                            numberAG={awardsState.numAG}
+                                            numberOV={awardsState.numOV}
+                                            overallInc={awardsState.overallInc}
+                                            grandMasters={awardsState.grandMasters}
+                                            masters={awardsState.masters}
                                             />
                                     )
                                 } else {
@@ -326,11 +230,11 @@ export default function Awards() {
                                             info={info}
                                             key={index}
                                             showTitle={distances.length > 1}
-                                            numberAG={state.numAG}
-                                            numberOV={state.numOV}
-                                            overallInc={state.overallInc}
-                                            grandMasters={state.grandMasters}
-                                            masters={state.masters}
+                                            numberAG={awardsState.numAG}
+                                            numberOV={awardsState.numOV}
+                                            overallInc={awardsState.overallInc}
+                                            grandMasters={awardsState.grandMasters}
+                                            masters={awardsState.masters}
                                             />
                                     )
                                 }

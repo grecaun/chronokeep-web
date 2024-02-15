@@ -6,13 +6,11 @@ import Submitting from './Submitting';
 import Modal from './Modal';
 import save from '/img/sd-card.svg';
 import gear from '/img/gear.svg';
-import { useLocation } from 'react-router-dom';
 import { AccountInfoState } from '../Interfaces/states';
-import { AccountProps } from '../Interfaces/props';
+import { AccountInfoProps } from '../Interfaces/props';
 import { ErrorResponse, ErrorWithStatus, GetAccountResponse } from '../Interfaces/responses';
-import { Account } from '../Interfaces/types';
 
-class AccountInfo extends Component<AccountProps, AccountInfoState> {
+class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
     state: AccountInfoState = {
         nameDisabled: true,
         emailDisabled: true,
@@ -36,7 +34,7 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
     componentDidMount() {
         this.setState({
             account: this.props.account,
-            path: this.props.location == null ? "API" : this.props.location.pathname.toUpperCase().replace('/', '')
+            path: this.props.page == 'account' ? "API" : "REMOTE"
         });
     }
 
@@ -332,10 +330,4 @@ class AccountInfo extends Component<AccountProps, AccountInfoState> {
     }
 }
 
-const AccountInfoPart = (props: {account: Account}) => (
-    <AccountInfo
-        {...props}
-        location={useLocation()}
-    />);
-
-export default AccountInfoPart;
+export default AccountInfo;

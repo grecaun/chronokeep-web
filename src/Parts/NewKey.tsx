@@ -9,7 +9,7 @@ import { ErrorWithStatus, ErrorResponse, ModifyKeyResponse } from '../Interfaces
 
 class NewKey extends Component<NewKeyProps> {
     render() {
-        const parent = this.props.parent;
+        const addKey = this.props.addKey;
         const isAccountPage = this.props.page === 'account';
         let types = {
             read: { value: "read", text: "Read" },
@@ -47,14 +47,14 @@ class NewKey extends Component<NewKeyProps> {
                                 data => {
                                     if (Object.prototype.hasOwnProperty.call(data.data, 'key')) {
                                         const keyResponse = data.data as ModifyKeyResponse
-                                        parent.add(keyResponse.key);
+                                        addKey(keyResponse.key);
                                         setValues({
                                             name: '',
                                             type: 'read',
                                             allowedHosts: '',
                                             validUntil: '',
                                         }).catch(e => {
-                                            console.log("error setting values ", e)
+                                            console.error("error setting values ", e)
                                         });
                                     } else {
                                         const errResponse = data.data as ErrorResponse

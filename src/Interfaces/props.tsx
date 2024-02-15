@@ -1,15 +1,14 @@
+import KeyInfo from "../Parts/KeyInfo";
 import { Account, Key, TimeResult } from "./types";
-import AccountPage from "../Pages/Account"
-import { Location, SetURLSearchParams } from "react-router-dom";
+import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
     results: TimeResult[],
     gender: string
 }
 
-export interface AccountProps {
+export interface AccountInfoProps extends PageProps {
     account: Account
-    location: Location
 }
 
 export interface ParamProps {
@@ -47,10 +46,6 @@ export interface PageProps {
     page: string;
 }
 
-export interface LoginProps extends PageProps {
-    location: { state?: { from?: string } }
-}
-
 export interface ResultsTableProps {
     distance: string
     results: TimeResult[]
@@ -68,9 +63,10 @@ export interface AwardsProps extends ResultsTableProps {
 }
 
 export interface NewKeyProps extends PageProps {
-    parent: AccountPage
+    addKey: (key: Key) => void
 }
 
 export interface KeyInfoProps extends NewKeyProps {
+    remove: (key: Key, childKey: KeyInfo) => void
     keyItem: Key
 }

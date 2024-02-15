@@ -34,7 +34,11 @@ export interface AccountInfoState {
     path: string
 }
 
-export interface BaseState {
+export interface PageState {
+    page: string
+}
+
+export interface BaseState extends PageState {
     status: number
     loading: boolean
     error: boolean
@@ -59,7 +63,7 @@ export interface EventsState extends BaseState {
     events: Event[]
 }
 
-export interface LoginState {
+export interface LoginState extends PageState {
     success: boolean
 }
 
@@ -71,15 +75,8 @@ export interface PersonState extends BaseState {
     person: Person
 }
 
-export interface QRState {
-    status: number
+export interface QRState extends ResultsState {
     value: string
-    loading: boolean
-    error: boolean
-    message: string | null
-    event: Event
-    year: string | undefined
-    page_name: string
 }
 
 export interface ResultsState extends BaseState {
@@ -90,7 +87,7 @@ export interface ResultsState extends BaseState {
     results: { [index: string]: TimeResult[] }
 }
 
-export interface AwardsState extends ResultsState {
+export interface AwardsState {
     numAG: number
     numOV: number
     overallInc: boolean
