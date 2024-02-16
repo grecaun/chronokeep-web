@@ -103,10 +103,8 @@ function Account(props: PageProps) {
     document.title = `Chronokeep - ${props.page === 'account' ? 'Account' : 'Remote'}`
     if (state.error === true && [401, 403].indexOf(state.status) !== -1) {
         let path = '/login';
-        let from = '/account';
         if (props.page === 'remote') {
             path = '/remote/login';
-            from = '/remote';
         }
         return <Navigate to={path} />
     }
