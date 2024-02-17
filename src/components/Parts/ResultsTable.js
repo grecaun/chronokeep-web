@@ -40,6 +40,12 @@ class ResultsTable extends Component {
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
             }
+            if (a.finish && !b.finish) {
+                return -1;
+            }
+            if (!a.finish && b.finish) {
+                return 1;
+            }
             // sort by occurence, this will place everyone who's finished above those who haven't
             if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
