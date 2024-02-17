@@ -153,7 +153,7 @@ a.active:hover {
   padding: 0px;
 }
 .chronokeep-card-header {
-  background-color: #ffffff;;
+  background-color: #ffffff;
 }
 .hidden {
   display: none;
@@ -184,6 +184,7 @@ button.close {
   background-color: transparent;
   border: 0;
   -webkit-appearance: none;
+  appearance: none;
 }
 .half-width {
   width: auto;
