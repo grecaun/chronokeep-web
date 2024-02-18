@@ -30,19 +30,29 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
             }
+            // propogate finish times to the top of the list
             if (a.finish && !b.finish) {
                 return -1;
             }
             if (!a.finish && b.finish) {
                 return 1;
             }
-            // sort by occurence, this will place everyone who's finished above those who haven't
-            if (a.occurence !== b.occurence) {
+            // no longer sort by occurence -- this was used to propogate finish times to the top
+            // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
+            // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
+            // the runner at point A will display above the runner at point B even though the runner at A is behind
+            // the runner at B -- with this in mind it is most likely better to not sort by occurence.
+            /*if (a.occurence !== b.occurence) {
                 return b.occurence - a.occurence
-            }
+            }//*/
             // if both values are set to the same ranking (start times with -1 or 0 set essentially)
             // sort by gun time given
             if (a.ranking === b.ranking) {
+                // the other case here is that one runner passed another
+                if (a.occurence != b.occurence) {
+                    // sort hight to low (instead of low to high for times and ranks)
+                    return b.occurence - a.occurence;
+                }
                 if (a.seconds === b.seconds) {
                     return a.milliseconds - b.milliseconds;
                 }
