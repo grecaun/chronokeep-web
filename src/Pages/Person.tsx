@@ -128,7 +128,7 @@ function Person() {
                         { start !== null &&
                         <div className="col col-cst text-center">
                             <div className="h5 border-bottom">Start Time</div>
-                            <div className="h5">{FormatTime(start.seconds, start.milliseconds, start, true)}</div>
+                            <div className="h5">{FormatTime(start.seconds, start.milliseconds, start)}</div>
                         </div>
                         }
                         { state.distance !== null &&
