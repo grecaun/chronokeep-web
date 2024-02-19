@@ -20,7 +20,7 @@ class AwardsTable extends Component<AwardsProps> {
             if (!a.finish && b.finish) {
                 return 1;
             }
-            // sort by occurence
+            // no longer sort by occurence -- this was used to propogate finish times to the top
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
             // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
             // the runner at point A will display above the runner at point B even though the runner at A is behind
