@@ -50,7 +50,7 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (a.ranking === b.ranking) {
                 // the other case here is that one runner passed another
                 if (a.occurence != b.occurence) {
-                    // sort hight to low (instead of low to high for times and ranks)
+                    // sort high to low (instead of low to high for times and ranks)
                     return b.occurence - a.occurence;
                 }
                 if (a.seconds === b.seconds) {

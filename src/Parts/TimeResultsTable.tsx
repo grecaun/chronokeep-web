@@ -11,18 +11,43 @@ class TimeResultsTable extends Component<ResultsTableProps> {
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
-        const resultMap = new Map<string, TimeResult>()
-        results.map(result => {
-            if (resultMap.has(result.bib)) {
-                if (result.occurence > resultMap.get(result.bib)!.occurence) {
-                    resultMap.set(result.bib, result)
+        const resMap = new Map<string, TimeResult>()
+        results.forEach(res => {
+            if (resMap.has(res.bib)) {
+                if (res.occurence > resMap.get(res.bib)!.occurence) {
+                    resMap.set(res.bib, res)
                 }
             } else {
-                resultMap.set(result.bib, result)
+                resMap.set(res.bib, res)
             }
         })
-        results = Array.from(resultMap.values())
+        results = Array.from(resMap.values())
         const sorted = results.sort((a: TimeResult, b: TimeResult) => {
+            // sort all DNF and DNS to the bottom
+            if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
+                return a.type - b.type;
+            }
+            // propogate finish times to the top of the list
+            if (a.finish && !b.finish) {
+                return -1;
+            }
+            if (!a.finish && b.finish) {
+                return 1;
+            }
+            // if both values are set to the same ranking (start times with -1 or 0 set essentially)
+            // sort by gun time given
+            if (a.ranking === b.ranking) {
+                // the other case here is that one runner passed another
+                if (a.occurence != b.occurence) {
+                    // sort high to low (instead of low to high for times and ranks)
+                    return b.occurence - a.occurence;
+                }
+                if (a.seconds === b.seconds) {
+                    return a.milliseconds - b.milliseconds;
+                }
+                return a.seconds - b.seconds;
+            }
+            // finally sort by ranking
             return a.ranking - b.ranking
         })
         return (
