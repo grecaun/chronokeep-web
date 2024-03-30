@@ -7,10 +7,21 @@ import { ResultsTableProps } from '../Interfaces/props';
 class TimeResultsTable extends Component<ResultsTableProps> {
 
     render() {
-        const results = this.props.results;
+        let results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
+        const resultMap = new Map<string, TimeResult>()
+        results.map(result => {
+            if (resultMap.has(result.bib)) {
+                if (result.occurence > resultMap.get(result.bib)!.occurence) {
+                    resultMap.set(result.bib, result)
+                }
+            } else {
+                resultMap.set(result.bib, result)
+            }
+        })
+        results = Array.from(resultMap.values())
         const sorted = results.sort((a: TimeResult, b: TimeResult) => {
             return a.ranking - b.ranking
         })
