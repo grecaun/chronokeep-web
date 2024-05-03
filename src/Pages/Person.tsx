@@ -67,9 +67,13 @@ function Person() {
     if (ranking_gender === state.person.gender.toUpperCase()) {
         ranking_gender = state.person.gender;
     }
+    let event: string = `${state.event.name}`;
+    if (state.single_distance === false) {
+        event = `${state.event.name} ${state.person.distance}`;
+    }
     let Certificate: JSX.Element | null = finish !== null ? CertificateGenerator(
         `${state.person.first} ${state.person.last}`,
-        `${state.event.name} ${state.person.distance}`,
+        event,
         FormatTime(finish.chip_seconds, 0, finish, true, true),
         DateString(state.year.date_time),
         false
