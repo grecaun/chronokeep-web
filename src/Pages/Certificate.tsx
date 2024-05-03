@@ -18,9 +18,9 @@ function Certificate() {
     }
 
     let name: string = `${state.person.first} ${state.person.last}`;
-    let event: string = `${state.event.name}`;
+    let event: string = `${state.year.year} ${state.event.name}`;
     if (state.single_distance === false) {
-        event = `${state.event.name} ${state.person.distance}`;
+        event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
     }
     let time: string = ``;
     if (finish !== null) {
