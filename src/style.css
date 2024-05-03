@@ -271,3 +271,41 @@ button.close {
     margin: 0px 30px;
   }
 }
+.certificate-container {
+  background-image: url("/certificate-template2.png");
+  background-size: cover;
+  width: 800px;
+  height: 565px;
+  position: relative;
+}
+.certificate-wrapper {
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.certificate-name {
+  font-size: 60px;
+  text-align: center;
+  font-weight: bold;
+}
+.certificate-event-distance {
+  font-size: 30px;
+  text-align: center;
+  margin-left: 100px;
+  width: 600px;
+}
+.certificate-time {
+  font-size: 60px;
+  text-align: center;
+  font-weight: bold;
+}
+.certificate-date {
+  font-size: 30px;
+  text-align: center;
+}
+.chronokeep-invisible {
+  display: none;
+}

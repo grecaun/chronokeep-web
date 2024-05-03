@@ -7,6 +7,7 @@ import PersonTime from '../Parts/PersonTime';
 import PersonDistance from '../Parts/PersonDistance';
 import { TimeResult } from '../Interfaces/types';
 import { PersonLoader } from '../loaders/person';
+import { CertificateGenerator } from './Certificate';
 
 function Person() {
     const params = useParams();
@@ -66,6 +67,13 @@ function Person() {
     if (ranking_gender === state.person.gender.toUpperCase()) {
         ranking_gender = state.person.gender;
     }
+    let Certificate: JSX.Element | null = finish !== null ? CertificateGenerator(
+        `${state.person.first} ${state.person.last}`,
+        `${state.event.name} ${state.person.distance}`,
+        FormatTime(finish.chip_seconds, 0, finish, true, true),
+        DateString(state.year.date_time),
+        false
+    ) : null;
     return (
         <div>
             <div className="container-sm m-2 p-4 mx-auto">
@@ -146,6 +154,9 @@ function Person() {
                     </div>
                 </div>
             </div>
+            { Certificate !== null &&
+                Certificate
+            }
             {state.event.type === "time" &&
                 <PersonTime results={results} gender={state.person.gender} />
             }

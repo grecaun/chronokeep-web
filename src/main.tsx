@@ -15,13 +15,18 @@ import Account from './Pages/Account';
 import Events from './Pages/Events';
 import Error from './Pages/Error';
 import DefaultPage from './Pages/DefaultPage';
+import Certificate from './Pages/Certificate';
 
 const router = createBrowserRouter([
+  {
+    path: '/certificate/:slug/:year/:bib',
+    element: <Certificate />
+  },
   {
     element: <DefaultPage />,
     errorElement: <Error />,
     children:
-    [  
+    [
       {
         path: '/awards/:slug/:year?',
         element: <Awards />

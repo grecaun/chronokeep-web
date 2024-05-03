@@ -1,6 +1,6 @@
 import { TimeResult } from "../Interfaces/types"
 
-const FormatTime = (seconds: number, milliseconds: number, result: TimeResult, not_blank: boolean = false) => {
+const FormatTime = (seconds: number, milliseconds: number, result: TimeResult, not_blank: boolean = false, no_millis: boolean = false) => {
     // Calculate the string to display for Time (Chip to Chip time)
     const hour = Math.floor(seconds / 3600)
     let minutes = Math.floor((seconds % 3600) / 60).toString()
@@ -28,6 +28,13 @@ const FormatTime = (seconds: number, milliseconds: number, result: TimeResult, n
             return 'DNS'
         }
         return ''
+    }
+    if (no_millis === true) {
+        // Only show hour if it exists.
+        if (hour > 0) {
+            return (`${hour}:${minutes}:${sec}`)
+        }
+        return (`${minutes}:${sec}`)
     }
     // Only show hour if it exists.
     if (hour > 0) {
