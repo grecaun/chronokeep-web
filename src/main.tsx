@@ -16,6 +16,8 @@ import Events from './Pages/Events';
 import Error from './Pages/Error';
 import DefaultPage from './Pages/DefaultPage';
 import Certificate, { CertificateNoAPI } from './Pages/Certificate';
+import Unsubscribe from './Pages/Unsubscribe';
+import Subscribe from './Pages/Subscribe';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children:
     [
+      {
+        path: '/unsubscribe/:email',
+        element: <Unsubscribe />
+      },
+      {
+        path: '/subscribe/:email',
+        element: <Subscribe />
+      },
       {
         path: '/awards/:slug/:year?',
         element: <Awards />

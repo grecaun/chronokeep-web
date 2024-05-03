@@ -63,6 +63,11 @@ export interface EventsState extends BaseState {
     events: Event[]
 }
 
+export interface SubscriptionState extends BaseState {
+    email: string
+    success: boolean
+}
+
 export interface LoginState extends PageState {
     success: boolean
 }
