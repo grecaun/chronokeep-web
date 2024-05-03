@@ -67,7 +67,7 @@ export function CertificateGenerator(
                     <button className="btn btn-danger btn-chronokeep" onClick={downloadImage}>Download Finisher Certificate</button>
                 </div>
             }
-            <div className="mx-auto fit-width mt-3">
+            <div className="mx-auto fit-width">
                 <div id="certificate" className={`certificate-container ${displ}`}>
                     <div className="certificate-wrapper">
                         <div className="certificate-name">{name}</div>
@@ -78,6 +78,16 @@ export function CertificateGenerator(
                 </div>
             </div>
         </div>
+    )
+}
+
+export function CertificateNoAPI() {
+    const params = useParams()
+    if (params.name === undefined || params.event === undefined || params.time === undefined || params.date === undefined) {
+        return;
+    }
+    return (
+        CertificateGenerator(params.name, params.event, params.time, params.date, true)
     )
 }
 

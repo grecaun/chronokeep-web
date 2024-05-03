@@ -15,12 +15,16 @@ import Account from './Pages/Account';
 import Events from './Pages/Events';
 import Error from './Pages/Error';
 import DefaultPage from './Pages/DefaultPage';
-import Certificate from './Pages/Certificate';
+import Certificate, { CertificateNoAPI } from './Pages/Certificate';
 
 const router = createBrowserRouter([
   {
     path: '/certificate/:slug/:year/:bib',
     element: <Certificate />
+  },
+  {
+    path: '/certificate/:name/:event/:time/:date',
+    element: <CertificateNoAPI />
   },
   {
     element: <DefaultPage />,
