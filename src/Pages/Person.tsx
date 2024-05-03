@@ -88,7 +88,9 @@ function Person() {
                     <div className="text-center text-important display-4 m-0">{`${state.person.anonymous === false ? state.person.first : "Bib"} ${state.person.anonymous === false ? state.person.last : state.person.bib}`}</div>
                     <div className="text-center text-important text-secondary m-0">{`${state.person.gender === "" ? "" : state.person.gender + " - "}${state.person.age}`}</div>
                 </div>
-                <div className="h3 m-2 mt-0 text-center text-important text-secondary mx-auto">{state.person.distance}</div>
+                { state.single_distance === false &&
+                    <div className="h3 m-2 mt-0 text-center text-important text-secondary mx-auto">{state.person.distance}</div>
+                }
                 <div className="bib-box h4 m-2 p-2 mx-auto">{state.person.bib}</div>
             </div>
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">

@@ -73,6 +73,7 @@ export interface PersonState extends BaseState {
     year: EventYear
     results: TimeResult[]
     person: Person
+    single_distance: boolean
 }
 
 export interface QRState extends ResultsState {

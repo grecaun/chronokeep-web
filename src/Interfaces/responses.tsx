@@ -74,4 +74,5 @@ export interface GetBibResultsResponse {
     year: EventYear
     results: TimeResult[]
     person: Person
+    single_distance: boolean
 }

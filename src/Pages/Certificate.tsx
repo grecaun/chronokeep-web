@@ -17,13 +17,15 @@ function Certificate() {
         }
     }
 
-    let time: string = ``;
+    let name: string = `${state.person.first} ${state.person.last}`;
     let event: string = `${state.event.name}`;
-    if (finish !== null) {
-        time = FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true, true);
+    if (state.single_distance === false) {
         event = `${state.event.name} ${state.person.distance}`;
     }
-    let name: string = `${state.person.first} ${state.person.last}`;
+    let time: string = ``;
+    if (finish !== null) {
+        time = FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true, true);
+    }
     let date: string = DateString(state.year.date_time);
 
     return (
