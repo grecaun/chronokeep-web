@@ -6,13 +6,13 @@ import { CheckinLoader } from "../loaders/checkin";
 import ErrorMsg from "../Parts/ErrorMsg";
 import Loading from "../Parts/Loading";
 import DateString from "../Parts/DateString";
-import { useState } from "react";
+import CheckinRow from "../Parts/CheckinRow";
 
 function updateParticipant(participant: Participant, state: CheckinPageState, setState: React.Dispatch<React.SetStateAction<CheckinPageState>>) {
     userService.updateParticipant(participant)
         .then(
             () => {
-                const newParts = state.participants.filter((part, _) => part.alternate_id !== participant.alternate_id)
+                const newParts = state.participants.filter((part, _) => part.id !== participant.id)
                 newParts.push(participant)
                 setState({
                     ...state,
@@ -72,9 +72,7 @@ function Checkin() {
                     <div className="p-0">
                         { participants.map(part => {
                             return (
-                                <div>
-                                    {`${part.first} ${part.last}`}
-                                </div>
+                                <CheckinRow participant={part} key={part.id}/>
                             );
                         })}
                     </div>

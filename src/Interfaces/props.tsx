@@ -1,5 +1,5 @@
 import KeyInfo from "../Parts/KeyInfo";
-import { Account, Key, TimeResult } from "./types";
+import { Account, Key, Participant, TimeResult } from "./types";
 import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
@@ -53,6 +53,10 @@ export interface ResultsTableProps {
     key: number
     info: { slug: string | undefined, year: string | undefined }
     showTitle: boolean
+}
+
+export interface CheckinRowProps {
+    participant: Participant
 }
 
 export interface AwardsProps extends ResultsTableProps {

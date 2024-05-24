@@ -60,7 +60,7 @@ export interface Person {
 }
 
 export interface Participant {
-    alternate_id: string
+    id: string
     bib: string
     first: string
     last: string

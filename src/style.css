@@ -309,3 +309,6 @@ button.close {
 .chronokeep-invisible {
   display: none;
 }
+.part-hidden {
+  display: none;
+}
