@@ -3,8 +3,9 @@ import { CheckinPageState } from "../Interfaces/states";
 import { userService } from "../Auth/_services/user.service";
 import { ErrorResponse, ErrorWithStatus, GetCheckinParticipantsResponse } from "../Interfaces/responses";
 import { Participant } from "../Interfaces/types";
+import { Params } from "react-router-dom";
 
-export function CheckinLoader(page: string): { state: CheckinPageState, setState: React.Dispatch<React.SetStateAction<CheckinPageState>> } {
+export function CheckinLoader(params: Params<string>, page: string): { state: CheckinPageState, setState: React.Dispatch<React.SetStateAction<CheckinPageState>> } {
     const [state, setState] = useState<CheckinPageState>({
         page: page,
         participants: [],
@@ -12,20 +13,25 @@ export function CheckinLoader(page: string): { state: CheckinPageState, setState
         loading: true,
         error: false,
         message: null,
+        event: null,
+        year: null,
+        search: "",
     });
     useEffect(() => {
         const fetchCheckin = async () => {
-            await userService.getParticipants().then(
+            await userService.getParticipants(params.slug!, params.year!).then(
                 data => {
                     if (Object.prototype.hasOwnProperty.call(data.data, 'participants')) {
                         const dta = data.data as GetCheckinParticipantsResponse
                         const sortedParts = dta.participants.sort((a: Participant, b: Participant) => {
                             if (a.last !== b.last) {
-                                return ('' + b.last).localeCompare(a.last)
+                                return ('' + a.last).localeCompare(b.last)
                             }
-                            return ('' + b.first).localeCompare(a.first)
+                            return ('' + a.first).localeCompare(b.first)
                         })
                         state.participants = sortedParts;
+                        state.event = dta.event
+                        state.year = dta.year
                     } else {
                         const err = data.data as ErrorResponse
                         state.error = true;

@@ -247,14 +247,15 @@ function changeEmail(oldEmail: string, newEmail: string, auth: string) {
  * Participant functions
  */
 
-function getParticipants() {
+function getParticipants(slug: string, year: string) {
     let currentUser = authenticationService.currentUserValue;
     let url = API_URL;
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
+        body: JSON.stringify({ slug: slug, year: year }),
         headers: authHeader(currentUser!),
     }
-    return fetchWithRefresh(url + '/r/participants', requestOptions, "API");
+    return fetchWithRefresh(url + 'r/participants', requestOptions, "API");
 }
 
 function updateParticipant(participant: Participant) {
@@ -265,7 +266,7 @@ function updateParticipant(participant: Participant) {
         headers: authHeader(currentUser!),
         body: JSON.stringify({ participant: participant })
     }
-    return fetchWithRefresh(url + '/r/participants/update', requestOptions, "API");
+    return fetchWithRefresh(url + 'r/participants/update', requestOptions, "API");
 }
 
 function addParticipant(participant: Participant) {
@@ -276,6 +277,6 @@ function addParticipant(participant: Participant) {
         headers: authHeader(currentUser!),
         body: JSON.stringify({ participant: participant })
     }
-    return fetchWithRefresh(url + '/r/participants/add', requestOptions, "API");
+    return fetchWithRefresh(url + 'r/participants/add', requestOptions, "API");
 
 }

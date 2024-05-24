@@ -18,6 +18,7 @@ import DefaultPage from './Pages/DefaultPage';
 import Certificate, { CertificateNoAPI } from './Pages/Certificate';
 import Unsubscribe from './Pages/Unsubscribe';
 import Subscribe from './Pages/Subscribe';
+import Checkin from './Pages/Checkin';
 
 const router = createBrowserRouter([
   {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: '/results/:slug/:year?',
         element: <Results />
+      },
+      {
+        path: '/checkin/:slug/:year',
+        element: <Checkin />
       },
       {
         path: '/remote/login',

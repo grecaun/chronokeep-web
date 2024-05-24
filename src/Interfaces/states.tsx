@@ -35,7 +35,10 @@ export interface AccountInfoState {
 }
 
 export interface CheckinPageState extends BaseState {
+    event: Event | null
+    year: EventYear | null
     participants: Participant[]
+    search: string
 }
 
 export interface PageState {

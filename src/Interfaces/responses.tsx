@@ -78,6 +78,8 @@ export interface GetBibResultsResponse {
 }
 
 export interface GetCheckinParticipantsResponse {
+    event: Event
+    year: EventYear
     participants: Participant[]
 }
 
