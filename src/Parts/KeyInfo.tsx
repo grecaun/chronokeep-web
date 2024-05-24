@@ -117,7 +117,7 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                 >
                     {({ status, isSubmitting }) => (
                         <Form className="key-form" id={`key-form${key.value}`}>
-                            <div className="card key-card key-card">
+                            <div className="card key-card">
                                 <p className="card-header chronokeep-card-header text-center">Key - {key.value}</p>
                                 <div className="card-body">
                                     <div>

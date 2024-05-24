@@ -1,26 +1,9 @@
 import { Navigate, useParams } from "react-router-dom";
-import { userService } from "../Auth/_services/user.service";
-import { CheckinPageState } from "../Interfaces/states";
-import { Participant } from "../Interfaces/types";
 import { CheckinLoader } from "../loaders/checkin";
 import ErrorMsg from "../Parts/ErrorMsg";
 import Loading from "../Parts/Loading";
 import DateString from "../Parts/DateString";
 import CheckinRow from "../Parts/CheckinRow";
-
-function updateParticipant(participant: Participant, state: CheckinPageState, setState: React.Dispatch<React.SetStateAction<CheckinPageState>>) {
-    userService.updateParticipant(participant)
-        .then(
-            () => {
-                const newParts = state.participants.filter((part, _) => part.id !== participant.id)
-                newParts.push(participant)
-                setState({
-                    ...state,
-                    participants: newParts
-                })
-            }
-        )
-}
 
 function Checkin() {
     const params = useParams();
@@ -65,14 +48,14 @@ function Checkin() {
             </div>
             { participants.length > 0 &&
             <div>
-                <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
+                <div className="row container-lg xs-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <input type="text" className="input" id="searchBox" placeholder="Search" onChange={handleChange} />
                 </div>
-                <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
+                <div className="row container-lg md-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
                         { participants.map(part => {
                             return (
-                                <CheckinRow participant={part} key={part.id}/>
+                                <CheckinRow participant={part} distances={distances} event={state.event!} year={state.year!} key={part.id}/>
                             );
                         })}
                     </div>
@@ -80,7 +63,7 @@ function Checkin() {
             </div>
             }
             { participants.length === 0 &&
-            <div className="container-lg lg-max-width shadow-sm p-5 mb-3 border border-light">
+            <div className="container-sm sm-max-width shadow-sm p-5 mb-3 border border-light">
                 <div className="text-center">
                     <h2>No participants to check-in.</h2>
                 </div>

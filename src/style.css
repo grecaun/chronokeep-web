@@ -57,8 +57,14 @@ code {
 .lg-max-width {
   max-width: 1000px;
 }
+.md-max-width {
+  max-width: 750px;
+}
 .sm-max-width {
   max-width: 500px;
+}
+.xs-max-width {
+  max-width: 300px;
 }
 .table-distance-header {
   font-size: 1.5rem;
@@ -311,4 +317,23 @@ button.close {
 }
 .part-hidden {
   display: none;
+}
+.part-label {
+  text-align: center;
+}
+.part-forms {
+  text-align: center;
+}
+.part-shared {
+  text-align: center;
+  padding: 10px;
+  border: #8faed2;
+  border-bottom-style: solid;
+  border-width: 1px;
+}
+.chronkokeep-checkbox {
+  margin-left: 5px;
+}
+.chronokeep-part-col {
+  min-width: 300px;
 }

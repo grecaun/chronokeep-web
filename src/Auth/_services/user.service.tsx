@@ -258,24 +258,24 @@ function getParticipants(slug: string, year: string) {
     return fetchWithRefresh(url + 'r/participants', requestOptions, "API");
 }
 
-function updateParticipant(participant: Participant) {
+function updateParticipant(slug: string, year: string, participant: Participant) {
     let currentUser = authenticationService.currentUserValue;
     let url = API_URL;
     const requestOptions = {
         method: 'POST',
         headers: authHeader(currentUser!),
-        body: JSON.stringify({ participant: participant })
+        body: JSON.stringify({ slug: slug, year: year, participant: participant })
     }
     return fetchWithRefresh(url + 'r/participants/update', requestOptions, "API");
 }
 
-function addParticipant(participant: Participant) {
+function addParticipant(slug: string, year: string, participant: Participant) {
     let currentUser = authenticationService.currentUserValue;
     let url = API_URL;
     const requestOptions = {
         method: 'POST',
         headers: authHeader(currentUser!),
-        body: JSON.stringify({ participant: participant })
+        body: JSON.stringify({ slug: slug, year: year, participant: participant })
     }
     return fetchWithRefresh(url + 'r/participants/add', requestOptions, "API");
 
