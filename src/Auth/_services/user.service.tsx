@@ -1,7 +1,7 @@
 import { authHeader } from '../_helpers/auth-header';
 import { handleResponse, handleResponseNoLogout } from '../_helpers/handle-response';
 import { authenticationService } from './authentication.service';
-import { AuthTokens, Key } from '../../Interfaces/types';
+import { AuthTokens, Key, Participant } from '../../Interfaces/types';
 import { ErrorWithStatus } from '../../Interfaces/responses';
 
 export const userService = {
@@ -14,6 +14,9 @@ export const userService = {
     addAccount,
     changeEmail,
     changePassword,
+    getParticipants,
+    updateParticipant,
+    addParticipant,
 };
 
 const API_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
@@ -238,4 +241,41 @@ function changeEmail(oldEmail: string, newEmail: string, auth: string) {
         .then(() => {
             return authenticationService.logout(auth);
         });
+}
+
+/*
+ * Participant functions
+ */
+
+function getParticipants() {
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader(currentUser!),
+    }
+    return fetchWithRefresh(url + '/r/participants', requestOptions, "API");
+}
+
+function updateParticipant(participant: Participant) {
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(currentUser!),
+        body: JSON.stringify({ participant: participant })
+    }
+    return fetchWithRefresh(url + '/r/participants/update', requestOptions, "API");
+}
+
+function addParticipant(participant: Participant) {
+    let currentUser = authenticationService.currentUserValue;
+    let url = API_URL;
+    const requestOptions = {
+        method: 'POST',
+        headers: authHeader(currentUser!),
+        body: JSON.stringify({ participant: participant })
+    }
+    return fetchWithRefresh(url + '/r/participants/add', requestOptions, "API");
+
 }

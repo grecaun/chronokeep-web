@@ -1,15 +1,15 @@
-import { ErrorResponse, GetAccountResponse, GetAllAccountsResponse, GetKeysResponse, ModifyAccountResponse, ModifyKeyResponse } from '../../Interfaces/responses';
+import { AddCheckinParticipantResponse, ErrorResponse, GetAccountResponse, GetAllAccountsResponse, GetCheckinParticipantsResponse, GetKeysResponse, ModifyAccountResponse, ModifyKeyResponse } from '../../Interfaces/responses';
 import { AuthTokens } from '../../Interfaces/types';
 import { authenticationService } from '../_services/authentication.service';
 
 export function handleResponse(response: Response, auth = "API") {
     return response.text().then(text => {
-        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | null = null;
+        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | null = null;
         if (text.length > 0) {
             dataVal = JSON.parse(text);
         }
         const data: { 
-                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens | null,
+                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | AuthTokens | null,
                     status: number
                 } = { data: dataVal, status: response.status }
         if (!response.ok) {
@@ -28,12 +28,12 @@ export function handleResponse(response: Response, auth = "API") {
 
 export function handleResponseNoLogout(response: Response) {
     return response.text().then(text => {
-        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | null = null;
+        let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | null = null;
         if (text.length > 0) {
             dataVal = JSON.parse(text);
         }
         const data: { 
-                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | ErrorResponse | AuthTokens | null,
+                    data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | AuthTokens | null,
                     status: number
                 } = { data: dataVal, status: response.status }
         if (!response.ok) {

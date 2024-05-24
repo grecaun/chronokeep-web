@@ -59,6 +59,21 @@ export interface Person {
     age: number
 }
 
+export interface Participant {
+    alternate_id: string
+    bib: string
+    first: string
+    last: string
+    birthdate: string
+    gender: string
+    age_group: string
+    distance: string
+    anonymous: boolean
+    sms_enabled: boolean
+    mobile: string
+    apparel: string
+}
+
 export interface Distance {
     name: string
     unit: string

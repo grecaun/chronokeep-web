@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, Distance, Event, EventYear, Key, Person, TimeResult } from "./types"
+import { Account, Distance, Event, EventYear, Key, Participant, Person, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -32,6 +32,10 @@ export interface AccountInfoState {
         setStatus: (status?: string) => void,
         setSubmitting: (isSubmitting: boolean) => void } | null
     path: string
+}
+
+export interface CheckinPageState extends BaseState {
+    participants: Participant[]
 }
 
 export interface PageState {
