@@ -4,6 +4,8 @@ import ErrorMsg from "../Parts/ErrorMsg";
 import Loading from "../Parts/Loading";
 import DateString from "../Parts/DateString";
 import CheckinRow from "../Parts/CheckinRow";
+import AddCheckin from "../Parts/AddCheckin";
+import { Participant } from "../Interfaces/types";
 
 function Checkin() {
     const params = useParams();
@@ -14,7 +16,20 @@ function Checkin() {
             ...state,
             search: e.target.value.trim().toLocaleLowerCase()
         })
-        console.log(e.target.value.trim())
+    }
+
+    const addParticipant = (p: Participant) => {
+        const newParts = state.participants
+        newParts.push(p)
+        setState({
+            ...state,
+            participants: newParts.sort((a: Participant, b: Participant) => {
+                            if (a.last !== b.last) {
+                                return ('' + a.last).localeCompare(b.last)
+                            }
+                            return ('' + a.first).localeCompare(b.first)
+                        })
+        })
     }
 
     document.title = `Chronokeep - Check-in`    
@@ -46,10 +61,11 @@ function Checkin() {
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
-            { participants.length > 0 &&
+            { state.participants.length > 0 &&
             <div>
                 <div className="row container-lg xs-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <input type="text" className="input" id="searchBox" placeholder="Search" onChange={handleChange} />
+                    <AddCheckin addParticipant={addParticipant} distances={distances} event={state.event!} year={state.year!} />
                 </div>
                 <div className="row container-lg md-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
@@ -62,7 +78,7 @@ function Checkin() {
                 </div>
             </div>
             }
-            { participants.length === 0 &&
+            { state.participants.length === 0 &&
             <div className="container-sm sm-max-width shadow-sm p-5 mb-3 border border-light">
                 <div className="text-center">
                     <h2>No participants to check-in.</h2>

@@ -62,6 +62,13 @@ export interface CheckinRowProps {
     year: EventYear
 }
 
+export interface AddCheckinProps {
+    distances: Set<string>
+    event: Event
+    year: EventYear
+    addParticipant: (p: Participant) => void
+}
+
 export interface AwardsProps extends ResultsTableProps {
     numberAG: number
     numberOV: number
