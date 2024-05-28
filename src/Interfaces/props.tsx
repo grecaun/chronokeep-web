@@ -85,3 +85,7 @@ export interface KeyInfoProps extends NewKeyProps {
     remove: (key: Key, childKey: KeyInfo) => void
     keyItem: Key
 }
+
+export interface EventListProps {
+    events: Event[]
+}

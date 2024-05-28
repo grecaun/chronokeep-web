@@ -353,3 +353,19 @@ button.close {
   margin-top: var(--bs-gutter-y);
   margin-bottom: var(--bs-gutter-y);
 }
+.event-list {
+  text-align: center;
+  max-width: 375px;
+  margin: 30px auto;
+}
+.chronokeep-pagination-link {
+  display: inline-block;
+  text-decoration: none;
+  width: 18px;
+}
+.chronokeep-pagination-active {
+  color: #c1c1c1;
+}
+a.chronokeep-pagination-active:hover {
+  color: #c1c1c1 !important;
+}

@@ -107,3 +107,8 @@ export interface AwardsState {
     grandMasters: boolean
     masters: boolean
 }
+
+export interface EventListState {
+    events: Event[]
+    page: number
+}
