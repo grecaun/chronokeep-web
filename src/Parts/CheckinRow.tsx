@@ -22,7 +22,7 @@ function CheckinRow(props: CheckinRowProps) {
     const year = props.year.year
     if (state.expanded) {
         return (
-            <div className="part-forms part-shared shadow-sm" key={`${part.id}`}>
+            <div className="part-forms part-shared" key={`${part.id}`}>
                 <Formik
                     enableReinitialize={true}
                     initialValues={{
@@ -152,7 +152,7 @@ function CheckinRow(props: CheckinRowProps) {
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
                                                 <label className="chronokeep-label form-label-sm" htmlFor="apparel">T-shirt</label>
-                                                <Field name="apparel" type="text" id={`apparel${part.id}`} className="chronokeep-input form-control form-control-sm" />
+                                                <Field name="apparel" type="text" id={`apparel${part.id}`} className="chronokeep-input form-control form-control-sm" disabled="true" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
                                                 <div className="row g-2 justify-content-center">
@@ -188,8 +188,8 @@ function CheckinRow(props: CheckinRowProps) {
     }
     
     return (
-        <div className="part-label part-shared shadow-sm" key={`${part.id}`} onClick={handleClick}>
-            <div className='' id={`part-label-${part.id}`}>{`${part.first} ${part.last}`}</div>
+        <div className="part-label part-shared" key={`${part.id}`} onClick={handleClick}>
+            <div className='part-name-holder shadow-sm border border-light' id={`part-label-${part.id}`}>{`${part.first} ${part.last}`}</div>
         </div>
     );
 }

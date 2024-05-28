@@ -23,7 +23,7 @@ function AddCheckin(props: AddCheckinProps) {
     const year = props.year.year
     if (state.expanded) {
         return (
-            <div className="part-forms part-shared shadow-sm" key={`-add`}>
+            <div className="part-forms part-shared" key={`-add`}>
                 <Formik
                     enableReinitialize={true}
                     initialValues={{

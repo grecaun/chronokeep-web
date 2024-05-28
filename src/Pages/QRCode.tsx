@@ -22,12 +22,20 @@ function QRCode(props: PageProps) {
         );
     }
     const codeName = params.year !== undefined ? `${state.year!.year} ${state.event!.name}` : `${state.event!.name}`;
+    let pageType = "Results"
+    if (state.page === "status") {
+        pageType = "Status"
+    } else if (state.page === "awards") {
+        pageType = "Awards"
+    } else if (state.page === "registration") {
+        pageType = "Registration"
+    }
     document.title = `Chronokeep - ${codeName} QRCode`;
     return (
         <div className="qr-holder">
             <div className="qr-buffer" />
             <h1 className="qr-label display-4">{codeName}</h1>
-            <h1 className="qr-label display-4">{state.page === "awards" ? "Awards" : state.page === "status" ? "Status" : "Results"} By</h1>
+            <h1 className="qr-label display-4">{pageType} By</h1>
             <QR value={href} ecLevel='H' size={350} quietZone={10} bgColor='#FFFFFF' fgColor='#5c6c7d' qrStyle='dots' eyeRadius={20} />
             <h1 className="qr-label display-4">Chronokeep</h1>
         </div>

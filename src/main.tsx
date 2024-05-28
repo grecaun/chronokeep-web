@@ -71,8 +71,12 @@ const router = createBrowserRouter([
         element: <Results />
       },
       {
-        path: '/checkin/:slug/:year',
+        path: '/checkin/:slug/:year?',
         element: <Checkin />
+      },
+      {
+        path: '/checkin/:slug/:year?/qr',
+        element: <QRCode page='registration' />
       },
       {
         path: '/remote/login',

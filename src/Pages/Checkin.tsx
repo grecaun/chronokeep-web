@@ -63,11 +63,13 @@ function Checkin() {
             </div>
             { state.participants.length > 0 &&
             <div>
-                <div className="row container-lg xs-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
+                <div className="row container-lg xs-max-width mx-auto d-flex align-items-stretch p-0 mb-3">
                     <input type="text" className="input" id="searchBox" placeholder="Search" onChange={handleChange} />
+                </div>
+                <div className="row container-lg md-max-width mx-auto d-flex align-items-stretch p-0 mb-3">
                     <AddCheckin addParticipant={addParticipant} distances={distances} event={state.event!} year={state.year!} />
                 </div>
-                <div className="row container-lg md-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
+                <div className="row container-lg md-max-width mx-auto d-flex align-items-stretch p-0 mb-3">
                     <div className="p-0">
                         { participants.map(part => {
                             return (

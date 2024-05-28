@@ -326,13 +326,18 @@ button.close {
 }
 .part-shared {
   text-align: center;
+  padding: 2px;
+}
+.part-name-holder {
+  margin: auto;
   padding: 10px;
-  border: #8faed2;
-  border-bottom-style: solid;
-  border-width: 1px;
+  width: 250px;
+  border-radius: 10px;
 }
 .chronkokeep-checkbox {
-  margin-left: 5px;
+  margin-left: 15px;
+  margin-top: 15px;
+  margin-bottom: 13px;
 }
 .chronokeep-part-col {
   min-width: 300px;
