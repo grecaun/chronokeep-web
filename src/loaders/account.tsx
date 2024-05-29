@@ -14,6 +14,7 @@ export function AccountLoader(page: string): { state: AccountPageState, setState
             type: ''
         },
         events: [],
+        linked: [],
         show: false,
         deleteKey: null,
         childKey: null,
@@ -26,17 +27,18 @@ export function AccountLoader(page: string): { state: AccountPageState, setState
         const fetchAccount = async () => {
             await userService.getAccountInfo(page === "account" ? "API" : "REMOTE").then(
                 data => {
-                    if (Object.prototype.hasOwnProperty.call(data.data, 'keys')) {
+                    if (Object.prototype.hasOwnProperty.call(data.data, 'account')) {
                         const dta = data.data as GetAccountResponse
-                        const sortedKeys = dta.keys.sort((a: Key, b: Key) => {
+                        const sortedKeys = dta.keys ? dta.keys.sort((a: Key, b: Key) => {
                             if (a.name !== b.name) {
                                 return ('' + b.name).localeCompare(a.name)
                             }
                             return ('' + a.value).localeCompare(b.value)
-                        })
+                        }) : [];
                         state.account = dta.account;
                         state.keys = sortedKeys;
                         state.events = dta.events ? dta.events : [];
+                        state.linked = dta.linked ? dta.linked : [];
                     } else {
                         const err = data.data as ErrorResponse
                         state.error = true;

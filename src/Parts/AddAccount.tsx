@@ -11,7 +11,7 @@ class AddAccount extends Component<PageProps> {
     render () {
         const path = this.props.page === 'account' ? "API" : "REMOTE"
         return (
-            <div className="account-info card chronokeep-crad">
+            <div className="account-info card chronokeep-card">
                 <h4 className="card-header chronokeep-card-header text-center">Add Account</h4>
                 <div className="card-body">
                     <Formik
@@ -28,7 +28,7 @@ class AddAccount extends Component<PageProps> {
                             password: Yup.string().required('Password is required'),
                             type: Yup.string().required('Type is required')
                         })}
-                        onSubmit={({ name, email, password, type }, { setStatus, setSubmitting }) => {
+                        onSubmit={({ name, email, password, type }, { setStatus, setSubmitting, resetForm }) => {
                             setStatus();
                             userService.addAccount(name, email, type, password, path)
                                 .then(
@@ -39,6 +39,7 @@ class AddAccount extends Component<PageProps> {
                                             setStatus(errResponse.message)
                                         }
                                         setSubmitting(false);
+                                        resetForm();
                                     },
                                     error => {
                                         if (Object.prototype.hasOwnProperty.call(error, 'message')) {

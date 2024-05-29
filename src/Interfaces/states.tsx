@@ -56,6 +56,7 @@ export interface AccountPageState extends BaseState {
     keys: Key[]
     account: Account
     events: Event[]
+    linked: Account[]
     show: boolean
     deleteKey: Key | null
     childKey: KeyInfo | null
@@ -111,4 +112,8 @@ export interface AwardsState {
 export interface EventListState {
     events: Event[]
     page: number
+}
+
+export interface LinkedAccountsState {
+    accounts: Account[]
 }

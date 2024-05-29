@@ -17,6 +17,8 @@ export const userService = {
     getParticipants,
     updateParticipant,
     addParticipant,
+    addLinkedAccount,
+    removeLinkedAccount,
 };
 
 const API_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
@@ -241,6 +243,28 @@ function changeEmail(oldEmail: string, newEmail: string, auth: string) {
         .then(() => {
             return authenticationService.logout(auth);
         });
+}
+
+function addLinkedAccount(email: string) {
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(currentUser!),
+        body: JSON.stringify({ email: email })
+    }
+    return fetchWithRefresh(url + 'account/link', requestOptions, "API");
+}
+
+function removeLinkedAccount(email: string) {
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(currentUser!),
+        body: JSON.stringify({ email: email })
+    }
+    return fetchWithRefresh(url + 'account/unlink', requestOptions, "API");
 }
 
 /*

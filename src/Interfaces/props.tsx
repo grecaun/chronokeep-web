@@ -89,3 +89,7 @@ export interface KeyInfoProps extends NewKeyProps {
 export interface EventListProps {
     events: Event[]
 }
+
+export interface LinkedAccountsProps {
+    accounts: Account[]
+}

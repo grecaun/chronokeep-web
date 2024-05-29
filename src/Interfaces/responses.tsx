@@ -12,6 +12,7 @@ export interface GetAccountResponse {
     account: Account
     keys: Key[]
     events: Event[] | null
+    linked: Account[] | null
 }
 
 export interface GetAllAccountsResponse {

@@ -13,6 +13,7 @@ import { ErrorWithStatus } from '../Interfaces/responses';
 import { AccountLoader } from '../loaders/account';
 import AddAccount from '../Parts/AddAccount';
 import EventList from '../Parts/EventList';
+import LinkedAccounts from '../Parts/LinkedAccounts';
 
 function hideModal(state: AccountPageState, setState: React.Dispatch<React.SetStateAction<AccountPageState>>) {
     setState({
@@ -123,8 +124,10 @@ function Account(props: PageProps) {
     }
     const keys = state.keys;
     const account = state.account;
-    const showKeys = state.account.type !== "registration";
+    const notRegistration = state.account.type !== "registration";
+    const linkingAllowed = state.account.type === "admin" || state.account.type === "paid"
     const events = state.events
+    const linked = state.linked
     return (
         <div className="account-container">
             {
@@ -139,10 +142,13 @@ function Account(props: PageProps) {
             { account.type === "admin" &&
                 <AddAccount page={props.page} />
             }
-            { props.page === "account" && events &&
+            { linkingAllowed && linked &&
+                <LinkedAccounts accounts={linked} />
+            }
+            { props.page === "account" && events && events.length > 0 &&
                 <EventList events={events} />
             }
-            { showKeys && keys && keys.length > 0 && 
+            { notRegistration && keys && keys.length > 0 && 
                 <div className="key-info-container">
                     <h4 className="text-center">Keys</h4>
                     <Modal id="keys-modal" show={state.show} handleClose={() => { hideModal(state, setState) }} save={() => {deleteKey(props, state, setState)}} title="Warning" text="Deletion of this key is permanent." saveText="Delete" />
