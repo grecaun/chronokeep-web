@@ -79,7 +79,8 @@ class EventList extends Component<EventListProps, EventListState> {
 
         return (
             <div className="event-list card chronokeep-card">
-                <div className="event-list-content">
+                <h4 className="card-header chronokeep-card-header text-center">Events</h4>
+                <div className="event-list-content text-center">
                     { state.events.slice(start, end).map(ev => {
                         return (
                             <div className="event-list-event" key={ev.slug}>
@@ -91,7 +92,7 @@ class EventList extends Component<EventListProps, EventListState> {
                     })
                     }
                 </div>
-                <div className="event-list-navigate">
+                <div className="event-list-navigate text-center">
                     <button className="btn btn-danger btn-chronokeep m-2" name="previous" onClick={() => {
                         this.setState({
                             page: state.page > 0 ? state.page - 1 : 0,
