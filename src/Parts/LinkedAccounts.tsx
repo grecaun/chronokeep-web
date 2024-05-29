@@ -25,7 +25,7 @@ class LinkedAccounts extends Component<LinkedAccountsProps, LinkedAccountsState>
         return (
             <div className="event-list accordion chronokeep-card" id="link-accordion">
                 <div className="accordion-item">
-                    <h2 className="accordion-header chronokeep-card-header text-center">
+                    <h2 className="accordion-header chronokeep-card-header text-center text-important">
                         <button className="accordion-button chronokeep-card-header" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-link" aria-expanded="false" aria-controls="collapse-link">
                             Linked Accounts
                         </button>

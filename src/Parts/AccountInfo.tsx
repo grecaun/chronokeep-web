@@ -116,7 +116,7 @@ class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
         const path = this.state.path;
         return (
             <div className="account-info card chronokeep-card">
-                <h4 className="card-header chronokeep-card-header text-center">Account Info</h4>
+                <h3 className="card-header chronokeep-card-header text-center text-important">Account Info</h3>
                 <Modal show={this.state.show} handleClose={() => { this.handleClose(); }} save={() => { this.props.setLoading(); this.saveInfo(); }} title="Warning" text="" id="accountModal" saveText="Confirm" />
                 <div className="card-body">
                     <Formik

@@ -79,15 +79,11 @@ class EventList extends Component<EventListProps, EventListState> {
 
         return (
             <div className="event-list card chronokeep-card">
-                <h4 className="card-header chronokeep-card-header text-center">Events</h4>
-                <div className="event-list-content text-center">
+                <h3 className="card-header chronokeep-card-header text-center text-important">Events</h3>
+                <div className="justify-content-center flex-column text-center">
                     { state.events.slice(start, end).map(ev => {
                         return (
-                            <div className="event-list-event" key={ev.slug}>
-                                { ev &&
-                                    <Link to={`/checkin/${ev.slug}`} className="nav-link m-2 p-1" key={ev.slug}>{ev.name}</Link>
-                                }
-                            </div>
+                            ev && <Link to={`/checkin/${ev.slug}`} className="nav-link p-2 m-1 text-important" key={ev.slug}>{ev.name}</Link>
                         );
                     })
                     }

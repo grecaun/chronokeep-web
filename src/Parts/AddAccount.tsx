@@ -13,7 +13,7 @@ class AddAccount extends Component<PageProps> {
         return (
             <div className="event-list accordion chronokeep-card" id="add-account-accord">
                 <div className="accordion-item">
-                    <h2 className="accordion-header chronokeep-card-header text-center">
+                    <h2 className="accordion-header chronokeep-card-header text-center text-important">
                         <button className="accordion-button chronokeep-card-header" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-add-account" aria-expanded="false" aria-controls="collapse-add-account">
                             Add Account
                         </button>
