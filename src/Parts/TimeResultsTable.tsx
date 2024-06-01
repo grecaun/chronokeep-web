@@ -115,7 +115,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                                             <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                             <td className="text-center">{rankStr}</td>
                                             <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`Bib ${result.bib}`}</Link></td>
-                                            <td className="overflow-hidden-lg text-center">{result.age}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                             <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                             <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                             <td className="overflow-hidden-lg text-center">{grankStr}</td>
