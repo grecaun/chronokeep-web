@@ -37,6 +37,13 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (!a.finish && b.finish) {
                 return 1;
             }
+            // propogate start times below other results (but not below DNS/DNF)
+            if (a.segment === "Start" && b.segment !== "Start") {
+                return 1;
+            }
+            if (a.segment !== "Start" && b.segment === "Start") {
+                return -1;
+            }
             // no longer sort by occurence -- this was used to propogate finish times to the top
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
             // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
