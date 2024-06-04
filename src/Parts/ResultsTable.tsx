@@ -46,7 +46,7 @@ class ResultsTable extends Component<ResultsTableProps> {
             }
             // if locations are the same, sort by occurrence
             if (a.location === b.location) {
-                return a.location.localeCompare(b.location)
+                return b.occurence - a.occurence;
             }
             // no longer sort by occurence -- this was used to propogate finish times to the top
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
