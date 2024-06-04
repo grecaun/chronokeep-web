@@ -44,6 +44,10 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (a.segment !== "Start" && b.segment === "Start") {
                 return -1;
             }
+            // if locations are the same, sort by occurrence
+            if (a.location === b.location) {
+                return a.location.localeCompare(b.location)
+            }
             // no longer sort by occurence -- this was used to propogate finish times to the top
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
             // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm

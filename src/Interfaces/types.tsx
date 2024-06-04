@@ -33,6 +33,8 @@ export interface TimeResult {
     segment: string
     type: number
     anonymous: boolean
+    distance: string
+    location: string
 }
 
 export interface Key {
