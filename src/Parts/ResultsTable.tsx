@@ -44,18 +44,15 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (a.segment !== "Start" && b.segment === "Start") {
                 return -1;
             }
-            // if locations are the same, sort by occurrence
-            if (a.location === b.location) {
-                return b.occurence - a.occurence;
-            }
-            // no longer sort by occurence -- this was used to propogate finish times to the top
+            // sort by occurrence again! only if the location is the same this time though
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
             // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
             // the runner at point A will display above the runner at point B even though the runner at A is behind
             // the runner at B -- with this in mind it is most likely better to not sort by occurence.
-            /*if (a.occurence !== b.occurence) {
-                return b.occurence - a.occurence
-            }//*/
+            // if locations are the same and occurrences differ, it is safe to sort by occurrence
+            if (a.location === b.location && a.occurence !== b.occurence) {
+                return b.occurence - a.occurence;
+            }
             // if both values are set to the same ranking (start times with -1 or 0 set essentially)
             // sort by gun time given
             if (a.ranking === b.ranking) {
