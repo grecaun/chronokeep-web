@@ -112,11 +112,27 @@ function Results() {
                                 distances.map((distance, index) => {
                                     if (state.event!.type === "time") {
                                         return (
-                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} search={state.search} sort_by={state.sort_by}/>
+                                            <TimeResultsTable
+                                                distance={distance}
+                                                results={state.results[distance]}
+                                                info={info}
+                                                key={index}
+                                                showTitle={distances.length > 1}
+                                                search={state.search}
+                                                sort_by={state.sort_by}
+                                                />
                                         )
                                     } else {
                                         return (
-                                            <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} search={state.search} sort_by={state.sort_by}/>
+                                            <ResultsTable
+                                                distance={distance}
+                                                results={state.results[distance]}
+                                                info={info}
+                                                key={index}
+                                                showTitle={distances.length > 1}
+                                                search={state.search}
+                                                sort_by={state.sort_by}
+                                                />
                                         )
                                     }
                                 })

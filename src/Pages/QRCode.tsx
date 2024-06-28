@@ -7,7 +7,7 @@ import { ResultsLoader } from '../loaders/results';
 
 function QRCode(props: PageProps) {
     const params = useParams();
-    const state = ResultsLoader(params, props.page);
+    const { state } = ResultsLoader(params, props.page);
     const href = window.location.href.slice(0, window.location.href.length - 3);
     document.title = `Chronokeep - QRCode`
     if (state.error === true) {

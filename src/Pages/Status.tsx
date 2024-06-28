@@ -6,7 +6,7 @@ import { ResultsLoader } from '../loaders/results';
 function Status() {
     document.title = `Chronokeep - Status`
     const params = useParams();
-    const state = ResultsLoader(params, 'status');
+    const { state } = ResultsLoader(params, 'status');
     if (state.error === true) {
         document.title = `Chronokeep - Error`
         return (

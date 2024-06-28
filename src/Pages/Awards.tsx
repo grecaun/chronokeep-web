@@ -217,6 +217,8 @@ export default function Awards() {
                                             overallInc={awardsState.overallInc}
                                             grandMasters={awardsState.grandMasters}
                                             masters={awardsState.masters}
+                                            search={state.search}
+                                            sort_by={state.sort_by}
                                             />
                                     )
                                 } else {
@@ -232,6 +234,8 @@ export default function Awards() {
                                             overallInc={awardsState.overallInc}
                                             grandMasters={awardsState.grandMasters}
                                             masters={awardsState.masters}
+                                            search={state.search}
+                                            sort_by={state.sort_by}
                                             />
                                     )
                                 }
