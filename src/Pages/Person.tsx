@@ -71,7 +71,7 @@ function Person() {
     if (state.single_distance === false) {
         event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
     }
-    let Certificate: JSX.Element | null = finish !== null ? CertificateGenerator(
+    const Certificate: JSX.Element | null = finish !== null ? CertificateGenerator(
         `${state.person.first} ${state.person.last}`,
         event,
         FormatTime(finish.chip_seconds, 0, finish, true, true),

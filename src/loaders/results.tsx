@@ -3,7 +3,7 @@ import { ResultsState } from "../Interfaces/states";
 import { ErrorResponse, GetResultsResponse } from "../Interfaces/responses";
 import { useEffect, useState } from "react";
 
-export function ResultsLoader(params: Params<string>, page: string): ResultsState {
+export function ResultsLoader(params: Params<string>, page: string): { state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>> } {
     const [state, setState] = useState<ResultsState>({
         page: page,
         count: 0,
@@ -14,7 +14,8 @@ export function ResultsLoader(params: Params<string>, page: string): ResultsStat
         status: 0,
         loading: true,
         error: false,
-        message: null
+        message: null,
+        search: ""
     });
     useEffect(() => {
         const fetchResults = async () => {
@@ -60,5 +61,5 @@ export function ResultsLoader(params: Params<string>, page: string): ResultsStat
         };
         fetchResults().catch(() => {});
     }, []);
-    return state
+    return { state, setState };
 }

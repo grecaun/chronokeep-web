@@ -9,7 +9,7 @@ import { ResultsLoader } from '../loaders/results';
 
 function Results() {
     const params = useParams();
-    const state = ResultsLoader(params, 'results');
+    const { state, setState } = ResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
     if (state.error === true) {
         document.title = `Chronokeep - Error`
@@ -30,6 +30,14 @@ function Results() {
         slug: params.slug,
         year: state.year?.year
     }
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        setState({
+            ...state,
+            search: e.target.value.trim().toLocaleLowerCase()
+        })
+    }
+
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
     return (
         <div>
@@ -56,6 +64,11 @@ function Results() {
             <div>
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
+                        <div>
+                            <div className="row container-lg xs-max-width mx-auto d-flex align-items-stretch p-0 mb-3 mt-2">
+                                <input type="text" className="input" id="searchBox" placeholder="Search" onChange={handleChange} />
+                            </div>
+                        </div>
                         <ul className="nav nav-tabs nav-fill">
                             { distances.length > 1 &&
                                 distances.map((distance, index) => {
@@ -72,11 +85,11 @@ function Results() {
                                 distances.map((distance, index) => {
                                     if (state.event!.type === "time") {
                                         return (
-                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
+                                            <TimeResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} search={state.search}/>
                                         )
                                     } else {
                                         return (
-                                            <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1}/>
+                                            <ResultsTable distance={distance} results={state.results[distance]} info={info} key={index} showTitle={distances.length > 1} search={state.search}/>
                                         )
                                     }
                                 })

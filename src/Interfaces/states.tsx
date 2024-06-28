@@ -99,6 +99,7 @@ export interface ResultsState extends BaseState {
     years: EventYear[]
     year: EventYear | null
     results: { [index: string]: TimeResult[] }
+    search: string
 }
 
 export interface AwardsState {

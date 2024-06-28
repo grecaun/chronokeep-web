@@ -6,10 +6,11 @@ import { TimeResult } from '../Interfaces/types';
 
 class ResultsTable extends Component<ResultsTableProps> {
     render() {
-        const results = this.props.results;
+        let results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
+        const search = this.props.search;
         const resMap: Map<string, TimeResult> = new Map();
         results.forEach(res => {
             if (resMap.has(res.bib)) {
@@ -21,11 +22,15 @@ class ResultsTable extends Component<ResultsTableProps> {
                 resMap.set(res.bib, res)
             }
         })
-        const res: TimeResult[] = []
-        resMap.forEach((value) => {
-            res.push(value);
+        console.log("search is " + search);
+        results = Array.from(resMap.values())
+        const dispResults = new Array<TimeResult>()
+        results.forEach(res => {
+            if (res.first.toLocaleLowerCase().indexOf(search) >= 0 || res.last.toLocaleLowerCase().indexOf(search) >= 0 || search === "") {
+                dispResults.push(res);
+            }
         })
-        const sorted = res.sort((a, b) => {
+        const sorted = dispResults.sort((a, b) => {
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;

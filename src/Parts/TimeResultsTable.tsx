@@ -11,6 +11,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
+        const search = this.props.search;
         const resMap = new Map<string, TimeResult>()
         results.forEach(res => {
             if (resMap.has(res.bib)) {
@@ -21,8 +22,15 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                 resMap.set(res.bib, res)
             }
         })
+        console.log("search is " + search);
         results = Array.from(resMap.values())
-        const sorted = results.sort((a: TimeResult, b: TimeResult) => {
+        const dispResults = new Array<TimeResult>()
+        results.forEach(res => {
+            if (res.first.toLocaleLowerCase().indexOf(search) >= 0 || res.last.toLocaleLowerCase().indexOf(search) >= 0 || search === "") {
+                dispResults.push(res);
+            }
+        })
+        const sorted = dispResults.sort((a: TimeResult, b: TimeResult) => {
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;

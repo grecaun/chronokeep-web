@@ -38,8 +38,7 @@ class AddAccount extends Component<PageProps> {
                                 userService.addAccount(name, email, type, password, path)
                                     .then(
                                         data => {
-                                            if (Object.prototype.hasOwnProperty.call(data.data, 'account')){}
-                                            else {
+                                            if (!Object.prototype.hasOwnProperty.call(data.data, 'account')) {
                                                 const errResponse = data.data as ErrorResponse
                                                 setStatus(errResponse.message)
                                             }

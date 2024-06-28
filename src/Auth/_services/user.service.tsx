@@ -272,8 +272,8 @@ function removeLinkedAccount(email: string) {
  */
 
 function getParticipants(slug: string, year: string) {
-    let currentUser = authenticationService.currentUserValue;
-    let url = API_URL;
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
     const requestOptions = {
         method: 'POST',
         body: JSON.stringify({ slug: slug, year: year }),
@@ -283,8 +283,8 @@ function getParticipants(slug: string, year: string) {
 }
 
 function updateParticipant(slug: string, year: string, participant: Participant) {
-    let currentUser = authenticationService.currentUserValue;
-    let url = API_URL;
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
     const requestOptions = {
         method: 'POST',
         headers: authHeader(currentUser!),
@@ -294,8 +294,8 @@ function updateParticipant(slug: string, year: string, participant: Participant)
 }
 
 function addParticipant(slug: string, year: string, participant: Participant) {
-    let currentUser = authenticationService.currentUserValue;
-    let url = API_URL;
+    const currentUser = authenticationService.currentUserValue;
+    const url = API_URL;
     const requestOptions = {
         method: 'POST',
         headers: authHeader(currentUser!),
