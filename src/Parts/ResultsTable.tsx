@@ -26,7 +26,8 @@ class ResultsTable extends Component<ResultsTableProps> {
         results = Array.from(resMap.values())
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
-            if (res.first.toLocaleLowerCase().indexOf(search) >= 0 || res.last.toLocaleLowerCase().indexOf(search) >= 0 || search === "") {
+            const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
+            if (name.indexOf(search) >= 0 || search === "") {
                 dispResults.push(res);
             }
         })
