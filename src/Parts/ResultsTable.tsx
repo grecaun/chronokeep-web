@@ -22,7 +22,6 @@ class ResultsTable extends Component<ResultsTableProps> {
                 resMap.set(res.bib, res)
             }
         })
-        console.log("search is " + search);
         results = Array.from(resMap.values())
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
