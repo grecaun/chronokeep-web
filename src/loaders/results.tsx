@@ -15,7 +15,9 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         loading: true,
         error: false,
         message: null,
-        search: ""
+        search: "",
+        sort_by: 0,
+        selected: { value: 0, label: "Sort by Ranking" }
     });
     useEffect(() => {
         const fetchResults = async () => {

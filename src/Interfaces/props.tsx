@@ -54,6 +54,7 @@ export interface ResultsTableProps {
     info: { slug: string | undefined, year: string | undefined }
     showTitle: boolean
     search: string
+    sort_by: number
 }
 
 export interface CheckinRowProps {

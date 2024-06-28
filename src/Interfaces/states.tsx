@@ -93,6 +93,11 @@ export interface QRState extends ResultsState {
     value: string
 }
 
+export interface SortByItem {
+    value: number
+    label: string
+}
+
 export interface ResultsState extends BaseState {
     count: number
     event: Event | null
@@ -100,6 +105,8 @@ export interface ResultsState extends BaseState {
     year: EventYear | null
     results: { [index: string]: TimeResult[] }
     search: string
+    sort_by: number
+    selected: SortByItem
 }
 
 export interface AwardsState {

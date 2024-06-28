@@ -11,6 +11,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         const info = this.props.info;
         const showTitle = this.props.showTitle;
         const search = this.props.search;
+        const sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
         results.forEach(res => {
             if (resMap.has(res.bib)) {
@@ -30,6 +31,23 @@ class ResultsTable extends Component<ResultsTableProps> {
             }
         })
         const sorted = dispResults.sort((a, b) => {
+            switch (sort_by) {
+                case 1:
+                    if (a.gender != b.gender) {
+                        return a.gender.localeCompare(b.gender)
+                    }
+                    break;
+                case 2:
+                    if (a.gender != b.gender) {
+                        return a.gender.localeCompare(b.gender)
+                    }
+                    if (a.age_group != b.age_group) {
+                        const a_start = Number(a.age_group.split('-')[0]) || 0
+                        const b_start = Number(b.age_group.split('-')[0]) || 1
+                        return a_start - b_start;
+                    }
+                    break;
+            }
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
