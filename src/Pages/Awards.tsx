@@ -77,7 +77,7 @@ function handleGrandMastersChange(
 export default function Awards() {
     const [searchParams] = useSearchParams();
     const params = useParams();
-    const state = ResultsLoader(params, 'awards');
+    const { state } = ResultsLoader(params, 'awards');
     const [awardsState, setAwardsState] = useState<AwardsState>({
         numAG: searchParams.get("ag") === null ? 3 : Number(searchParams.get("ag")) < 0 ? 3 : Number(searchParams.get("ag")),
         numOV: searchParams.get("ov") === null ? 3 : Number(searchParams.get("ov")) < 0 ? 3 : Number(searchParams.get("ov")),
@@ -217,6 +217,8 @@ export default function Awards() {
                                             overallInc={awardsState.overallInc}
                                             grandMasters={awardsState.grandMasters}
                                             masters={awardsState.masters}
+                                            search={state.search}
+                                            sort_by={state.sort_by}
                                             />
                                     )
                                 } else {
@@ -232,6 +234,8 @@ export default function Awards() {
                                             overallInc={awardsState.overallInc}
                                             grandMasters={awardsState.grandMasters}
                                             masters={awardsState.masters}
+                                            search={state.search}
+                                            sort_by={state.sort_by}
                                             />
                                     )
                                 }

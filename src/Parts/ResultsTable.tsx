@@ -6,10 +6,12 @@ import { TimeResult } from '../Interfaces/types';
 
 class ResultsTable extends Component<ResultsTableProps> {
     render() {
-        const results = this.props.results;
+        let results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
         const showTitle = this.props.showTitle;
+        const search = this.props.search;
+        const sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
         results.forEach(res => {
             if (resMap.has(res.bib)) {
@@ -21,11 +23,32 @@ class ResultsTable extends Component<ResultsTableProps> {
                 resMap.set(res.bib, res)
             }
         })
-        const res: TimeResult[] = []
-        resMap.forEach((value) => {
-            res.push(value);
+        results = Array.from(resMap.values())
+        const dispResults = new Array<TimeResult>()
+        results.forEach(res => {
+            const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
+            if (name.indexOf(search) >= 0 || search === "") {
+                dispResults.push(res);
+            }
         })
-        const sorted = res.sort((a, b) => {
+        const sorted = dispResults.sort((a, b) => {
+            switch (sort_by) {
+                case 1:
+                    if (a.gender != b.gender) {
+                        return a.gender.localeCompare(b.gender)
+                    }
+                    break;
+                case 2:
+                    if (a.gender != b.gender) {
+                        return a.gender.localeCompare(b.gender)
+                    }
+                    if (a.age_group != b.age_group) {
+                        const a_start = Number(a.age_group.split('-')[0]) || 0
+                        const b_start = Number(b.age_group.split('-')[0]) || 1
+                        return a_start - b_start;
+                    }
+                    break;
+            }
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
@@ -44,14 +67,15 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (a.segment !== "Start" && b.segment === "Start") {
                 return -1;
             }
-            // no longer sort by occurence -- this was used to propogate finish times to the top
+            // sort by occurrence again! only if the location is the same this time though
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
             // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
             // the runner at point A will display above the runner at point B even though the runner at A is behind
             // the runner at B -- with this in mind it is most likely better to not sort by occurence.
-            /*if (a.occurence !== b.occurence) {
-                return b.occurence - a.occurence
-            }//*/
+            // if locations are the same and occurrences differ, it is safe to sort by occurrence
+            if (a.location === b.location && a.occurence !== b.occurence) {
+                return b.occurence - a.occurence;
+            }
             // if both values are set to the same ranking (start times with -1 or 0 set essentially)
             // sort by gun time given
             if (a.ranking === b.ranking) {

@@ -17,7 +17,7 @@ function Certificate() {
         }
     }
 
-    let name: string = `${state.person.first} ${state.person.last}`;
+    const name: string = `${state.person.first} ${state.person.last}`;
     let event: string = `${state.year.year} ${state.event.name}`;
     if (state.single_distance === false) {
         event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
@@ -26,7 +26,7 @@ function Certificate() {
     if (finish !== null) {
         time = FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true, true);
     }
-    let date: string = DateString(state.year.date_time);
+    const date: string = DateString(state.year.date_time);
 
     return (
         CertificateGenerator(name, event, time, date)
@@ -42,7 +42,7 @@ export function CertificateGenerator(
 ) {
     const downloadImage = async () => {
         try {
-            let certificate = document.getElementById("certificate");
+            const certificate = document.getElementById("certificate");
             if (certificate !== null) {
                 certificate.style.display = "block";
                 const dataUrl = await toPng(certificate);

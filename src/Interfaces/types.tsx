@@ -35,6 +35,8 @@ export interface TimeResult {
     segment: string
     type: number
     anonymous: boolean
+    distance: string
+    location: string
     local_time: string
 }
 
