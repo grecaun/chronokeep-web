@@ -1,4 +1,4 @@
-import { Account, Event, EventYear, Key, Participant, Person, TimeResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, Person, Segment, TimeResult } from "./types";
 
 export interface ModifyKeyResponse {
     key: Key
@@ -76,6 +76,7 @@ export interface GetBibResultsResponse {
     results: TimeResult[]
     person: Person
     single_distance: boolean
+    segments: Segment[]
 }
 
 export interface GetCheckinParticipantsResponse {

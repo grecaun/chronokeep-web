@@ -12,6 +12,8 @@ export interface Event {
 export interface EventYear {
     year: string
     date_time: string
+    live: boolean
+    days_allowed: number
 }
 
 export interface TimeResult {
@@ -33,6 +35,7 @@ export interface TimeResult {
     segment: string
     type: number
     anonymous: boolean
+    local_time: string
 }
 
 export interface Key {
@@ -83,4 +86,14 @@ export interface Distance {
 export interface AuthTokens {
     access_token: string
     refresh_token: string
+}
+
+export interface Segment {
+    location: string
+    distance_name: string
+    name: string
+    distance_value: number
+    distance_unit: string
+    gps: string
+    map_link: string
 }
