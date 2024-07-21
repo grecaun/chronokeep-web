@@ -107,6 +107,7 @@ export interface ResultsState extends BaseState {
     search: string
     sort_by: number
     selected: SortByItem
+    show_sms_modal: boolean
 }
 
 export interface AwardsState {

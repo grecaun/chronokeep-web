@@ -17,7 +17,8 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         message: null,
         search: "",
         sort_by: 0,
-        selected: { value: 0, label: "Sort by Ranking" }
+        selected: { value: 0, label: "Sort by Ranking" },
+        show_sms_modal: false,
     });
     useEffect(() => {
         const fetchResults = async () => {

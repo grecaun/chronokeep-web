@@ -47,6 +47,8 @@ function Results() {
     ]
 
     const defaultSort = { value: 0, label: "Sort by Ranking" }
+    const textAllowedTime = new Date(Date.parse(state.year!.date_time) + (1000 * 60 * 60 * 24 * state.year!.days_allowed))
+    const nowDate = new Date(Date.now())
 
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
     return (
@@ -67,6 +69,11 @@ function Results() {
                                 return <a href={`/results/${params.slug}/${year.year}`} key={`year${index}`} className={className}>{year.year}</a>
                             })
                         }
+                    </div>
+                }
+                { textAllowedTime > nowDate &&
+                    <div className='col-md-2 nav flext-md-column justify-content-center p-0'>
+                        <div>Sign up for text messages!</div>
                     </div>
                 }
             </div>
