@@ -19,6 +19,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         sort_by: 0,
         selected: { value: 0, label: "Sort by Ranking" },
         show_sms_modal: false,
+        participants: [],
     });
     useEffect(() => {
         const fetchResults = async () => {
@@ -47,6 +48,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         state.years = dta.years
                         state.results = dta.results
                         state.year = dta.event_year
+                        state.participants = dta.participants
                     } else {
                         const err = data as ErrorResponse
                         state.error = true

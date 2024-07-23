@@ -23,7 +23,9 @@ export function PersonLoader(params: Params<string>): PersonState {
         },
         year: {
             year: '',
-            date_time: ''
+            date_time: '',
+            live: false,
+            days_allowed: 1
         },
         results: [],
         person: {

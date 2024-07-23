@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, Distance, Event, EventYear, Key, Participant, Person, TimeResult } from "./types"
+import { Account, Distance, Event, EventYear, Key, Participant, Person, ResultsParticipant, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -108,6 +108,7 @@ export interface ResultsState extends BaseState {
     sort_by: number
     selected: SortByItem
     show_sms_modal: boolean
+    participants: ResultsParticipant[]
 }
 
 export interface AwardsState {

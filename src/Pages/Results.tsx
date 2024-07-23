@@ -4,10 +4,14 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear } from '../Interfaces/types';
+import { EventYear, ResultsParticipant } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { SortByItem } from '../Interfaces/states';
+import { Formik, Form } from 'formik';
+import Autocomplete from "@mui/material/Autocomplete"
+import { TextField } from '@mui/material';
+import * as Yup from 'yup';
 
 function Results() {
     const params = useParams();
@@ -33,6 +37,17 @@ function Results() {
         year: state.year?.year
     }
 
+    const initialValues = {
+        part_id: { bib: "", first: "", last: "", age_group: "", gender: "", distance: "" },
+        phone: ''
+    }
+
+    const submit = (values: { part_id: ResultsParticipant; phone: string; }) => {
+        alert(`Value for part_id is: ${JSON.stringify(values.part_id)} -- Phone is: ${values.phone}`);
+    }
+
+    const phoneRegex = new RegExp("^(\\+?1)?\\s?\\(?\\d{3}[\\s\\-]?\\d{3}[\\s\\-]?\\d{4}$");
+
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         setState({
             ...state,
@@ -51,6 +66,7 @@ function Results() {
     const nowDate = new Date(Date.now())
 
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
+    console.log(JSON.stringify(state.participants))
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
@@ -71,12 +87,61 @@ function Results() {
                         }
                     </div>
                 }
-                { textAllowedTime > nowDate &&
-                    <div className='col-md-2 nav flext-md-column justify-content-center p-0'>
-                        <div>Sign up for text messages!</div>
-                    </div>
-                }
             </div>
+            { textAllowedTime > nowDate &&
+                <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch'>
+                    <Formik
+                        initialValues={initialValues}
+                        onSubmit={submit}
+                        validationSchema={Yup.object().shape({
+                            phone: Yup.string().matches(phoneRegex, 'Phone number is not valid.').required('Phone number is required.')
+                        })}
+                        >
+                        {({ errors, touched, setFieldValue, handleChange, handleBlur }) => (
+                            <Form>
+                                <div className='row container-lg md-max-width mx-auto justify-content-center align-items-center'>
+                                    <div className='col-md-3 px-2 mt-2 text-center'>
+                                        Sign up for text alerts
+                                    </div>
+                                    <Autocomplete
+                                        className='col-md-4 px-2'
+                                        id="part_id"
+                                        options={[...state.participants]}
+                                        getOptionLabel={option => `${option.first} ${option.last} - ${option.gender} ${option.age_group}`}
+                                        onChange={(_e, value) => {
+                                            console.log(value);
+                                            setFieldValue(
+                                                "part_id",
+                                                value !== null ? value : initialValues.part_id
+                                            );
+                                        }}
+                                        renderInput={params => (
+                                            <TextField
+                                                margin="normal"
+                                                label="Name"
+                                                name="part_id"
+                                                {...params}
+                                                />
+                                        )}
+                                    />
+                                    <TextField
+                                        className='col-md-3 px-2'
+                                        margin='normal'
+                                        label='Phone'
+                                        name='phone'
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        error={Boolean(errors.phone) && touched.phone}
+                                        />
+                                    <div className='mt-2 col-md-2 px-2 align-items-center d-flex justify-content-center'>
+                                        <button className='btn btn-primary btn-chronokeep' type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            }
             { distances.length > 0 &&
             <div>
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">

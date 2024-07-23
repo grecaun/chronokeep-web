@@ -64,6 +64,15 @@ export interface Person {
     age: number
 }
 
+export interface ResultsParticipant {
+    bib: string
+    first: string
+    last: string
+    gender: string
+    distance: string
+    age_group: string
+}
+
 export interface Participant {
     id: string
     bib: string

@@ -1,4 +1,4 @@
-import { Account, Event, EventYear, Key, Participant, Person, Segment, TimeResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, Person, ResultsParticipant, Segment, TimeResult } from "./types";
 
 export interface ModifyKeyResponse {
     key: Key
@@ -50,6 +50,7 @@ export interface GetEventResponse {
     event_years: EventYear[]
     year: EventYear | null
     results: { [index: string]: TimeResult[] }
+    participants: ResultsParticipant[]
 }
 
 export interface ModifyEventResponse {
