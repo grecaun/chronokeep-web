@@ -116,6 +116,7 @@ function Results() {
     const defaultSort = { value: 0, label: "Sort by Ranking" }
     const textAllowedTime = new Date(Date.parse(state.year!.date_time) + (1000 * 60 * 60 * 24 * state.year!.days_allowed))
     const nowDate = new Date(Date.now())
+    const days_allowed = state.year?.days_allowed ?? 0;
 
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
     return (
@@ -139,7 +140,7 @@ function Results() {
                     </div>
                 }
             </div>
-            { textAllowedTime > nowDate && state.participants.length > 0 &&
+            { textAllowedTime > nowDate && state.participants.length > 0 && days_allowed > 0 &&
                 <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch'>
                     <Formik
                         enableReinitialize={true}
