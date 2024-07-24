@@ -2,6 +2,7 @@ import { ModalProps } from "../Interfaces/props";
 
 function Modal(props: ModalProps) {
     const showHideClassName = props.show ? "modal fade show display-block" : "modal fade";
+    const closeOrCancel = props.saveText.length > 0 ? "Cancel" : "Close";
     return (
         <div className={showHideClassName} tabIndex={-1} role="dialog" >
             <div className="modal-dialog modal-dialog-centered modal-sm" role="document">
@@ -16,8 +17,10 @@ function Modal(props: ModalProps) {
                         {props.text}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-primary" onClick={() => { props.save() }}>{props.saveText}</button>
-                        <button type="button" className="btn btn-secondary" onClick={() => { props.handleClose() }}>Cancel</button>
+                        { props.saveText.length > 0 &&
+                            <button type="button" className="btn btn-primary" onClick={() => { props.save() }}>{props.saveText}</button>
+                        }
+                        <button type="button" className="btn btn-secondary" onClick={() => { props.handleClose() }}>{closeOrCancel}</button>
                     </div>
                 </div>
             </div>

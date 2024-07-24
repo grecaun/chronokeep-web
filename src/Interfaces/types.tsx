@@ -73,6 +73,13 @@ export interface ResultsParticipant {
     age_group: string
 }
 
+export interface SmsSubscription {
+    bib: string
+    first: string
+    last: string
+    phone: string
+}
+
 export interface Participant {
     id: string
     bib: string

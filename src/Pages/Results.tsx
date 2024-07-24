@@ -4,14 +4,75 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear, ResultsParticipant } from '../Interfaces/types';
+import { EventYear, SmsSubscription } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
-import { SortByItem } from '../Interfaces/states';
+import { ResultsState, SortByItem } from '../Interfaces/states';
 import { Formik, Form } from 'formik';
 import Autocomplete from "@mui/material/Autocomplete"
 import { TextField } from '@mui/material';
+import Modal from '../Parts/Modal';
 import * as Yup from 'yup';
+import { SendAddSmsSubscription } from '../loaders/sms_subscription';
+
+function hideModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+    setState({
+        ...state,
+        show_sms_modal: false,
+        subscription: null,
+    })
+}
+
+function showModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, sub: SmsSubscription) {
+    setState({
+        ...state,
+        show_sms_modal: true,
+        subscription: sub,
+    })
+}
+
+async function addSubscription(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+    try {
+        const success = await SendAddSmsSubscription(
+            state.event?.slug!,
+            state.year?.year!,
+            state.subscription?.bib!,
+            state.subscription?.first!,
+            state.subscription?.last!,
+            state.subscription?.phone!)
+        if (success === true) {
+            hideModal(state, setState)
+        } else {
+            showErrorModal(state, setState)
+        }
+    }
+    catch {
+        showErrorModal(state, setState)
+    }
+}
+
+function showErrorModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+    setState({
+        ...state,
+        show_sms_modal: false,
+        subscription: null,
+        show_sms_error_modal: true,
+    })
+}
+
+function hideErrorModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+    setState({
+        ...state,
+        show_sms_modal: false,
+        subscription: null,
+        show_sms_error_modal: false,
+    })
+}
+
+const initialValues = {
+    part_id: { bib: "", first: "", last: "", age_group: "", gender: "", distance: "" },
+    phone: ''
+}
 
 function Results() {
     const params = useParams();
@@ -37,15 +98,6 @@ function Results() {
         year: state.year?.year
     }
 
-    const initialValues = {
-        part_id: { bib: "", first: "", last: "", age_group: "", gender: "", distance: "" },
-        phone: ''
-    }
-
-    const submit = (values: { part_id: ResultsParticipant; phone: string; }) => {
-        alert(`Value for part_id is: ${JSON.stringify(values.part_id)} -- Phone is: ${values.phone}`);
-    }
-
     const phoneRegex = new RegExp("^(\\+?1)?\\s?\\(?\\d{3}[\\s\\-]?\\d{3}[\\s\\-]?\\d{4}$");
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -66,7 +118,6 @@ function Results() {
     const nowDate = new Date(Date.now())
 
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
-    console.log(JSON.stringify(state.participants))
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
@@ -91,14 +142,37 @@ function Results() {
             { textAllowedTime > nowDate &&
                 <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch'>
                     <Formik
+                        enableReinitialize={true}
                         initialValues={initialValues}
-                        onSubmit={submit}
+                        onSubmit={({ part_id, phone }, { resetForm }) => {
+                            showModal(state, setState, {bib: part_id.bib, first: part_id.first, last: part_id.last, phone: phone})
+                            console.log("boop")
+                            resetForm()
+                        }}
                         validationSchema={Yup.object().shape({
                             phone: Yup.string().matches(phoneRegex, 'Phone number is not valid.').required('Phone number is required.')
                         })}
                         >
-                        {({ errors, touched, setFieldValue, handleChange, handleBlur }) => (
+                        {({ errors, touched, setFieldValue, handleChange, handleBlur, values }) => (
                             <Form>
+                                <Modal
+                                    id="sms-modal"
+                                    show={state.show_sms_modal}
+                                    handleClose={() => { hideModal(state, setState) }}
+                                    save={() => { addSubscription(state, setState)} }
+                                    title="Warning"
+                                    text="By subscribing to text alerts for this participant you acknowledge that you are the owner of this phone number or authorized on their behalf to consent to receive sms messages. Standard messaging rates apply."
+                                    saveText="Subscribe"
+                                    />
+                                <Modal
+                                    id="sms-error-modal"
+                                    show={state.show_sms_error_modal}
+                                    handleClose={() => { hideErrorModal(state, setState) }}
+                                    save={() => { hideErrorModal(state, setState)} }
+                                    title="Error"
+                                    text="There was an error subscribing to text alerts. Please try again."
+                                    saveText=""
+                                    />
                                 <div className='row container-lg md-max-width mx-auto justify-content-center align-items-center'>
                                     <div className='col-md-3 px-2 mt-2 text-center'>
                                         Sign up for text alerts
@@ -109,7 +183,6 @@ function Results() {
                                         options={[...state.participants]}
                                         getOptionLabel={option => `${option.first} ${option.last} - ${option.gender} ${option.age_group}`}
                                         onChange={(_e, value) => {
-                                            console.log(value);
                                             setFieldValue(
                                                 "part_id",
                                                 value !== null ? value : initialValues.part_id
@@ -125,13 +198,15 @@ function Results() {
                                         )}
                                     />
                                     <TextField
-                                        className='col-md-3 px-2'
+                                        className='col-md-3'
                                         margin='normal'
                                         label='Phone'
                                         name='phone'
                                         onChange={handleChange}
                                         onBlur={handleBlur}
+                                        value={values.phone}
                                         error={Boolean(errors.phone) && touched.phone}
+                                        helperText={errors.phone && touched.phone}
                                         />
                                     <div className='mt-2 col-md-2 px-2 align-items-center d-flex justify-content-center'>
                                         <button className='btn btn-primary btn-chronokeep' type="submit">Submit</button>

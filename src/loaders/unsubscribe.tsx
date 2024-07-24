@@ -46,11 +46,11 @@ export function UnsubscribeLoader(params: Params<string>): SubscriptionState {
             .catch(_ => {
                 state.error = true;
             });
-        setState({
-            ...state
-        });
-    };
-    fetchUnsubscribe().catch(() => {});
-}, []);
-return state;
+            setState({
+                ...state
+            });
+        };
+        fetchUnsubscribe().catch(() => {});
+    }, []);
+    return state;
 }
