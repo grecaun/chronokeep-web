@@ -139,7 +139,7 @@ function Results() {
                     </div>
                 }
             </div>
-            { textAllowedTime > nowDate &&
+            { textAllowedTime > nowDate && state.participants.length > 0 &&
                 <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch'>
                     <Formik
                         enableReinitialize={true}
