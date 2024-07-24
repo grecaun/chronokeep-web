@@ -20,6 +20,8 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         selected: { value: 0, label: "Sort by Ranking" },
         show_sms_modal: false,
         participants: [],
+        subscription: null,
+        show_sms_error_modal: false,
     });
     useEffect(() => {
         const fetchResults = async () => {
