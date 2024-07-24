@@ -118,12 +118,12 @@ function Results() {
     const nowDate = new Date(Date.now())
     const days_allowed = state.year?.days_allowed ?? 0;
 
-    document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Results`
+    document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.year!.year} ${state.event!.name} Results`}</p>
+                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                 </div>
                 { years.length > 1 && 
