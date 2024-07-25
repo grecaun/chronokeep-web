@@ -15,11 +15,12 @@ import Modal from '../Parts/Modal';
 import * as Yup from 'yup';
 import { SendAddSmsSubscription } from '../loaders/sms_subscription';
 
-function hideModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+function hideModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, show_success: boolean) {
     setState({
         ...state,
         show_sms_modal: false,
         subscription: null,
+        subscription_success: show_success,
     })
 }
 
@@ -28,6 +29,7 @@ function showModal(state: ResultsState, setState: React.Dispatch<React.SetStateA
         ...state,
         show_sms_modal: true,
         subscription: sub,
+        subscription_success: false,
     })
 }
 
@@ -41,7 +43,7 @@ async function addSubscription(state: ResultsState, setState: React.Dispatch<Rea
             state.subscription?.last!,
             state.subscription?.phone!)
         if (success === true) {
-            hideModal(state, setState)
+            hideModal(state, setState, true)
         } else {
             showErrorModal(state, setState)
         }
@@ -141,7 +143,10 @@ function Results() {
                 }
             </div>
             { textAllowedTime > nowDate && state.participants.length > 0 && days_allowed > 0 &&
-                <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch'>
+                <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch justify-content-center'>
+                    <div className='col text-important h5 px-2 mt-2 text-center'>
+                        Sign up for text alerts
+                    </div>
                     <Formik
                         enableReinitialize={true}
                         initialValues={initialValues}
@@ -159,7 +164,7 @@ function Results() {
                                 <Modal
                                     id="sms-modal"
                                     show={state.show_sms_modal}
-                                    handleClose={() => { hideModal(state, setState) }}
+                                    handleClose={() => { hideModal(state, setState, false) }}
                                     save={() => { addSubscription(state, setState)} }
                                     title="Warning"
                                     text="By subscribing to text alerts for this participant you acknowledge that you are the owner of this phone number or authorized on their behalf to consent to receive sms messages. Standard messaging rates apply."
@@ -175,11 +180,8 @@ function Results() {
                                     saveText=""
                                     />
                                 <div className='row container-lg md-max-width mx-auto justify-content-center align-items-center'>
-                                    <div className='col-md-3 px-2 mt-2 text-center'>
-                                        Sign up for text alerts
-                                    </div>
                                     <Autocomplete
-                                        className='col-md-4 px-2'
+                                        className='col-md-5 px-2'
                                         id="part_id"
                                         options={[...state.participants]}
                                         getOptionLabel={option => `${option.first} ${option.last} - ${option.gender} ${option.age_group}`}
@@ -199,7 +201,7 @@ function Results() {
                                         )}
                                     />
                                     <TextField
-                                        className='col-md-3'
+                                        className='col-md-5'
                                         margin='normal'
                                         label='Phone'
                                         name='phone'
@@ -216,6 +218,11 @@ function Results() {
                             </Form>
                         )}
                     </Formik>
+                    { state.subscription_success &&
+                        <div className='col-md-4 text-important h5 p-2 m-2 text-center bg-success text-white rounded'>
+                            You've successfully subscribed.
+                        </div>
+                    }
                 </div>
             }
             { distances.length > 0 &&

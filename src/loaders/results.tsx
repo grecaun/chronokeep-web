@@ -22,6 +22,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         participants: [],
         subscription: null,
         show_sms_error_modal: false,
+        subscription_success: false,
     });
     useEffect(() => {
         const fetchResults = async () => {
