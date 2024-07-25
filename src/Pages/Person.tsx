@@ -46,7 +46,6 @@ function Person() {
     segments.sort((a, b) => {
         return a.distance_value - b.distance_value;
     })
-    console.log(segments)
     let latestResult: TimeResult | null = results.length > 0 ? results[results.length-1] : null;
     let prevResult: TimeResult | null = results.length > 1 ? results[results.length-2] : start ?? null;
     let prevSegment: Segment | null = null;
@@ -68,12 +67,6 @@ function Person() {
             finishSegment = seg;
         }
     }
-    console.log(latestResult)
-    console.log(prevResult)
-    console.log(prevSegment)
-    console.log(curSegment)
-    console.log(nextSegment)
-    console.log(finishSegment)
     // segment pace
     let segmentPace = 0;
     let segmentPaceStr = "";
@@ -84,7 +77,6 @@ function Person() {
         segmentPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
         segmentPaceStr = FormatPace(segmentPace);
     }
-    console.log(segmentPaceStr)
     // overall pace
     let overallPace = 0;
     let overallPaceStr = "";
@@ -92,46 +84,36 @@ function Person() {
         overallPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
         overallPaceStr = FormatPace(overallPace);
     }
-    console.log(overallPaceStr)
     // Difference between paces. Runners usually slow down so this will be a positive value,
     // if they make a negative split then this will be negative.
     let paceDiff = segmentPace - overallPace;
     // estimated time to next (segment pace & segment pace + segment/overall pace diff)
-    let estimatedNextMin: Date | null = null;
-    let estimatedNextMax: Date | null = null;
-    let estimatedNextClockMin = "";
-    let estimatedNextClockMax = "";
-    let estimatedNextChipMin = "";
-    let estimatedNextChipMax = "";
+    let estimatedNext: Date | null = null;
+    let estimatedNextChip = "";
     if (latestResult != null && curSegment != null && nextSegment != null) {
-        estimatedNextMin = new Date(latestResult.local_time);
-        estimatedNextMin.setSeconds(estimatedNextMin.getSeconds() + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)));
-        estimatedNextMax = new Date(latestResult.local_time)
-        estimatedNextMax.setSeconds(estimatedNextMax.getSeconds() + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)));
-        estimatedNextClockMin = FormatTime(latestResult.seconds + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedNextClockMax = FormatTime(latestResult.seconds + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedNextChipMin = FormatTime(latestResult.chip_seconds + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedNextChipMax = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        if (paceDiff < 0) {
+            estimatedNext = new Date(latestResult.local_time);
+            estimatedNext.setSeconds(estimatedNext.getSeconds() + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)));
+            estimatedNextChip = FormatTime(latestResult.chip_seconds + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        } else {
+            estimatedNext = new Date(latestResult.local_time)
+            estimatedNext.setSeconds(estimatedNext.getSeconds() + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)));
+            estimatedNextChip = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        }
     }
-    console.log(estimatedNextMin, estimatedNextMax)
     // estimated finish (if not next)
-    let estimatedFinishMin: Date | null = null;
-    let estimatedFinishMax: Date | null = null;
-    let estimatedFinishClockMin = "";
-    let estimatedFinishClockMax = "";
-    let estimatedFinishChipMin = "";
-    let estimatedFinishChipMax = "";
+    let estimatedFinish: Date | null = null;
+    let estimatedFinishChip = "";
     if (latestResult != null && curSegment != null && finishSegment != null) {
-        estimatedFinishMin = new Date(latestResult.local_time);
-        estimatedFinishMin.setSeconds(estimatedFinishMin.getSeconds() + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)));
-        estimatedFinishMax = new Date(latestResult.local_time)
-        estimatedFinishMax.setSeconds(estimatedFinishMax.getSeconds() + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)));
-        estimatedFinishClockMin = FormatTime(latestResult.seconds + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedFinishClockMax = FormatTime(latestResult.seconds + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedFinishChipMin = FormatTime(latestResult.chip_seconds + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
-        estimatedFinishChipMax = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedFinish = new Date(latestResult.local_time)
+        if (paceDiff < 0) {
+            estimatedFinish.setSeconds(estimatedFinish.getSeconds() + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)));
+            estimatedFinishChip = FormatTime(latestResult.chip_seconds + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        } else {
+            estimatedFinish.setSeconds(estimatedFinish.getSeconds() + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)));
+            estimatedFinishChip = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        }
     }
-    console.log(estimatedFinishMin, estimatedFinishMax)
     const gend = state.person.gender.toUpperCase()
     if (gend === "U" || gend === "O" || gend === "NS" || gend === "NOT SPECIFIED") {
         if (finish !== null) {
@@ -254,21 +236,50 @@ function Person() {
             }
             { !finish && curSegment &&
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
-                <div>
-                    Current location: {curSegment.name}
+                <div className='mx-auto text-center mt-3 mb-3 text-important h2'>
+                    <div className='h5 mb-0'>{state.person.anonymous === false ? `${state.person.first} was last` : "Last"} seen at</div>
+                    <div>{curSegment.name}</div>
                 </div>
-                <div>
-                    Segment pace: {segmentPaceStr}
+                <div className="col-md-4 my-0 text-important h6 text-center">
+                    <div className='mb-0'>Current Pace</div>
+                    <div className='h2'>{`${segmentPaceStr} / ${curSegment?.distance_unit}`}</div>
                 </div>
-                <div>
-                    Overall pace: {overallPaceStr}
+                <div className="col-md-4 my-0 text-important h6 text-center">
+                    <div className='mb-0'>Overall Pace</div>
+                    <div className='h2'>{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
                 </div>
-                <div>
-                    Estimated arrival time at { nextSegment != null ? nextSegment.name : "next location" }: { `Clock - ${estimatedNextClockMin}-${estimatedNextClockMax} -- Chip - ${estimatedNextChipMin}-${estimatedNextChipMax}` } {estimatedNextMin != null ? estimatedNextMin.toLocaleTimeString() : ""}
+                { (estimatedNextChip.length > 0 || estimatedNext) && 
+                <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
+                    { estimatedNextChip.length > 0 &&
+                        <div className="col-md-4 my-0 text-important h6 text-center">
+                            <div className='mb-0'>Estimated Chip Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
+                            <div className='h2'>{`${estimatedNextChip}`}</div>
+                        </div>
+                    }
+                    { estimatedNext &&
+                        <div className="col-md-4 my-0 text-important h6 text-center">
+                            <div className='mb-0'>Estimated Local Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
+                            <div className='h2'>{`${estimatedNext.toLocaleTimeString()}`}</div>
+                        </div>
+                    }
                 </div>
-                <div>
-                    Estimated finish time: { `Clock - ${estimatedFinishClockMin}-${estimatedFinishClockMax} -- Chip - ${estimatedFinishChipMin}-${estimatedFinishChipMax}` } {estimatedFinishMin != null ? estimatedFinishMin.toLocaleTimeString() : ""}
+                }
+                { (estimatedFinishChip.length > 0 || estimatedFinish) && 
+                <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
+                    { estimatedFinishChip.length > 0 &&
+                        <div className="col-md-4 my-0 text-important h6 text-center">
+                            <div className='mb-0'>Estimated Chip Time at Finish</div>
+                            <div className='h2'>{`${estimatedFinishChip}`}</div>
+                        </div>
+                    }
+                    { estimatedFinish &&
+                        <div className="col-md-4 my-0 text-important h6 text-center">
+                            <div className='mb-0'>Estimated Local Time at Finish</div>
+                            <div className='h2'>{`${estimatedFinish.toLocaleTimeString()}`}</div>
+                        </div>
+                    }
                 </div>
+                }
             </div>
             }
             { Certificate !== null &&
