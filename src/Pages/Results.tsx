@@ -4,13 +4,13 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear, SmsSubscription } from '../Interfaces/types';
+import { EventYear, ResultsParticipant, SmsSubscription } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { ResultsState, SortByItem } from '../Interfaces/states';
 import { Formik, Form, ErrorMessage } from 'formik';
 import Autocomplete from "@mui/material/Autocomplete"
-import { TextField } from '@mui/material';
+import { createFilterOptions, TextField } from '@mui/material';
 import Modal from '../Parts/Modal';
 import * as Yup from 'yup';
 import { SendAddSmsSubscription, SendRemoveSmsSubscription } from '../loaders/sms_subscription';
@@ -106,6 +106,10 @@ const initialValues = {
     part_id: { bib: "", first: "", last: "", age_group: "", gender: "", distance: "" },
     phone: ''
 }
+
+const filterOptions = createFilterOptions({
+    stringify: (option: ResultsParticipant) => `${option.first} ${option.last}`
+})
 
 function Results() {
     const params = useParams();
@@ -213,11 +217,19 @@ function Results() {
                                         className='col-md-5 px-2'
                                         id="part_id"
                                         options={[...state.participants]}
-                                        getOptionLabel={option => `${option.first} ${option.last} - ${option.gender} ${option.age_group}`}
+                                        filterOptions={filterOptions}
+                                        getOptionLabel={option => `${option.first} ${option.last}`}
                                         onChange={(_e, value) => {
                                             setFieldValue(
                                                 "part_id",
                                                 value !== null ? value : initialValues.part_id
+                                            );
+                                        }}
+                                        renderOption={(props, option: ResultsParticipant) => {
+                                            return (
+                                                <li {...props}>
+                                                    {`${option.first} ${option.last} - ${option.gender} ${option.age_group}`}
+                                                </li>
                                             );
                                         }}
                                         renderInput={params => (
