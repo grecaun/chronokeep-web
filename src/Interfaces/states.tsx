@@ -112,6 +112,8 @@ export interface ResultsState extends BaseState {
     subscription: SmsSubscription | null
     show_sms_error_modal: boolean
     subscription_success: boolean
+    unsubscribe_success: boolean
+    unsubscribe_error: boolean
 }
 
 export interface AwardsState {

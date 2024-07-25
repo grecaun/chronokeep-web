@@ -8,12 +8,12 @@ import { EventYear, SmsSubscription } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { ResultsState, SortByItem } from '../Interfaces/states';
-import { Formik, Form } from 'formik';
+import { Formik, Form, ErrorMessage } from 'formik';
 import Autocomplete from "@mui/material/Autocomplete"
 import { TextField } from '@mui/material';
 import Modal from '../Parts/Modal';
 import * as Yup from 'yup';
-import { SendAddSmsSubscription } from '../loaders/sms_subscription';
+import { SendAddSmsSubscription, SendRemoveSmsSubscription } from '../loaders/sms_subscription';
 
 function hideModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, show_success: boolean) {
     setState({
@@ -33,7 +33,7 @@ function showModal(state: ResultsState, setState: React.Dispatch<React.SetStateA
     })
 }
 
-async function addSubscription(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>) {
+async function addSubscription(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, resetForm: any) {
     try {
         const success = await SendAddSmsSubscription(
             state.event?.slug!,
@@ -41,15 +41,46 @@ async function addSubscription(state: ResultsState, setState: React.Dispatch<Rea
             state.subscription?.bib!,
             state.subscription?.first!,
             state.subscription?.last!,
-            state.subscription?.phone!)
+            state.subscription?.phone!
+        )
         if (success === true) {
             hideModal(state, setState, true)
+            resetForm()
         } else {
             showErrorModal(state, setState)
         }
-    }
-    catch {
+    } catch {
         showErrorModal(state, setState)
+    }
+}
+
+async function removeSubscriptions(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, phone: string, resetForm: any) {
+    try {
+        const success = await SendRemoveSmsSubscription(
+            state.event?.slug!,
+            state.year?.year!,
+            phone,
+        )
+        if (success === true) {
+            setState({
+                ...state,
+                unsubscribe_error: false,
+                unsubscribe_success: true
+            })
+            resetForm()
+        } else {
+            setState({
+                ...state,
+                unsubscribe_error: true,
+                unsubscribe_success: false
+            })
+        }
+    } catch {
+        setState({
+            ...state,
+            unsubscribe_error: true,
+            unsubscribe_success: false
+        })
     }
 }
 
@@ -143,29 +174,27 @@ function Results() {
                 }
             </div>
             { textAllowedTime > nowDate && state.participants.length > 0 && days_allowed > 0 &&
-                <div className='row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch justify-content-center'>
-                    <div className='col text-important h5 px-2 mt-2 text-center'>
-                        Sign up for text alerts
-                    </div>
-                    <Formik
-                        enableReinitialize={true}
-                        initialValues={initialValues}
-                        onSubmit={({ part_id, phone }, { resetForm }) => {
-                            showModal(state, setState, {bib: part_id.bib, first: part_id.first, last: part_id.last, phone: phone})
-                            console.log("boop")
-                            resetForm()
-                        }}
-                        validationSchema={Yup.object().shape({
-                            phone: Yup.string().matches(phoneRegex, 'Phone number is not valid.').required('Phone number is required.')
-                        })}
-                        >
-                        {({ errors, touched, setFieldValue, handleChange, handleBlur, values }) => (
-                            <Form>
+                <Formik
+                    enableReinitialize={true}
+                    initialValues={initialValues}
+                    onSubmit={({ part_id, phone }) => {
+                        showModal(state, setState, {bib: part_id.bib, first: part_id.first, last: part_id.last, phone: phone})
+                    }}
+                    validationSchema={Yup.object().shape({
+                        phone: Yup.string().matches(phoneRegex, 'Phone number not valid. 10 digits expected. Ex: 123-555-1234 1235551234 etc.').required('Phone number is required.')
+                    })}
+                    >
+                    {({ errors, touched, setFieldValue, handleChange, handleBlur, values, resetForm }) => (
+                        <Form>
+                            <div className='row container-lg lg-max-width mx-auto d-flex shadow-sm p-2 mb-3 border border-light align-items-stretch justify-content-center'>
+                                <div className='text-important h5 px-2 mt-2 text-center'>
+                                    Sign up for text alerts
+                                </div>
                                 <Modal
                                     id="sms-modal"
                                     show={state.show_sms_modal}
                                     handleClose={() => { hideModal(state, setState, false) }}
-                                    save={() => { addSubscription(state, setState)} }
+                                    save={() => { addSubscription(state, setState, resetForm)} }
                                     title="Warning"
                                     text="By subscribing to text alerts for this participant you acknowledge that you are the owner of this phone number or authorized on their behalf to consent to receive sms messages. Standard messaging rates apply."
                                     saveText="Subscribe"
@@ -215,15 +244,18 @@ function Results() {
                                         <button className='btn btn-primary btn-chronokeep' type="submit">Submit</button>
                                     </div>
                                 </div>
-                            </Form>
-                        )}
-                    </Formik>
-                    { state.subscription_success &&
-                        <div className='col-md-4 text-important h5 p-2 m-2 text-center bg-success text-white rounded'>
-                            You've successfully subscribed.
-                        </div>
-                    }
-                </div>
+                                <div className='mt-2 mx-3 text-center'>
+                                    <ErrorMessage name='phone' />
+                                </div>
+                                { state.subscription_success &&
+                                    <div className='col-md-4 text-important h5 p-2 m-2 text-center bg-success text-white rounded'>
+                                        You've successfully subscribed.
+                                    </div>
+                                }
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
             }
             { distances.length > 0 &&
             <div>
@@ -303,6 +335,62 @@ function Results() {
                 <div className="text-center">
                     <h2>No results to display.</h2>
                 </div>
+            </div>
+            }
+            { textAllowedTime > nowDate && state.participants.length > 0 && days_allowed > 0 &&
+            <div className="row container-lg lg-max-width mx-auto d-flex shadow-sm p-2 mb-3 border border-light align-items-stretch justify-content-center">
+                <div className='col text-important h5 px-2 mt-2 text-center'>
+                    Unsubscribe to text alerts
+                </div>
+                <Formik
+                    enableReinitialize={true}
+                    initialValues={initialValues}
+                    onSubmit={({ phone }, { resetForm }) => {
+                        setState({
+                            ...state,
+                            unsubscribe_success: false,
+                            unsubscribe_error: false,
+                        })
+                        removeSubscriptions(state, setState, phone, resetForm)
+                    }}
+                    validationSchema={Yup.object().shape({
+                        phone: Yup.string().matches(phoneRegex, 'Phone number not valid. 10 digits expected. Ex: 123-555-1234 1235551234 etc.').required('Phone number is required.')
+                    })}
+                    >
+                    {({ errors, touched, handleChange, handleBlur, values }) => (
+                        <Form>
+                            <div className='row container-lg md-max-width mx-auto justify-content-center align-items-center'>
+                                <TextField
+                                    className='col-md-5'
+                                    margin='normal'
+                                    label='Phone'
+                                    name='phone'
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.phone}
+                                    error={Boolean(errors.phone) && touched.phone}
+                                    helperText={errors.phone && touched.phone}
+                                    />
+                                <div className='mt-2 col-md-2 px-2 align-items-center d-flex justify-content-center'>
+                                    <button className='btn btn-primary btn-chronokeep' type="submit">Submit</button>
+                                </div>
+                            </div>
+                            <div className='mt-2 mx-3 text-center'>
+                                <ErrorMessage name='phone' />
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+                { state.unsubscribe_success &&
+                    <div className='col-md-4 text-important h5 p-2 m-2 text-center bg-success text-white rounded'>
+                        You've successfully unsubscribed.
+                    </div>
+                }
+                { state.unsubscribe_error &&
+                    <div className='col-md-4 text-important h5 p-2 m-2 text-center bg-danger text-white rounded'>
+                        Error unsubscribing.
+                    </div>
+                }
             </div>
             }
         </div>
