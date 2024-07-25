@@ -53,7 +53,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         state.years = dta.years
                         state.results = dta.results
                         state.year = dta.event_year
-                        state.participants = dta.participants
+                        state.participants = dta.participants.filter(i => i.first.length + i.last.length > 0)
                     } else {
                         const err = data as ErrorResponse
                         state.error = true
