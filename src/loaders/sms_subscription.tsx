@@ -16,11 +16,34 @@ export async function SendAddSmsSubscription(slug: string, year: string, bib: st
         }
     }
     return await fetch(BASE_URL + 'sms/add', requestOptions)
-    .then(response => {
-        return response.status === 200
-    })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    .catch(_ => {
-        return false
-    });
+        .then(response => {
+            return response.status === 200
+        })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .catch(_ => {
+            return false
+        });
+}
+
+export async function SendRemoveSmsSubscription(slug: string, year: string, phone: string): Promise<boolean> {
+    const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
+    const requestOptions = {
+        method: 'POST',
+        body: JSON.stringify({
+            slug: slug,
+            year: year,
+            phone: phone,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }
+    return await fetch(BASE_URL + 'sms/remove', requestOptions)
+        .then(response => {
+            return response.status === 200
+        })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .catch(_ => {
+            return false
+        });
 }
