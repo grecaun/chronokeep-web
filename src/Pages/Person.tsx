@@ -9,6 +9,14 @@ import { Segment, TimeResult } from '../Interfaces/types';
 import { PersonLoader } from '../loaders/person';
 import { CertificateGenerator } from './Certificate';
 
+const googleMapsRegex = new RegExp("^https:\\/\\/www\\.google\\.com\\/maps\\/");
+
+function MapsFrame(link: string) {
+    return (
+        <iframe src={link} width="640" height="480"></iframe>
+    )
+}
+
 function Person() {
     const params = useParams();
     const state = PersonLoader(params);
@@ -234,52 +242,59 @@ function Person() {
                 </div>
             </div>
             }
-            { !finish && curSegment &&
-            <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
-                <div className='mx-auto text-center mt-3 mb-3 text-important h2'>
-                    <div className='h5 mb-0'>{state.person.anonymous === false ? `${state.person.first} was last` : "Last"} seen at</div>
-                    <div>{curSegment.name}</div>
-                </div>
-                <div className="col-md-4 my-0 text-important h6 text-center">
-                    <div className='mb-0'>Current Pace</div>
-                    <div className='h2'>{`${segmentPaceStr} / ${curSegment?.distance_unit}`}</div>
-                </div>
-                <div className="col-md-4 my-0 text-important h6 text-center">
-                    <div className='mb-0'>Overall Pace</div>
-                    <div className='h2'>{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
-                </div>
-                { (estimatedNextChip.length > 0 || estimatedNext) && 
-                <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
-                    { estimatedNextChip.length > 0 &&
-                        <div className="col-md-4 my-0 text-important h6 text-center">
-                            <div className='mb-0'>Estimated Chip Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
-                            <div className='h2'>{`${estimatedNextChip}`}</div>
-                        </div>
-                    }
-                    { estimatedNext &&
-                        <div className="col-md-4 my-0 text-important h6 text-center">
-                            <div className='mb-0'>Estimated Local Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
-                            <div className='h2'>{`${estimatedNext.toLocaleTimeString()}`}</div>
-                        </div>
-                    }
+            { !finish && curSegment != null && curSegment.name !== "Finish" &&
+            <div>
+                { curSegment.map_link != null && curSegment.map_link.length > 0 && curSegment.map_link.match(googleMapsRegex) &&
+                <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 mb-4 justify-content-center align-items-center">
+                    {MapsFrame(curSegment.map_link)}
                 </div>
                 }
-                { (estimatedFinishChip.length > 0 || estimatedFinish) && 
-                <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
-                    { estimatedFinishChip.length > 0 &&
-                        <div className="col-md-4 my-0 text-important h6 text-center">
-                            <div className='mb-0'>Estimated Chip Time at Finish</div>
-                            <div className='h2'>{`${estimatedFinishChip}`}</div>
-                        </div>
+                <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
+                    <div className='mx-auto text-center mt-3 mb-3 text-important h2'>
+                        <div className='h5 mb-0'>{state.person.anonymous === false ? `${state.person.first} was last` : "Last"} seen at</div>
+                        <div>{curSegment.name}</div>
+                    </div>
+                    <div className="col-md-4 my-0 text-important h6 text-center">
+                        <div className='mb-0'>Current Pace</div>
+                        <div className='h2'>{`${segmentPaceStr} / ${curSegment?.distance_unit}`}</div>
+                    </div>
+                    <div className="col-md-4 my-0 text-important h6 text-center">
+                        <div className='mb-0'>Overall Pace</div>
+                        <div className='h2'>{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
+                    </div>
+                    { (estimatedNextChip.length > 0 || estimatedNext) && 
+                    <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
+                        { estimatedNextChip.length > 0 &&
+                            <div className="col-md-4 my-0 text-important h6 text-center">
+                                <div className='mb-0'>Estimated Chip Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
+                                <div className='h2'>{`${estimatedNextChip}`}</div>
+                            </div>
+                        }
+                        { estimatedNext &&
+                            <div className="col-md-4 my-0 text-important h6 text-center">
+                                <div className='mb-0'>Estimated Local Time at { nextSegment != null ? nextSegment.name : "Next Location" }</div>
+                                <div className='h2'>{`${estimatedNext.toLocaleTimeString()}`}</div>
+                            </div>
+                        }
+                    </div>
                     }
-                    { estimatedFinish &&
-                        <div className="col-md-4 my-0 text-important h6 text-center">
-                            <div className='mb-0'>Estimated Local Time at Finish</div>
-                            <div className='h2'>{`${estimatedFinish.toLocaleTimeString()}`}</div>
-                        </div>
+                    { (estimatedFinishChip.length > 0 || estimatedFinish) && 
+                    <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
+                        { estimatedFinishChip.length > 0 &&
+                            <div className="col-md-4 my-0 text-important h6 text-center">
+                                <div className='mb-0'>Estimated Chip Time at Finish</div>
+                                <div className='h2'>{`${estimatedFinishChip}`}</div>
+                            </div>
+                        }
+                        { estimatedFinish &&
+                            <div className="col-md-4 my-0 text-important h6 text-center">
+                                <div className='mb-0'>Estimated Local Time at Finish</div>
+                                <div className='h2'>{`${estimatedFinish.toLocaleTimeString()}`}</div>
+                            </div>
+                        }
+                    </div>
                     }
                 </div>
-                }
             </div>
             }
             { Certificate !== null &&
