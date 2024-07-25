@@ -37,7 +37,8 @@ export function PersonLoader(params: Params<string>): PersonState {
             distance: '',
             age: 0
         },
-        single_distance: false
+        single_distance: false,
+        segments: [],
     });
     useEffect(() => {
         const fetchPerson = async () => {const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
@@ -64,7 +65,8 @@ export function PersonLoader(params: Params<string>): PersonState {
                         state.year = dta.year;
                         state.results = dta.results;
                         state.person = dta.person;
-                        state.single_distance = dta.single_distance
+                        state.single_distance = dta.single_distance;
+                        state.segments = dta.segments;
                     } else {
                         const err = data as ErrorResponse
                         state.error = true;

@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, Distance, Event, EventYear, Key, Participant, Person, ResultsParticipant, SmsSubscription, TimeResult } from "./types"
+import { Account, Distance, Event, EventYear, Key, Participant, Person, ResultsParticipant, Segment, SmsSubscription, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -87,6 +87,7 @@ export interface PersonState extends BaseState {
     results: TimeResult[]
     person: Person
     single_distance: boolean
+    segments: Segment[]
 }
 
 export interface QRState extends ResultsState {

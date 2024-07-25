@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import DateString from '../Parts/DateString';
 import ErrorMsg from '../Parts/ErrorMsg';
-import FormatTime from '../Parts/FormatTime';
+import FormatTime, { FormatPace } from '../Parts/FormatTime';
 import Loading from '../Parts/Loading';
 import PersonTime from '../Parts/PersonTime';
 import PersonDistance from '../Parts/PersonDistance';
-import { TimeResult } from '../Interfaces/types';
+import { Segment, TimeResult } from '../Interfaces/types';
 import { PersonLoader } from '../loaders/person';
 import { CertificateGenerator } from './Certificate';
 
@@ -42,6 +42,96 @@ function Person() {
     results.sort((a, b) => {
         return a.seconds - b.seconds;
     })
+    const segments: Segment[] = state.segments
+    segments.sort((a, b) => {
+        return a.distance_value - b.distance_value;
+    })
+    console.log(segments)
+    let latestResult: TimeResult | null = results.length > 0 ? results[results.length-1] : null;
+    let prevResult: TimeResult | null = results.length > 1 ? results[results.length-2] : start ?? null;
+    let prevSegment: Segment | null = null;
+    let curSegment: Segment | null = null;
+    let nextSegment: Segment | null = null;
+    let finishSegment: Segment | null = null;
+    for (const seg of segments) {
+        if (latestResult !== null && latestResult.segment.trim() === seg.name.trim()) {
+            curSegment = seg;
+        }
+        if (prevResult !== null && prevResult.segment.trim() === seg.name.trim()) {
+            prevSegment = seg;
+        }
+        if ((curSegment != null && seg.distance_value > curSegment.distance_value)
+            && (nextSegment === null || seg.distance_value < nextSegment.distance_value)) {
+            nextSegment = seg;
+        }
+        if (seg.name === "Finish") {
+            finishSegment = seg;
+        }
+    }
+    console.log(latestResult)
+    console.log(prevResult)
+    console.log(prevSegment)
+    console.log(curSegment)
+    console.log(nextSegment)
+    console.log(finishSegment)
+    // segment pace
+    let segmentPace = 0;
+    let segmentPaceStr = "";
+    if (prevResult != null && latestResult != null && curSegment != null && prevSegment != null) {
+        segmentPace = Math.floor((latestResult.seconds - prevResult.seconds) / (curSegment.distance_value - prevSegment.distance_value));
+        segmentPaceStr = FormatPace(segmentPace);
+    } else if (latestResult != null && curSegment != null) {
+        segmentPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
+        segmentPaceStr = FormatPace(segmentPace);
+    }
+    console.log(segmentPaceStr)
+    // overall pace
+    let overallPace = 0;
+    let overallPaceStr = "";
+    if (latestResult != null && curSegment != null) {
+        overallPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
+        overallPaceStr = FormatPace(overallPace);
+    }
+    console.log(overallPaceStr)
+    // Difference between paces. Runners usually slow down so this will be a positive value,
+    // if they make a negative split then this will be negative.
+    let paceDiff = segmentPace - overallPace;
+    // estimated time to next (segment pace & segment pace + segment/overall pace diff)
+    let estimatedNextMin: Date | null = null;
+    let estimatedNextMax: Date | null = null;
+    let estimatedNextClockMin = "";
+    let estimatedNextClockMax = "";
+    let estimatedNextChipMin = "";
+    let estimatedNextChipMax = "";
+    if (latestResult != null && curSegment != null && nextSegment != null) {
+        estimatedNextMin = new Date(latestResult.local_time);
+        estimatedNextMin.setSeconds(estimatedNextMin.getSeconds() + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)));
+        estimatedNextMax = new Date(latestResult.local_time)
+        estimatedNextMax.setSeconds(estimatedNextMax.getSeconds() + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)));
+        estimatedNextClockMin = FormatTime(latestResult.seconds + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedNextClockMax = FormatTime(latestResult.seconds + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedNextChipMin = FormatTime(latestResult.chip_seconds + (segmentPace * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedNextChipMax = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (nextSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+    }
+    console.log(estimatedNextMin, estimatedNextMax)
+    // estimated finish (if not next)
+    let estimatedFinishMin: Date | null = null;
+    let estimatedFinishMax: Date | null = null;
+    let estimatedFinishClockMin = "";
+    let estimatedFinishClockMax = "";
+    let estimatedFinishChipMin = "";
+    let estimatedFinishChipMax = "";
+    if (latestResult != null && curSegment != null && finishSegment != null) {
+        estimatedFinishMin = new Date(latestResult.local_time);
+        estimatedFinishMin.setSeconds(estimatedFinishMin.getSeconds() + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)));
+        estimatedFinishMax = new Date(latestResult.local_time)
+        estimatedFinishMax.setSeconds(estimatedFinishMax.getSeconds() + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)));
+        estimatedFinishClockMin = FormatTime(latestResult.seconds + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedFinishClockMax = FormatTime(latestResult.seconds + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedFinishChipMin = FormatTime(latestResult.chip_seconds + (segmentPace * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+        estimatedFinishChipMax = FormatTime(latestResult.chip_seconds + ((segmentPace + paceDiff) * (finishSegment.distance_value - curSegment.distance_value)), 0, latestResult, false, true);
+    }
+    console.log(estimatedFinishMin, estimatedFinishMax)
     const gend = state.person.gender.toUpperCase()
     if (gend === "U" || gend === "O" || gend === "NS" || gend === "NOT SPECIFIED") {
         if (finish !== null) {
@@ -97,6 +187,7 @@ function Person() {
                 }
                 <div className="bib-box h4 m-2 p-2 mx-auto">{state.person.bib}</div>
             </div>
+            { finish &&
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
                 <div className="col-lg-8 p-4">
                     <div className="row d-flex justify-content-left align-items-center gx-4 gy-3 mb-4">
@@ -160,6 +251,26 @@ function Person() {
                     </div>
                 </div>
             </div>
+            }
+            { !finish && curSegment &&
+            <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
+                <div>
+                    Current location: {curSegment.name}
+                </div>
+                <div>
+                    Segment pace: {segmentPaceStr}
+                </div>
+                <div>
+                    Overall pace: {overallPaceStr}
+                </div>
+                <div>
+                    Estimated arrival time at { nextSegment != null ? nextSegment.name : "next location" }: { `Clock - ${estimatedNextClockMin}-${estimatedNextClockMax} -- Chip - ${estimatedNextChipMin}-${estimatedNextChipMax}` } {estimatedNextMin != null ? estimatedNextMin.toLocaleTimeString() : ""}
+                </div>
+                <div>
+                    Estimated finish time: { `Clock - ${estimatedFinishClockMin}-${estimatedFinishClockMax} -- Chip - ${estimatedFinishChipMin}-${estimatedFinishChipMax}` } {estimatedFinishMin != null ? estimatedFinishMin.toLocaleTimeString() : ""}
+                </div>
+            </div>
+            }
             { Certificate !== null &&
                 Certificate
             }
