@@ -27,7 +27,8 @@ class ResultsTable extends Component<ResultsTableProps> {
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
             const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
-            if (name.indexOf(search) >= 0 || search === "") {
+            const bib = `${res.bib}`
+            if (name.indexOf(search) >= 0 || bib.indexOf(search) >= 0 || search === "") {
                 dispResults.push(res);
             }
         })
