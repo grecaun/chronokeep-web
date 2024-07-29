@@ -177,27 +177,24 @@ function Person() {
                 }
                 <div className="bib-box h4 m-2 p-2 mx-auto">{state.person.bib}</div>
             </div>
-            { finish &&
+            { finish !== null &&
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
                 <div className="col-lg-8 p-4">
                     <div className="row d-flex justify-content-left align-items-center gx-4 gy-3 mb-4">
-                        { finish !== null &&
+                        { 
                         <div className="col-sm-8 text-center">
                             <div className="h2 border-bottom">Time</div>
-                            <div className="h2">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
+                            <div className="h2">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
                         </div>
                         }
-                        { finish !== null &&  state.distance !== null &&
-                        <div className="col-sm-4 overflow-hidden">
-                            <div className="d-flex border-bottom text-center">
-                                <div className="h5 me-1 mb-0">Pace </div>
-                                <div className="text-secondary">(per {state.distance.unit})</div>
-                            </div>
-                            <div className="h5">{FormatTime(finish.chip_seconds / state.distance.dist, 0, finish, true)}</div>
+                        { overallPaceStr.length > 0 && finishSegment !== null &&
+                        <div className="col-sm-4 text-center">
+                            <div className="h5 border-bottom">Pace </div>
+                            <div className="h5">{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
                         </div>
                         }
                     </div>
-                    { finish !== null && finish.ranking > 0 &&
+                    {  finish.ranking > 0 &&
                     <div className="row d-flex justify-content-center align-items-center gx-4 gy-3">
                         <div className="col-sm-4 text-center">
                             <div className="h5 border-bottom">Overall</div>
@@ -234,8 +231,8 @@ function Person() {
                         }
                         { finish !== null && finish.type === 0 &&
                         <div className="col col-cst text-center">
-                            <div className="h5 border-bottom">Chip Time</div>
-                            <div className="h5">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
+                            <div className="h5 border-bottom">Gun Time</div>
+                            <div className="h5">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
                         </div>
                         }
                     </div>
