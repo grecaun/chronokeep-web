@@ -225,7 +225,7 @@ function Person() {
                         }
                         { finish !== null && finish.type === 0 &&
                         <div className="col col-cst text-center">
-                            <div className="h5 border-bottom">Gun Time</div>
+                            <div className="h5 border-bottom">Clock Time</div>
                             <div className="h5">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
                         </div>
                         }
