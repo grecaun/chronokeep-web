@@ -62,10 +62,10 @@ class ResultsTable extends Component<ResultsTableProps> {
                 return 1;
             }
             // propogate start times below other results (but not below DNS/DNF)
-            if (a.segment === "Start" && b.segment !== "Start") {
+            if (a.segment.trim() === "Start" && b.segment.trim() !== "Start") {
                 return 1;
             }
-            if (a.segment !== "Start" && b.segment === "Start") {
+            if (a.segment.trim() !== "Start" && b.segment.trim() === "Start") {
                 return -1;
             }
             // sort by occurrence again! only if the location is the same this time though
@@ -111,7 +111,7 @@ class ResultsTable extends Component<ResultsTableProps> {
                             <th className="overflow-hidden-sm col-sm text-center">Gender</th>
                             <th className="overflow-hidden-sm col-sm text-center">Pl</th>
                             <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">Chip Time*</a></th>
-                            <th className="col-lg text-center">Time</th>
+                            <th className="col-lg text-center">Clock Time</th>
                         </tr>
                     </thead>
                     <tbody>
