@@ -92,6 +92,13 @@ function Person() {
         overallPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
         overallPaceStr = FormatPace(overallPace);
     }
+    // finish pace
+    let finishPace = 0;
+    let finishPaceStr = "";
+    if (finish != null && finishSegment != null) {
+        finishPace = Math.floor(finish.chip_seconds / finishSegment.distance_value)
+        finishPaceStr = FormatPace(finishPace)
+    }
     // Difference between paces. Runners usually slow down so this will be a positive value,
     // if they make a negative split then this will be negative.
     let paceDiff = segmentPace - overallPace;
@@ -187,10 +194,10 @@ function Person() {
                             <div className="h2">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
                         </div>
                         }
-                        { overallPaceStr.length > 0 && finishSegment !== null &&
+                        { finishPaceStr.length > 0 && finishSegment !== null &&
                         <div className="col-sm-4 text-center">
                             <div className="h5 border-bottom">Pace </div>
-                            <div className="h5">{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
+                            <div className="h5">{`${finishPaceStr} / ${finishSegment?.distance_unit}`}</div>
                         </div>
                         }
                     </div>
