@@ -115,6 +115,7 @@ export interface ResultsState extends BaseState {
     subscription_success: boolean
     unsubscribe_success: boolean
     unsubscribe_error: boolean
+    rank_by_chip: boolean
 }
 
 export interface AwardsState {

@@ -25,6 +25,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         subscription_success: false,
         unsubscribe_success: false,
         unsubscribe_error: false,
+        rank_by_chip: false,
     });
     useEffect(() => {
         const fetchResults = async () => {
