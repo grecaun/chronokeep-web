@@ -55,6 +55,7 @@ export interface ResultsTableProps {
     showTitle: boolean
     search: string
     sort_by: number
+    rank_by_chip: boolean
 }
 
 export interface CheckinRowProps {

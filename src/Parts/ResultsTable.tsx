@@ -13,6 +13,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         const search = this.props.search;
         const sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
+        const rank_by_chip = this.props.rank_by_chip;
         results.forEach(res => {
             if (resMap.has(res.bib)) {
                 // if res comes later than current value, replace current value
@@ -93,6 +94,8 @@ class ResultsTable extends Component<ResultsTableProps> {
             // finally sort by ranking
             return a.ranking - b.ranking
         })
+        const chip_time = rank_by_chip ? "Clock Time*" : "Chip Time*";
+        const clock_time = rank_by_chip ? "Chip Time" : "Clock Time";
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
@@ -110,8 +113,8 @@ class ResultsTable extends Component<ResultsTableProps> {
                             <th className="overflow-hidden-lg col-sm text-center">Pl</th>
                             <th className="overflow-hidden-sm col-sm text-center">Gender</th>
                             <th className="overflow-hidden-sm col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">Chip Time*</a></th>
-                            <th className="col-lg text-center">Clock Time</th>
+                            <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
+                            <th className="col-lg text-center">{clock_time}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,8 +182,12 @@ class ResultsTable extends Component<ResultsTableProps> {
                                             <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                             <td className="overflow-hidden-sm text-center">{result.gender}</td>
                                             <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                            <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
-                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
+                                            <td className="overflow-hidden-lg text-center">{
+                                                rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            }</td>
+                                            <td className="text-center">{
+                                                rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                            }</td>
                                         </tr>
                                     );
                                 }
@@ -193,8 +200,12 @@ class ResultsTable extends Component<ResultsTableProps> {
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                         <td className="overflow-hidden-sm text-center">{result.gender}</td>
                                         <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                        <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
-                                        <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
+                                        <td className="overflow-hidden-lg text-center">{
+                                            rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                        }</td>
+                                        <td className="text-center">{
+                                            rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                        }</td>
                                     </tr>
                                 );
                             })

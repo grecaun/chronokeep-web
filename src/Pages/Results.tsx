@@ -231,6 +231,7 @@ function Results() {
         })
     }
 
+    const disclaimer = state.rank_by_chip ? "*Results are ranked based upon the Chip Time and not the Clock Time." : "*Results are ranked based upon the Clock Time and not the Chip Time.";
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
@@ -350,7 +351,7 @@ function Results() {
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
                         <div className="row container-lg md-max-width mx-auto p-0 my-2">
-                            <div className="col-md-3">
+                            <div className="col-md-4 d-flex justify-content-center">
                                 <FormControlLabel
                                     label="Rank by Chip Time"
                                     control={
@@ -407,6 +408,7 @@ function Results() {
                                                 showTitle={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
+                                                rank_by_chip={state.rank_by_chip}
                                                 />
                                         )
                                     } else {
@@ -419,6 +421,7 @@ function Results() {
                                                 showTitle={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
+                                                rank_by_chip={state.rank_by_chip}
                                                 />
                                         )
                                     }
@@ -427,7 +430,7 @@ function Results() {
                         </div>
                     </div>
                 </div>
-                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>*Results are ranked based upon the Time and not the Chip Time.</div>
+                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>{disclaimer}</div>
             </div>
             }
             { distances.length === 0 &&
