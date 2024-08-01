@@ -196,30 +196,36 @@ function Results() {
                     return a.chip_milliseconds - b.chip_milliseconds;
                 }
                 return a.chip_seconds - b.chip_seconds;
-            })
+            });
             var place = 1;
-            var genderPlace: { [gend: string]: number }
-            var ageGroupPlace: { [age_group: string]: { [gend: string]: number } }
+            var genderPlace: { [gend: string]: number } = {}
+            var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
             current_results[distance].map(result => {
-                result.ranking = place;
-                place = place + 1;
-                if (typeof genderPlace[result.gender] === 'undefined') {
-                    result.gender_ranking = 1;
-                    genderPlace[result.gender] = 2;
+                if (result.finish == true) {
+                    result.ranking = place;
+                    place = place + 1;
+                    if (genderPlace[result.gender] === undefined) {
+                        result.gender_ranking = 1;
+                        genderPlace[result.gender] = 2;
+                    } else {
+                        result.gender_ranking = genderPlace[result.gender];
+                        genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                    }
+                    if (ageGroupPlace[result.age_group] === undefined) {
+                        result.age_ranking = 1;
+                        ageGroupPlace[result.age_group] = { };
+                        ageGroupPlace[result.age_group][result.gender] = 2;
+                    } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                        result.age_ranking = 1;
+                        ageGroupPlace[result.age_group][result.gender] = 2;
+                    } else {
+                        result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                        ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                    }
                 } else {
-                    result.gender_ranking = genderPlace[result.gender];
-                    genderPlace[result.gender] = genderPlace[result.gender] + 1;
-                }
-                if (typeof ageGroupPlace[result.age_group] === 'undefined') {
-                    result.age_ranking = 1;
-                    ageGroupPlace[result.age_group] = { };
-                    ageGroupPlace[result.age_group][result.gender] = 2;
-                } else if (typeof ageGroupPlace[result.age_group][result.gender] === 'undefined') {
-                    result.age_ranking = 1;
-                    ageGroupPlace[result.age_group][result.gender] = 2;
-                } else {
-                    result.age_ranking = ageGroupPlace[result.age_group][result.gender];
-                    ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                    result.ranking = -1;
+                    result.gender_ranking = -1;
+                    result.age_ranking = -1;
                 }
             })
         })
@@ -344,7 +350,7 @@ function Results() {
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
                         <div className="row container-lg md-max-width mx-auto p-0 my-2">
-                            <div className="col-md-4">
+                            <div className="col-md-3">
                                 <FormControlLabel
                                     label="Rank by Chip Time"
                                     control={
