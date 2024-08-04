@@ -201,7 +201,8 @@ function Results() {
             var genderPlace: { [gend: string]: number } = {}
             var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
             current_results[distance].map(result => {
-                if (result.finish == true) {
+                // verify it's a finish result and it isn't DNF/DNF/DNS
+                if (result.finish == true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
                     result.ranking = place;
                     place = place + 1;
                     if (genderPlace[result.gender] === undefined) {
