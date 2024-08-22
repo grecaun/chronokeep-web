@@ -115,3 +115,8 @@ export interface Segment {
     gps: string
     map_link: string
 }
+
+export enum RankingType {
+    Gun = 1,
+    Chip
+}

@@ -2,6 +2,7 @@ import { Params } from "react-router-dom";
 import { ResultsState } from "../Interfaces/states";
 import { ErrorResponse, GetResultsResponse } from "../Interfaces/responses";
 import { useEffect, useState } from "react";
+import { RankingType } from "../Interfaces/types";
 
 export function ResultsLoader(params: Params<string>, page: string): { state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>> } {
     const [state, setState] = useState<ResultsState>({
@@ -26,6 +27,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         unsubscribe_success: false,
         unsubscribe_error: false,
         rank_by_chip: false,
+        default_ranking_type: RankingType.Gun
     });
     useEffect(() => {
         const fetchResults = async () => {

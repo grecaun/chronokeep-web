@@ -56,6 +56,7 @@ export interface ResultsTableProps {
     search: string
     sort_by: number
     rank_by_chip: boolean
+    age_group_map: Map<number, string>
 }
 
 export interface CheckinRowProps {

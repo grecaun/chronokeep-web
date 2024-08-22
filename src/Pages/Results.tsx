@@ -4,7 +4,7 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear, ResultsParticipant, SmsSubscription } from '../Interfaces/types';
+import { EventYear, RankingType, ResultsParticipant, SmsSubscription } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { ResultsState, SortByItem } from '../Interfaces/states';
@@ -145,9 +145,13 @@ function Results() {
     }
 
     const handleChangeRanking = (e: React.ChangeEvent<HTMLInputElement>) => {
+        var rank_by_chip = e.target.checked
+        if (state.default_ranking_type == RankingType.Chip) {
+            rank_by_chip = !rank_by_chip
+        }
         setState({
             ...state,
-            rank_by_chip: e.target.checked,
+            rank_by_chip: rank_by_chip,
         })
     }
 
@@ -162,6 +166,36 @@ function Results() {
     const nowDate = new Date(Date.now())
     const days_allowed = state.year?.days_allowed ?? 0;
     var current_results = state.results;
+    const age_groups: Set<string> = new Set<string>()
+    distances.map(distance => {
+        state.results[distance].map(result => {
+            age_groups.add(result.age_group)
+        })
+    })
+    const sorted_age_groups = Array.from(age_groups)
+    sorted_age_groups.sort((g1, g2) => {
+        if (g1.includes("Under") || g2.includes("Over")) {
+            return -1
+        }
+        if (g2.includes("Under") || g1.includes("Over")) {
+            return 1
+        }
+        const oneStart: number = +g1.split('-')[0]
+        const twoStart: number = +g2.split('-')[0]
+        return oneStart - twoStart
+    })
+    var cur_value = 3;
+    const age_group_map: Map<number, string> = new Map<number, string>()
+    sorted_age_groups.map(age_group => {
+        const new_option = { value: cur_value, label: `Show Only: ${age_group}` }
+        age_group_map.set(cur_value, age_group)
+        cur_value++
+        options.push(new_option)
+    })
+    var ranking_checkbox_text = "Rank by Chip Time"
+    if (state.default_ranking_type == RankingType.Chip) {
+        ranking_checkbox_text = "Rank by Gun Time"
+    }
     if (state.rank_by_chip === true) {
         current_results = {};
         distances.map(distance => {
@@ -354,7 +388,7 @@ function Results() {
                         <div className="row container-lg md-max-width mx-auto p-0 my-2">
                             <div className="col-md-4 d-flex justify-content-center">
                                 <FormControlLabel
-                                    label="Rank by Chip Time"
+                                    label={ranking_checkbox_text}
                                     control={
                                         <Checkbox
                                             size="small"
@@ -410,6 +444,7 @@ function Results() {
                                                 search={state.search}
                                                 sort_by={state.sort_by}
                                                 rank_by_chip={state.rank_by_chip}
+                                                age_group_map={age_group_map}
                                                 />
                                         )
                                     } else {
@@ -423,6 +458,7 @@ function Results() {
                                                 search={state.search}
                                                 sort_by={state.sort_by}
                                                 rank_by_chip={state.rank_by_chip}
+                                                age_group_map={age_group_map}
                                                 />
                                         )
                                     }

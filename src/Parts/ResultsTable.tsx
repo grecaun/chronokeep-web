@@ -11,9 +11,17 @@ class ResultsTable extends Component<ResultsTableProps> {
         const info = this.props.info;
         const showTitle = this.props.showTitle;
         const search = this.props.search;
-        const sort_by = this.props.sort_by;
+        var sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
         const rank_by_chip = this.props.rank_by_chip;
+        var only_age_group = ""
+        if (sort_by > 2) {
+            sort_by = 1;
+            const tmp = this.props.age_group_map.get(this.props.sort_by)
+            if (tmp != undefined) {
+                only_age_group = tmp
+            }
+        }
         results.forEach(res => {
             if (resMap.has(res.bib)) {
                 // if res comes later than current value, replace current value
@@ -29,7 +37,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         results.forEach(res => {
             const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
             const bib = `${res.bib}`
-            if (name.indexOf(search) >= 0 || bib === search || search === "") {
+            if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
                 dispResults.push(res);
             }
         })
