@@ -57,6 +57,10 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         state.results = dta.results
                         state.year = dta.event_year
                         state.participants = dta.participants.filter(i => i.first.length + i.last.length > 0)
+                        state.default_ranking_type = RankingType.Gun
+                        if (dta.event_year.ranking_type === "chip") {
+                            state.default_ranking_type = RankingType.Chip
+                        }
                     } else {
                         const err = data as ErrorResponse
                         state.error = true

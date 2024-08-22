@@ -14,6 +14,7 @@ export interface EventYear {
     date_time: string
     live: boolean
     days_allowed: number
+    ranking_type: string
 }
 
 export interface TimeResult {
