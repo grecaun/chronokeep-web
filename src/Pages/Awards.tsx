@@ -85,6 +85,7 @@ export default function Awards() {
         grandMasters: (searchParams.get("gmas")) === "true",
         masters: (searchParams.get("mas")) === "true"
     });
+    const age_group_map: Map<number, string> = new Map<number, string>();
     useEffect(() => {
         pushHistory(awardsState, setSearchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -220,6 +221,7 @@ export default function Awards() {
                                             search={state.search}
                                             sort_by={state.sort_by}
                                             rank_by_chip={state.rank_by_chip}
+                                            age_group_map={age_group_map}
                                             />
                                     )
                                 } else {
@@ -238,6 +240,7 @@ export default function Awards() {
                                             search={state.search}
                                             sort_by={state.sort_by}
                                             rank_by_chip={state.rank_by_chip}
+                                            age_group_map={age_group_map}
                                             />
                                     )
                                 }
