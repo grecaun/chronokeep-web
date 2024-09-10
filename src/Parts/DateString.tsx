@@ -13,8 +13,17 @@ const DateString = (date: string) => {
         'November',
         'December'
     ]
-    const d = new Date(date)
-    return (`${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`)
+    const firstSplit = date.split('T')
+    if (firstSplit.length < 1) {
+        return ""
+    }
+    const secondSplit = firstSplit[0].split('-')
+    if (secondSplit.length < 3) {
+        return ""
+    }
+    const month = Number(secondSplit[1]) - 1;
+    const day = Number(secondSplit[2]);
+    return (`${months[month]} ${day}, ${secondSplit[0]}`)
 }
 
 export default DateString
