@@ -131,15 +131,21 @@ class ResultsTable extends Component<ResultsTableProps> {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
                                 let rankStr = result.ranking.toString()
                                 let arankStr = result.age_ranking.toString()
+                                if (result.age_ranking < 1) {
+                                    arankStr = "";
+                                }
                                 let grankStr = result.gender_ranking.toString()
+                                if (result.gender_ranking < 1) {
+                                    arankStr = "";
+                                }
                                 // If ranking is set to -1, or it is a start time then ignore output
                                 // otherwise display the current ranking for that value
                                 if (result.ranking < 1 || result.occurence === 0) {
-                                    rankStr = arankStr = grankStr = ''
+                                    rankStr = arankStr = grankStr = ""
                                 }
                                 // DNF - DNF - DNS
                                 if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                    rankStr = arankStr = grankStr = ''
+                                    rankStr = arankStr = grankStr = ""
                                 }
                                 // Early start time
                                 if (result.type === 1 || result.type === 11) {

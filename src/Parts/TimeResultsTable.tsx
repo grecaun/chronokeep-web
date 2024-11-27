@@ -101,11 +101,20 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                             sorted.map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
                                 let rankStr = result.ranking.toString()
+                                if (result.ranking < 1) {
+                                    rankStr = "";
+                                }
                                 let arankStr = result.age_ranking.toString()
+                                if (result.age_ranking < 1) {
+                                    arankStr = "";
+                                }
                                 let grankStr = result.gender_ranking.toString()
+                                if (result.gender_ranking < 1) {
+                                    arankStr = "";
+                                }
                                 // If not a finish time
                                 if (result.finish !== true) {
-                                    rankStr = arankStr = grankStr = ''
+                                    rankStr = arankStr = grankStr = ""
                                 }
                                 let segName = result.segment;
                                 if (segName === "Finish") {
