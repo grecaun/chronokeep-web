@@ -143,7 +143,8 @@ function Person() {
     if (state.person.gender === "M" || state.person.gender === "m") {
         state.person.gender = "Man"
     }
-    document.title = `Chronokeep - ${state.year.year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
+    const pretty_year = state.year.year.replace(/\D/g, "");
+    document.title = `Chronokeep - ${pretty_year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
     let ranking_gender = state.person.gender.toUpperCase();
     if (ranking_gender === "W" || ranking_gender === "F" || ranking_gender === "WOMAN") {
         ranking_gender = "Women"
@@ -154,7 +155,6 @@ function Person() {
     if (ranking_gender === state.person.gender.toUpperCase()) {
         ranking_gender = state.person.gender;
     }
-    const pretty_year = state.year.year.replace(/\D/g, "");
     let event: string = `${pretty_year} ${state.event.name}`;
     if (state.single_distance === false) {
         event = `${pretty_year} ${state.event.name} ${state.person.distance}`;
@@ -174,7 +174,7 @@ function Person() {
         <div>
             <div className="container-sm m-2 p-4 mx-auto">
                 <div className="p-2">
-                    <div className="text-center text-important display-4 m-0">{`${state.year.year} ${state.event.name}`}</div>
+                    <div className="text-center text-important display-4 m-0">{`${pretty_year} ${state.event.name}`}</div>
                     <div className="text-center text-important text-secondary m-0 mt-2">{DateString(state.year.date_time)}</div>
                 </div>
                 <div className="mx-auto fit-width mt-3"><Link to={`/results/${state.event.slug}/${state.year.year}`} className="btn btn-danger btn-chronokeep">Back</Link></div>
