@@ -80,7 +80,7 @@ export function CertificateGenerator(
                         <div className="certificate-time">{time}</div>
                         <div className="certificate-date">on this day of {date}</div>
                         { certification.length > 0 &&
-                            <div className="certificate-certification">Certification - {certification}</div>
+                            <div className="certificate-certification">Course Certification: {certification}</div>
                         }
                     </div>
                 </div>
