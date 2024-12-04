@@ -268,7 +268,9 @@ function Results() {
     const certifications = new Map<string, string>()
     if (state.distances != null) {
         state.distances.map(dist => {
-            certifications.set(dist.name, dist.certification)
+            if (dist.certification.length > 0) {
+                certifications.set(dist.name, dist.certification)
+            }
         })
     }
     const disclaimer = state.rank_by_chip ? "*Results are ranked based upon the Chip Time and not the Clock Time." : "*Results are ranked based upon the Clock Time and not the Chip Time.";
@@ -279,6 +281,9 @@ function Results() {
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
+                    { distances.length == 1 && certifications.has(distances[0]) &&
+                        <div className='chronokeep-certification'>{certifications.get(distances[0])}</div>
+                    }
                 </div>
                 { years.length > 1 && 
                     <div className="col-md-2 nav flex-md-column justify-content-center p-0">
