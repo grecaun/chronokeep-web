@@ -57,6 +57,7 @@ export interface ResultsTableProps {
     sort_by: number
     rank_by_chip: boolean
     age_group_map: Map<number, string>
+    certification: string | undefined
 }
 
 export interface CheckinRowProps {

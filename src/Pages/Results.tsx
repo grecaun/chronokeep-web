@@ -430,9 +430,6 @@ function Results() {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
                                             <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
-                                            { certifications.has(distance) &&
-                                                <a className='text-important h6 text-secondary'>{`(${certifications.get(distance)})`}</a>
-                                            }
                                         </li>
                                     );
                                 })
@@ -453,6 +450,7 @@ function Results() {
                                                 sort_by={state.sort_by}
                                                 rank_by_chip={state.rank_by_chip}
                                                 age_group_map={age_group_map}
+                                                certification={certifications.get(distance)}
                                                 />
                                         )
                                     } else {
@@ -467,6 +465,7 @@ function Results() {
                                                 sort_by={state.sort_by}
                                                 rank_by_chip={state.rank_by_chip}
                                                 age_group_map={age_group_map}
+                                                certification={certifications.get(distance)}
                                                 />
                                         )
                                     }

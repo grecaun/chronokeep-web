@@ -373,3 +373,6 @@ button.close {
 a.chronokeep-pagination-active:hover {
   color: #c1c1c1 !important;
 }
+.chronokeep-certification {
+  font-size: 14px;
+}

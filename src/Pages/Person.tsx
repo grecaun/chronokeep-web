@@ -163,7 +163,7 @@ function Person() {
         event,
         FormatTime(finish.chip_seconds, 0, finish, true, true),
         DateString(state.year.date_time),
-        state.event.cert_name,
+        state.cert_distance !== null ? state.cert_distance.certification : '',
         true
     ) : null;
     return (

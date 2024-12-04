@@ -81,7 +81,11 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                     <thead>
                         {showTitle &&
                             <tr>
-                                <td className="table-distance-header text-important text-center" colSpan={10}>{distance}</td>
+                                <td className="table-distance-header text-important text-center" colSpan={10}>{distance}
+                                    { this.props.certification !== undefined &&
+                                        <a className='text-important chronokeep-certification text-secondary'>{`(${this.props.certification})`}</a>
+                                    }
+                                </td>
                             </tr>
                         }
                         <tr>
