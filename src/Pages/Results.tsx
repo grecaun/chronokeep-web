@@ -282,7 +282,7 @@ function Results() {
                     <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                     { distances.length == 1 && certifications.has(distances[0]) &&
-                        <div className='chronokeep-certification'>{certifications.get(distances[0])}</div>
+                        <div className='chronokeep-certification'>Course Certification: {certifications.get(distances[0])}</div>
                     }
                 </div>
                 { years.length > 1 && 

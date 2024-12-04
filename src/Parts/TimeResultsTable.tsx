@@ -83,7 +83,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                             <tr>
                                 <td className="table-distance-header text-important text-center" colSpan={10}>{distance}
                                     { this.props.certification !== undefined &&
-                                    <div className='chronokeep-certification'>{this.props.certification}</div>
+                                    <div className='chronokeep-certification'>Course Certification: {this.props.certification}</div>
                                     }
                                 </td>
                             </tr>

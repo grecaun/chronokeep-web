@@ -167,7 +167,7 @@ function Person() {
         FormatTime(finish.chip_seconds, 0, finish, true, true),
         DateString(state.year.date_time),
         state.cert_distance !== null ? state.cert_distance.certification : '',
-        true
+        false
     ) : null;
     return (
         <div>
