@@ -222,6 +222,7 @@ export default function Awards() {
                                             sort_by={state.sort_by}
                                             rank_by_chip={state.rank_by_chip}
                                             age_group_map={age_group_map}
+                                            certification={undefined}
                                             />
                                     )
                                 } else {
@@ -241,6 +242,7 @@ export default function Awards() {
                                             sort_by={state.sort_by}
                                             rank_by_chip={state.rank_by_chip}
                                             age_group_map={age_group_map}
+                                            certification={undefined}
                                             />
                                     )
                                 }
