@@ -27,7 +27,8 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         unsubscribe_success: false,
         unsubscribe_error: false,
         rank_by_chip: false,
-        default_ranking_type: RankingType.Gun
+        default_ranking_type: RankingType.Gun,
+        distances: null,
     });
     useEffect(() => {
         const fetchResults = async () => {
@@ -61,6 +62,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         if (dta.event_year.ranking_type === "chip") {
                             state.default_ranking_type = RankingType.Chip
                         }
+                        state.distances = dta.distances
                     } else {
                         const err = data as ErrorResponse
                         state.error = true

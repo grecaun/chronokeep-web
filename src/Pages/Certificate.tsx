@@ -19,8 +19,12 @@ function Certificate() {
 
     const name: string = `${state.person.first} ${state.person.last}`;
     let event: string = `${state.year.year} ${state.event.name}`;
+    let certificate: string = state.cert_distance != null ? state.cert_distance.certification : '';
     if (state.single_distance === false) {
         event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
+    }
+    if (state.event.cert_name.length > 0) {
+        event = `${state.year.year} ${state.event.cert_name} ${state.person.distance}`;
     }
     let time: string = ``;
     if (finish !== null) {
@@ -29,7 +33,7 @@ function Certificate() {
     const date: string = DateString(state.year.date_time);
 
     return (
-        CertificateGenerator(name, event, time, date)
+        CertificateGenerator(name, event, time, date, certificate)
     )
 }
 
@@ -38,6 +42,7 @@ export function CertificateGenerator(
     event: string,
     time: string,
     date: string,
+    certification: string,
     displayCert: boolean = true
 ) {
     const downloadImage = async () => {
@@ -74,6 +79,9 @@ export function CertificateGenerator(
                         <div className="certificate-event-distance">finished the {event} with a time of</div>
                         <div className="certificate-time">{time}</div>
                         <div className="certificate-date">on this day of {date}</div>
+                        { certification.length > 0 &&
+                            <div className="certificate-certification">Certification - {certification}</div>
+                        }
                     </div>
                 </div>
             </div>
@@ -86,8 +94,12 @@ export function CertificateNoAPI() {
     if (params.name === undefined || params.event === undefined || params.time === undefined || params.date === undefined) {
         return;
     }
+    let certificate = '';
+    if (params.certificate !== undefined) {
+        certificate = `${params.certificate}`;
+    }
     return (
-        CertificateGenerator(params.name, params.event, params.time, params.date, true)
+        CertificateGenerator(params.name, params.event, params.time, params.date, certificate, true)
     )
 }
 

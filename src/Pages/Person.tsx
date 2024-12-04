@@ -163,7 +163,8 @@ function Person() {
         event,
         FormatTime(finish.chip_seconds, 0, finish, true, true),
         DateString(state.year.date_time),
-        false
+        state.event.cert_name,
+        true
     ) : null;
     return (
         <div>

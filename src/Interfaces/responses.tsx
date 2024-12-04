@@ -1,4 +1,4 @@
-import { Account, Event, EventYear, Key, Participant, Person, ResultsParticipant, Segment, TimeResult } from "./types";
+import { Account, CertDistance, Event, EventYear, Key, Participant, Person, ResultsParticipant, Segment, TimeResult } from "./types";
 
 export interface ModifyKeyResponse {
     key: Key
@@ -51,6 +51,7 @@ export interface GetEventResponse {
     year: EventYear | null
     results: { [index: string]: TimeResult[] }
     participants: ResultsParticipant[]
+    distances: CertDistance[] | null
 }
 
 export interface ModifyEventResponse {
@@ -78,6 +79,7 @@ export interface GetBibResultsResponse {
     person: Person
     single_distance: boolean
     segments: Segment[]
+    distance: CertDistance | null
 }
 
 export interface GetCheckinParticipantsResponse {

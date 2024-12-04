@@ -1,5 +1,6 @@
 export interface Event {
     name: string
+    cert_name: string
     slug: string
     website: string
     image: string
@@ -72,6 +73,11 @@ export interface ResultsParticipant {
     gender: string
     distance: string
     age_group: string
+}
+
+export interface CertDistance {
+    name: string
+    certification: string
 }
 
 export interface SmsSubscription {

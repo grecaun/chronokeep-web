@@ -265,7 +265,12 @@ function Results() {
             })
         })
     }
-
+    const certifications = new Map<string, string>()
+    if (state.distances != null) {
+        state.distances.map(dist => {
+            certifications.set(dist.name, dist.certification)
+        })
+    }
     const disclaimer = state.rank_by_chip ? "*Results are ranked based upon the Chip Time and not the Clock Time." : "*Results are ranked based upon the Clock Time and not the Chip Time.";
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
@@ -425,6 +430,9 @@ function Results() {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
                                             <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
+                                            { certifications.has(distance) &&
+                                                <a className='text-important h6 text-secondary'>{`(${certifications.get(distance)})`}</a>
+                                            }
                                         </li>
                                     );
                                 })

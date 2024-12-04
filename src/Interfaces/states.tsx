@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, Distance, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from "./types"
+import { Account, CertDistance, Distance, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -88,6 +88,7 @@ export interface PersonState extends BaseState {
     person: Person
     single_distance: boolean
     segments: Segment[]
+    cert_distance: CertDistance | null
 }
 
 export interface QRState extends ResultsState {
@@ -117,6 +118,7 @@ export interface ResultsState extends BaseState {
     unsubscribe_error: boolean
     rank_by_chip: boolean
     default_ranking_type: RankingType
+    distances: CertDistance[] | null
 }
 
 export interface AwardsState {

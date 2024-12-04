@@ -288,7 +288,7 @@ button.close {
   width: 100%;
   margin: 0;
   position: absolute;
-  top: 50%;
+  top: 55%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
@@ -311,6 +311,11 @@ button.close {
 .certificate-date {
   font-size: 30px;
   text-align: center;
+}
+.certificate-certification {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 30px;
 }
 .chronokeep-invisible {
   display: none;

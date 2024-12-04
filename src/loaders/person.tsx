@@ -13,13 +13,14 @@ export function PersonLoader(params: Params<string>): PersonState {
         message: null,
         event: {
             name: '',
+            cert_name: '',
             slug: '',
             website: '',
             image: '',
             contact_email: '',
             access_restricted: false,
             type: '',
-            recent_time: ''
+            recent_time: '',
         },
         year: {
             year: '',
@@ -40,6 +41,7 @@ export function PersonLoader(params: Params<string>): PersonState {
         },
         single_distance: false,
         segments: [],
+        cert_distance: null,
     });
     useEffect(() => {
         const fetchPerson = async () => {const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
@@ -68,6 +70,7 @@ export function PersonLoader(params: Params<string>): PersonState {
                         state.person = dta.person;
                         state.single_distance = dta.single_distance;
                         state.segments = dta.segments;
+                        state.cert_distance = dta.distance;
                     } else {
                         const err = data as ErrorResponse
                         state.error = true;
