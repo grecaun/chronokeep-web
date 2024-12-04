@@ -154,12 +154,13 @@ function Person() {
     if (ranking_gender === state.person.gender.toUpperCase()) {
         ranking_gender = state.person.gender;
     }
-    let event: string = `${state.year.year} ${state.event.name}`;
+    const pretty_year = state.year.year.replace(/\D/g, "");
+    let event: string = `${pretty_year} ${state.event.name}`;
     if (state.single_distance === false) {
-        event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
+        event = `${pretty_year} ${state.event.name} ${state.person.distance}`;
     }
     if (state.event.cert_name.length > 0) {
-        event = `${state.year.year} ${state.event.cert_name} ${state.person.distance}`;
+        event = `${pretty_year} ${state.event.cert_name} ${state.person.distance}`;
     }
     const Certificate: JSX.Element | null = finish !== null ? CertificateGenerator(
         `${state.person.first} ${state.person.last}`,
