@@ -265,7 +265,7 @@ function Person() {
                         <div className='mb-0'>Overall Pace</div>
                         <div className='h2'>{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
                     </div>
-                    { (estimatedNextChip.length > 0 || estimatedNext) && 
+                    { (estimatedNextChip.length > 0 || estimatedNext) && nextSegment !== finishSegment &&
                     <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">
                         { estimatedNextChip.length > 0 &&
                             <div className="col-md-4 my-0 text-important h6 text-center">
