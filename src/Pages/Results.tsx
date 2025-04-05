@@ -396,18 +396,20 @@ function Results() {
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
                         <div className="row container-lg md-max-width mx-auto p-0 my-2">
-                            <div className="col-md-4 d-flex justify-content-center">
-                                <FormControlLabel
-                                    label={ranking_checkbox_text}
-                                    control={
-                                        <Checkbox
-                                            size="small"
-                                            checked={state.rank_by_chip}
-                                            onChange={handleChangeRanking}
-                                            />
-                                    }
-                                />
-                            </div>
+                            { state.event!.type !== "time" &&
+                                <div className="col-md-4 d-flex justify-content-center">
+                                    <FormControlLabel
+                                        label={ranking_checkbox_text}
+                                        control={
+                                            <Checkbox
+                                                size="small"
+                                                checked={state.rank_by_chip}
+                                                onChange={handleChangeRanking}
+                                                />
+                                        }
+                                    />
+                                </div>
+                            }
                             <div className="col-md-4">
                                 <Select
                                     defaultValue={defaultSort}
