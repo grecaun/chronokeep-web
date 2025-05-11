@@ -191,7 +191,6 @@ function Results() {
     })
     var ranking_checkbox_text = "Rank by Chip Time"
     if (state.default_ranking_type === RankingType.Chip) {
-        console.log(`ranking selector text set to rank by gun time`)
         ranking_checkbox_text = "Rank by Gun Time"
     }
     if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
@@ -343,7 +342,6 @@ function Results() {
         || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) 
         ? "*Results are ranked based upon the Chip Time and not the Clock Time."
         : "*Results are ranked based upon the Clock Time and not the Chip Time.";
-    console.log(`HRMPH -- ${state.rank_by_selected} -- ${state.default_ranking_type}`)
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
