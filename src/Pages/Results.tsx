@@ -146,10 +146,6 @@ function Results() {
 
     const handleChangeRanking = (e: React.ChangeEvent<HTMLInputElement>) => {
         var rbc = e.target.checked
-        if (state.default_ranking_type === RankingType.Chip) {
-            rbc = !rbc
-        }
-        console.log(`attempting to change rank_by_chip: ${rbc}`)
         setState({
             ...state,
             rank_by_selected: rbc,
@@ -347,6 +343,7 @@ function Results() {
         || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) 
         ? "*Results are ranked based upon the Chip Time and not the Clock Time."
         : "*Results are ranked based upon the Clock Time and not the Chip Time.";
+    console.log(`HRMPH -- ${state.rank_by_selected} -- ${state.default_ranking_type}`)
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
