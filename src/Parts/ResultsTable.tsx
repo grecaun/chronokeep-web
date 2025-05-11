@@ -13,7 +13,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         const search = this.props.search;
         var sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
-        const rank_by_chip = this.props.rank_by_chip;
+        const rank_by_chip = this.props.rank_by_selected;
         var only_age_group = ""
         if (sort_by > 2) {
             sort_by = 1;

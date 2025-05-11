@@ -145,13 +145,14 @@ function Results() {
     }
 
     const handleChangeRanking = (e: React.ChangeEvent<HTMLInputElement>) => {
-        var rank_by_chip = e.target.checked
-        if (state.default_ranking_type == RankingType.Chip) {
-            rank_by_chip = !rank_by_chip
+        var rbc = e.target.checked
+        if (state.default_ranking_type === RankingType.Chip) {
+            rbc = !rbc
         }
+        console.log(`attempting to change rank_by_chip: ${rbc}`)
         setState({
             ...state,
-            rank_by_chip: rank_by_chip,
+            rank_by_selected: rbc,
         })
     }
 
@@ -193,10 +194,11 @@ function Results() {
         options.push(new_option)
     })
     var ranking_checkbox_text = "Rank by Chip Time"
-    if (state.default_ranking_type == RankingType.Chip) {
+    if (state.default_ranking_type === RankingType.Chip) {
+        console.log(`ranking selector text set to rank by gun time`)
         ranking_checkbox_text = "Rank by Gun Time"
     }
-    if (state.rank_by_chip === true) {
+    if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
         current_results = {};
         distances.map(distance => {
             current_results[distance] = [];
@@ -226,7 +228,7 @@ function Results() {
                 });
             })
             current_results[distance].sort((a,b) => {
-                if (a.chip_seconds == b.chip_seconds) {
+                if (a.chip_seconds === b.chip_seconds) {
                     return a.chip_milliseconds - b.chip_milliseconds;
                 }
                 return a.chip_seconds - b.chip_seconds;
@@ -236,7 +238,75 @@ function Results() {
             var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
             current_results[distance].map(result => {
                 // verify it's a finish result and it isn't DNF/DNF/DNS
-                if (result.finish == true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                    result.ranking = place;
+                    place = place + 1;
+                    if (genderPlace[result.gender] === undefined) {
+                        result.gender_ranking = 1;
+                        genderPlace[result.gender] = 2;
+                    } else {
+                        result.gender_ranking = genderPlace[result.gender];
+                        genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                    }
+                    if (ageGroupPlace[result.age_group] === undefined) {
+                        result.age_ranking = 1;
+                        ageGroupPlace[result.age_group] = { };
+                        ageGroupPlace[result.age_group][result.gender] = 2;
+                    } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                        result.age_ranking = 1;
+                        ageGroupPlace[result.age_group][result.gender] = 2;
+                    } else {
+                        result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                        ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                    }
+                } else {
+                    result.ranking = -1;
+                    result.gender_ranking = -1;
+                    result.age_ranking = -1;
+                }
+            })
+        })
+    } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // rank by gun
+        current_results = {};
+        distances.map(distance => {
+            current_results[distance] = [];
+            state.results[distance].map(result => {
+                current_results[distance].push({
+                    bib: result.bib,
+                    first: result.first,
+                    last: result.last,
+                    seconds: result.seconds,
+                    milliseconds: result.milliseconds,
+                    chip_seconds: result.chip_seconds,
+                    chip_milliseconds: result.chip_milliseconds,
+                    gender: result.gender,
+                    occurence: result.occurence,
+                    age_group: result.age_group,
+                    age: result.age,
+                    ranking: result.ranking,
+                    age_ranking: result.age_ranking,
+                    gender_ranking: result.gender_ranking,
+                    finish: result.finish,
+                    segment: result.segment,
+                    type: result.type,
+                    anonymous: result.anonymous,
+                    distance: result.distance,
+                    location: result.location,
+                    local_time: result.local_time
+                });
+            })
+            current_results[distance].sort((a,b) => {
+                if (a.seconds === b.seconds) {
+                    return a.milliseconds - b.milliseconds;
+                }
+                return a.seconds - b.seconds;
+            });
+            var place = 1;
+            var genderPlace: { [gend: string]: number } = {}
+            var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+            current_results[distance].map(result => {
+                // verify it's a finish result and it isn't DNF/DNF/DNS
+                if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
                     result.ranking = place;
                     place = place + 1;
                     if (genderPlace[result.gender] === undefined) {
@@ -273,7 +343,10 @@ function Results() {
             }
         })
     }
-    const disclaimer = state.rank_by_chip ? "*Results are ranked based upon the Chip Time and not the Clock Time." : "*Results are ranked based upon the Clock Time and not the Chip Time.";
+    const disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
+        || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) 
+        ? "*Results are ranked based upon the Chip Time and not the Clock Time."
+        : "*Results are ranked based upon the Clock Time and not the Chip Time.";
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
@@ -281,7 +354,7 @@ function Results() {
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
-                    { distances.length == 1 && certifications.has(distances[0]) &&
+                    { distances.length === 1 && certifications.has(distances[0]) &&
                         <div className='chronokeep-certification'>Course Certification: {certifications.get(distances[0])}</div>
                     }
                 </div>
@@ -403,7 +476,7 @@ function Results() {
                                         control={
                                             <Checkbox
                                                 size="small"
-                                                checked={state.rank_by_chip}
+                                                checked={state.rank_by_selected === true}
                                                 onChange={handleChangeRanking}
                                                 />
                                         }
@@ -455,7 +528,8 @@ function Results() {
                                                 showTitle={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
-                                                rank_by_chip={state.rank_by_chip}
+                                                rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
+                                                                || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
                                                 />
@@ -470,7 +544,8 @@ function Results() {
                                                 showTitle={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
-                                                rank_by_chip={state.rank_by_chip}
+                                                rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
+                                                                || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
                                                 />

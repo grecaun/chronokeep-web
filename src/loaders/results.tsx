@@ -26,7 +26,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         subscription_success: false,
         unsubscribe_success: false,
         unsubscribe_error: false,
-        rank_by_chip: false,
+        rank_by_selected: false,
         default_ranking_type: RankingType.Gun,
         distances: null,
     });
@@ -60,6 +60,7 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         state.participants = dta.participants.filter(i => i.first.length + i.last.length > 0)
                         state.default_ranking_type = RankingType.Gun
                         if (dta.event_year.ranking_type === "chip") {
+                            console.log(`loading results, ranking type set to chip`)
                             state.default_ranking_type = RankingType.Chip
                         }
                         state.distances = dta.distances

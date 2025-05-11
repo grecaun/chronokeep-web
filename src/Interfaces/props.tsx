@@ -55,7 +55,7 @@ export interface ResultsTableProps {
     showTitle: boolean
     search: string
     sort_by: number
-    rank_by_chip: boolean
+    rank_by_selected: boolean
     age_group_map: Map<number, string>
     certification: string | undefined
 }

@@ -220,7 +220,7 @@ export default function Awards() {
                                             masters={awardsState.masters}
                                             search={state.search}
                                             sort_by={state.sort_by}
-                                            rank_by_chip={state.rank_by_chip}
+                                            rank_by_selected={state.rank_by_selected}
                                             age_group_map={age_group_map}
                                             certification={undefined}
                                             />
@@ -240,7 +240,7 @@ export default function Awards() {
                                             masters={awardsState.masters}
                                             search={state.search}
                                             sort_by={state.sort_by}
-                                            rank_by_chip={state.rank_by_chip}
+                                            rank_by_selected={state.rank_by_selected}
                                             age_group_map={age_group_map}
                                             certification={undefined}
                                             />

@@ -116,7 +116,7 @@ export interface ResultsState extends BaseState {
     subscription_success: boolean
     unsubscribe_success: boolean
     unsubscribe_error: boolean
-    rank_by_chip: boolean
+    rank_by_selected: boolean
     default_ranking_type: RankingType
     distances: CertDistance[] | null
 }
