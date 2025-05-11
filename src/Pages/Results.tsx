@@ -191,7 +191,7 @@ function Results() {
     })
     var ranking_checkbox_text = "Rank by Chip Time"
     if (state.default_ranking_type === RankingType.Chip) {
-        ranking_checkbox_text = "Rank by Gun Time"
+        ranking_checkbox_text = "Rank by Clock Time"
     }
     if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
         current_results = {};
