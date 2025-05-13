@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import DateString from '../Parts/DateString';
 import ErrorMsg from '../Parts/ErrorMsg';
-import FormatTime, { FormatPace } from '../Parts/FormatTime';
+import FormatTime, { FormatAltPace, FormatPace } from '../Parts/FormatTime';
 import Loading from '../Parts/Loading';
 import PersonTime from '../Parts/PersonTime';
 import PersonDistance from '../Parts/PersonDistance';
@@ -78,27 +78,35 @@ function Person() {
     // segment pace
     let segmentPace = 0;
     let segmentPaceStr = "";
+    let segmentAltPaceStr = "";
     if (prevResult != null && latestResult != null && curSegment != null && prevSegment != null) {
         segmentPace = Math.floor((latestResult.seconds - prevResult.seconds) / (curSegment.distance_value - prevSegment.distance_value));
         segmentPaceStr = FormatPace(segmentPace);
+        segmentAltPaceStr = FormatAltPace(segmentPace, curSegment.distance_unit)
     } else if (latestResult != null && curSegment != null) {
         segmentPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
         segmentPaceStr = FormatPace(segmentPace);
+        segmentAltPaceStr = FormatAltPace(segmentPace, curSegment.distance_unit)
     }
     // overall pace
     let overallPace = 0;
     let overallPaceStr = "";
+    let overallAltPaceStr = "";
     if (latestResult != null && curSegment != null) {
         overallPace = Math.floor(latestResult.chip_seconds / curSegment.distance_value);
         overallPaceStr = FormatPace(overallPace);
+        overallAltPaceStr = FormatAltPace(overallPace, curSegment.distance_unit)
     }
     // finish pace
     let finishPace = 0;
     let finishPaceStr = "";
+    let finishAltPaceStr = "";
     if (finish != null && finishSegment != null) {
         finishPace = Math.floor(finish.chip_seconds / finishSegment.distance_value)
         finishPaceStr = FormatPace(finishPace)
+        finishAltPaceStr = FormatAltPace(finishPace, finishSegment.distance_unit)
     }
+
     // Difference between paces. Runners usually slow down so this will be a positive value,
     // if they make a negative split then this will be negative.
     let paceDiff = segmentPace - overallPace;
@@ -201,8 +209,9 @@ function Person() {
                         }
                         { finishPaceStr.length > 0 && finishSegment !== null &&
                         <div className="col-sm-4 text-center">
-                            <div className="h5 border-bottom">Pace </div>
+                            <div className="h4 border-bottom">Pace</div>
                             <div className="h5">{`${finishPaceStr} / ${finishSegment?.distance_unit}`}</div>
+                            <div className="h5">{`${finishAltPaceStr}`}</div>
                         </div>
                         }
                     </div>
@@ -260,10 +269,12 @@ function Person() {
                     <div className="col-md-4 my-0 text-important h6 text-center">
                         <div className='mb-0'>Current Pace</div>
                         <div className='h2'>{`${segmentPaceStr} / ${curSegment?.distance_unit}`}</div>
+                        <div className='h2'>{`${segmentAltPaceStr}`}</div>
                     </div>
                     <div className="col-md-4 my-0 text-important h6 text-center">
                         <div className='mb-0'>Overall Pace</div>
                         <div className='h2'>{`${overallPaceStr} / ${finishSegment?.distance_unit}`}</div>
+                        <div className='h2'>{`${overallAltPaceStr}`}</div>
                     </div>
                     { (estimatedNextChip.length > 0 || estimatedNext) && nextSegment !== finishSegment &&
                     <div className="col-lg-12 row my-0 text-important h6 text-center justify-content-center align-items-center">

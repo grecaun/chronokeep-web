@@ -51,4 +51,22 @@ export const FormatPace = (seconds: number) => {
     return (`${minutes}:${sec}`);
 }
 
+export const FormatAltPace = (seconds: number, distance: string) => {
+    if (distance === "km") {
+        let translatedSeconds = Math.floor(seconds * 1.609344);
+        let minutes = Math.floor(translatedSeconds / 60).toString();
+        let sec = (translatedSeconds % 60).toString();
+        sec = Number(sec) < 10 ? `0${sec}`.toString() : sec;
+        return (`${minutes}:${sec} / mi`);
+    } else if (distance === "mi") {
+        let translatedSeconds = Math.floor(seconds * 0.6213712);
+        let minutes = Math.floor(translatedSeconds / 60).toString();
+        let sec = (translatedSeconds % 60).toString();
+        sec = Number(sec) < 10 ? `0${sec}`.toString() : sec;
+        return (`${minutes}:${sec} / km`);
+    } else {
+        return "";
+    }
+}
+
 export default FormatTime
