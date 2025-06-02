@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
-import { ResultsTableProps } from '../Interfaces/props';
 import { TimeResult } from '../Interfaces/types';
+import { ResultsTableProps } from '../Interfaces/props';
 
-class ResultsTable extends Component<ResultsTableProps> {
+class BackyardResultsTable extends Component<ResultsTableProps> {
+
     render() {
         let results = this.props.results;
         const distance = this.props.distance;
@@ -41,7 +42,7 @@ class ResultsTable extends Component<ResultsTableProps> {
                 dispResults.push(res);
             }
         })
-        const sorted = dispResults.sort((a, b) => {
+        const sorted = dispResults.sort((a: TimeResult, b: TimeResult) => {
             switch (sort_by) {
                 case 1:
                     if (a.gender != b.gender) {
@@ -70,22 +71,6 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (!a.finish && b.finish) {
                 return 1;
             }
-            // propogate start times below other results (but not below DNS/DNF)
-            if (a.segment.trim() === "Start" && b.segment.trim() !== "Start") {
-                return 1;
-            }
-            if (a.segment.trim() !== "Start" && b.segment.trim() === "Start") {
-                return -1;
-            }
-            // sort by occurrence again! only if the location is the same this time though
-            // the occurrence being higher doesn't always indicate that the runner is ahead of another runner
-            // for example: A course is set for the runner to go A -> A -> B -> Finish.  With our current algorithm
-            // the runner at point A will display above the runner at point B even though the runner at A is behind
-            // the runner at B -- with this in mind it is most likely better to not sort by occurence.
-            // if locations are the same and occurrences differ, it is safe to sort by occurrence
-            if (a.location === b.location && a.occurence !== b.occurence) {
-                return b.occurence - a.occurence;
-            }
             // if both values are set to the same ranking (start times with -1 or 0 set essentially)
             // sort by gun time given
             if (a.ranking === b.ranking) {
@@ -102,31 +87,32 @@ class ResultsTable extends Component<ResultsTableProps> {
             // finally sort by ranking
             return a.ranking - b.ranking
         })
-        const chip_time = rank_by_chip ? "Clock Time*" : "Chip Time*";
-        const clock_time = rank_by_chip ? "Chip Time" : "Clock Time";
+        const chip_time = rank_by_chip ? "Cumulative*" : "Elapsed*";
+        const clock_time = rank_by_chip ? "Elapsed" : "Cumulative";
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
                     <thead>
-                        { showTitle &&
-                        <tr>
-                            <th className="table-distance-header text-important text-center" colSpan={10}>{distance}
-                                { this.props.certification !== undefined &&
+                        {showTitle &&
+                            <tr>
+                                <td className="table-distance-header text-important text-center" colSpan={10}>{distance}
+                                    { this.props.certification !== undefined &&
                                     <div className='chronokeep-certification'>Course Certification: {this.props.certification}</div>
-                                }
-                            </th>
-                        </tr>
+                                    }
+                                </td>
+                            </tr>
                         }
                         <tr>
                             <th className="overflow-hidden-sm col-md text-center">Bib</th>
                             <th className="col-sm text-center">Place</th>
-                            <th className="col-xl">Name</th>
+                            <th className="col-lg">Name</th>
                             <th className="overflow-hidden-lg col-sm text-center">Age</th>
                             <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-sm col-sm text-center">Gender</th>
-                            <th className="overflow-hidden-sm col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
+                            <th className="overflow-hidden-lg col-sm text-center">Gender</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Pl</th>
+                            <th className="overflow-hidden-lg col-sm text-center"><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
                             <th className="col-lg text-center">{clock_time}</th>
+                            <th className="col-lg text-center"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -142,34 +128,16 @@ class ResultsTable extends Component<ResultsTableProps> {
                                 if (result.gender_ranking < 1) {
                                     arankStr = "";
                                 }
-                                // If ranking is set to -1, or it is a start time then ignore output
-                                // otherwise display the current ranking for that value
-                                if (result.ranking < 1 || result.occurence === 0) {
+                                // If not a finish time
+                                if (result.finish !== true) {
                                     rankStr = arankStr = grankStr = ""
                                 }
-                                // DNF - DNF - DNS
-                                if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                    rankStr = arankStr = grankStr = ""
+                                if (result.ranking < 1) {
+                                    rankStr = arankStr = grankStr = "";
                                 }
-                                // Drop
-                                if (result.type === 10) {
-                                    rankStr = `${rankStr}d`
-                                }
-                                // Early start time
-                                if (result.type === 1 || result.type === 11) {
-                                    rankStr = `${rankStr}e`
-                                }
-                                // Unofficial time
-                                if (result.type === 2 || result.type === 12) {
-                                    rankStr = `${rankStr}u`
-                                }
-                                // Virtual
-                                if (result.type === 13) {
-                                    rankStr = `${rankStr}v`
-                                }
-                                // Late time
-                                if (result.type === 14) {
-                                    rankStr = `${rankStr}l`
+                                let segName = result.segment;
+                                if (segName === "Finish") {
+                                    segName = "Hour " + Math.floor((result.occurence/ 2) + 1);
                                 }
                                 // Modify the gender field. 
                                 // Make string into the upper case string for easier checks.
@@ -202,14 +170,15 @@ class ResultsTable extends Component<ResultsTableProps> {
                                             <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`Bib ${result.bib}`}</Link></td>
                                             <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                             <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                            <td className="overflow-hidden-sm text-center">{result.gender}</td>
-                                            <td className="overflow-hidden-sm text-center">{grankStr}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.gender}</td>
+                                            <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                             <td className="overflow-hidden-lg text-center">{
-                                                rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                                !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
                                             }</td>
                                             <td className="text-center">{
-                                                rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                                !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
                                             }</td>
+                                            <td className="text-center">{segName}</td>
                                         </tr>
                                     );
                                 }
@@ -220,14 +189,15 @@ class ResultsTable extends Component<ResultsTableProps> {
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                        <td className="overflow-hidden-sm text-center">{result.gender}</td>
-                                        <td className="overflow-hidden-sm text-center">{grankStr}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.gender}</td>
+                                        <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                         <td className="overflow-hidden-lg text-center">{
-                                            rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
                                         }</td>
                                         <td className="text-center">{
-                                            rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                            !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
                                         }</td>
+                                        <td className="text-center">{segName}</td>
                                     </tr>
                                 );
                             })
@@ -239,4 +209,4 @@ class ResultsTable extends Component<ResultsTableProps> {
     }
 }
 
-export default ResultsTable
+export default BackyardResultsTable

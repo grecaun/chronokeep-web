@@ -4,7 +4,7 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear, RankingType, ResultsParticipant, SmsSubscription } from '../Interfaces/types';
+import { EventYear, RankingType, ResultsParticipant, SmsSubscription, TimeResult } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { ResultsState, SortByItem } from '../Interfaces/states';
@@ -14,6 +14,7 @@ import { Checkbox, createFilterOptions, FormControlLabel, TextField } from '@mui
 import Modal from '../Parts/Modal';
 import * as Yup from 'yup';
 import { SendAddSmsSubscription, SendRemoveSmsSubscription } from '../loaders/sms_subscription';
+import BackyardResultsTable from '../Parts/BackyardResultsTable';
 
 function hideModal(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, show_success: boolean) {
     setState({
@@ -193,142 +194,316 @@ function Results() {
     if (state.default_ranking_type === RankingType.Chip) {
         ranking_checkbox_text = "Rank by Clock Time"
     }
-    if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
-        current_results = {};
-        distances.map(distance => {
-            current_results[distance] = [];
-            state.results[distance].map(result => {
-                current_results[distance].push({
-                    bib: result.bib,
-                    first: result.first,
-                    last: result.last,
-                    seconds: result.seconds,
-                    milliseconds: result.milliseconds,
-                    chip_seconds: result.chip_seconds,
-                    chip_milliseconds: result.chip_milliseconds,
-                    gender: result.gender,
-                    occurence: result.occurence,
-                    age_group: result.age_group,
-                    age: result.age,
-                    ranking: result.ranking,
-                    age_ranking: result.age_ranking,
-                    gender_ranking: result.gender_ranking,
-                    finish: result.finish,
-                    segment: result.segment,
-                    type: result.type,
-                    anonymous: result.anonymous,
-                    distance: result.distance,
-                    location: result.location,
-                    local_time: result.local_time
+    if (state.event!.type === "backyardultra") {
+        ranking_checkbox_text = "Rank by Cumulative Time"
+        if (state.default_ranking_type === RankingType.Chip) {
+            ranking_checkbox_text = "Rank by Elapsed Time"
+        }
+        if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
+            current_results = {};
+            distances.map(distance => {
+                const resMap = new Map<string, TimeResult>()
+                state.results[distance].map(result => {
+                    if (resMap.has(result.bib)) {
+                        if (result.occurence > resMap.get(result.bib)!.occurence) {
+                            resMap.set(result.bib, result)
+                        }
+                    } else {
+                        resMap.set(result.bib, result)
+                    }
+                })
+                state.results[distance] = Array.from(resMap.values())
+                current_results[distance] = []
+                state.results[distance].map(result => {
+                    current_results[distance].push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time
+                    });
+                })
+                current_results[distance].sort((a,b) => {
+                    if (a.occurence === b.occurence) {
+                        if (a.chip_seconds === b.chip_seconds) {
+                            return a.chip_milliseconds - b.chip_milliseconds;
+                        }
+                        return a.chip_seconds - b.chip_seconds;
+                    }
+                    // larger is better and should come first
+                    return b.occurence - a.occurence;
                 });
-            })
-            current_results[distance].sort((a,b) => {
-                if (a.chip_seconds === b.chip_seconds) {
-                    return a.chip_milliseconds - b.chip_milliseconds;
-                }
-                return a.chip_seconds - b.chip_seconds;
-            });
-            var place = 1;
-            var genderPlace: { [gend: string]: number } = {}
-            var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-            current_results[distance].map(result => {
-                // verify it's a finish result and it isn't DNF/DNF/DNS
-                if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
-                    result.ranking = place;
-                    place = place + 1;
-                    if (genderPlace[result.gender] === undefined) {
-                        result.gender_ranking = 1;
-                        genderPlace[result.gender] = 2;
+                var place = 1;
+                var genderPlace: { [gend: string]: number } = {}
+                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                current_results[distance].map(result => {
+                    // verify it's a finish result and it isn't DNF/DNF/DNS
+                    if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                        result.ranking = place;
+                        place = place + 1;
+                        if (genderPlace[result.gender] === undefined) {
+                            result.gender_ranking = 1;
+                            genderPlace[result.gender] = 2;
+                        } else {
+                            result.gender_ranking = genderPlace[result.gender];
+                            genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        }
+                        if (ageGroupPlace[result.age_group] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group] = { };
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else {
+                            result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                            ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                        }
                     } else {
-                        result.gender_ranking = genderPlace[result.gender];
-                        genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        result.ranking = -1;
+                        result.gender_ranking = -1;
+                        result.age_ranking = -1;
                     }
-                    if (ageGroupPlace[result.age_group] === undefined) {
-                        result.age_ranking = 1;
-                        ageGroupPlace[result.age_group] = { };
-                        ageGroupPlace[result.age_group][result.gender] = 2;
-                    } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
-                        result.age_ranking = 1;
-                        ageGroupPlace[result.age_group][result.gender] = 2;
-                    } else {
-                        result.age_ranking = ageGroupPlace[result.age_group][result.gender];
-                        ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
-                    }
-                } else {
-                    result.ranking = -1;
-                    result.gender_ranking = -1;
-                    result.age_ranking = -1;
-                }
+                })
             })
-        })
-    } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // rank by gun
-        current_results = {};
-        distances.map(distance => {
-            current_results[distance] = [];
-            state.results[distance].map(result => {
-                current_results[distance].push({
-                    bib: result.bib,
-                    first: result.first,
-                    last: result.last,
-                    seconds: result.seconds,
-                    milliseconds: result.milliseconds,
-                    chip_seconds: result.chip_seconds,
-                    chip_milliseconds: result.chip_milliseconds,
-                    gender: result.gender,
-                    occurence: result.occurence,
-                    age_group: result.age_group,
-                    age: result.age,
-                    ranking: result.ranking,
-                    age_ranking: result.age_ranking,
-                    gender_ranking: result.gender_ranking,
-                    finish: result.finish,
-                    segment: result.segment,
-                    type: result.type,
-                    anonymous: result.anonymous,
-                    distance: result.distance,
-                    location: result.location,
-                    local_time: result.local_time
+        } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // rank by gun
+            current_results = {};
+            distances.map(distance => {
+                const resMap = new Map<string, TimeResult>()
+                state.results[distance].map(result => {
+                    if (resMap.has(result.bib)) {
+                        if (result.occurence > resMap.get(result.bib)!.occurence) {
+                            resMap.set(result.bib, result)
+                        }
+                    } else {
+                        resMap.set(result.bib, result)
+                    }
+                })
+                state.results[distance] = Array.from(resMap.values())
+                current_results[distance] = []
+                state.results[distance].map(result => {
+                    current_results[distance].push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time
+                    });
+                })
+                current_results[distance].sort((a,b) => {
+                    if (a.occurence === b.occurence) {
+                        if (a.seconds === b.seconds) {
+                            return a.milliseconds - b.milliseconds;
+                        }
+                        return a.seconds - b.seconds;
+                    }
+                    // larger is better and should come first
+                    return b.occurence - a.occurence;
                 });
-            })
-            current_results[distance].sort((a,b) => {
-                if (a.seconds === b.seconds) {
-                    return a.milliseconds - b.milliseconds;
-                }
-                return a.seconds - b.seconds;
-            });
-            var place = 1;
-            var genderPlace: { [gend: string]: number } = {}
-            var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-            current_results[distance].map(result => {
-                // verify it's a finish result and it isn't DNF/DNF/DNS
-                if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
-                    result.ranking = place;
-                    place = place + 1;
-                    if (genderPlace[result.gender] === undefined) {
-                        result.gender_ranking = 1;
-                        genderPlace[result.gender] = 2;
+                var place = 1;
+                var genderPlace: { [gend: string]: number } = {}
+                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                current_results[distance].map(result => {
+                    // verify it's a finish result and it isn't DNF/DNF/DNS
+                    if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                        result.ranking = place;
+                        place = place + 1;
+                        if (genderPlace[result.gender] === undefined) {
+                            result.gender_ranking = 1;
+                            genderPlace[result.gender] = 2;
+                        } else {
+                            result.gender_ranking = genderPlace[result.gender];
+                            genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        }
+                        if (ageGroupPlace[result.age_group] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group] = { };
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else {
+                            result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                            ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                        }
                     } else {
-                        result.gender_ranking = genderPlace[result.gender];
-                        genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        result.ranking = -1;
+                        result.gender_ranking = -1;
+                        result.age_ranking = -1;
                     }
-                    if (ageGroupPlace[result.age_group] === undefined) {
-                        result.age_ranking = 1;
-                        ageGroupPlace[result.age_group] = { };
-                        ageGroupPlace[result.age_group][result.gender] = 2;
-                    } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
-                        result.age_ranking = 1;
-                        ageGroupPlace[result.age_group][result.gender] = 2;
-                    } else {
-                        result.age_ranking = ageGroupPlace[result.age_group][result.gender];
-                        ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
-                    }
-                } else {
-                    result.ranking = -1;
-                    result.gender_ranking = -1;
-                    result.age_ranking = -1;
-                }
+                })
             })
-        })
+        }
+    } else {
+        if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
+            current_results = {};
+            distances.map(distance => {
+                current_results[distance] = [];
+                state.results[distance].map(result => {
+                    current_results[distance].push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time
+                    });
+                })
+                current_results[distance].sort((a,b) => {
+                    if (a.chip_seconds === b.chip_seconds) {
+                        return a.chip_milliseconds - b.chip_milliseconds;
+                    }
+                    return a.chip_seconds - b.chip_seconds;
+                });
+                var place = 1;
+                var genderPlace: { [gend: string]: number } = {}
+                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                current_results[distance].map(result => {
+                    // verify it's a finish result and it isn't DNF/DNF/DNS
+                    if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                        result.ranking = place;
+                        place = place + 1;
+                        if (genderPlace[result.gender] === undefined) {
+                            result.gender_ranking = 1;
+                            genderPlace[result.gender] = 2;
+                        } else {
+                            result.gender_ranking = genderPlace[result.gender];
+                            genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        }
+                        if (ageGroupPlace[result.age_group] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group] = { };
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else {
+                            result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                            ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                        }
+                    } else {
+                        result.ranking = -1;
+                        result.gender_ranking = -1;
+                        result.age_ranking = -1;
+                    }
+                })
+            })
+        } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // rank by gun
+            current_results = {};
+            distances.map(distance => {
+                current_results[distance] = [];
+                state.results[distance].map(result => {
+                    current_results[distance].push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time
+                    });
+                })
+                current_results[distance].sort((a,b) => {
+                    if (a.seconds === b.seconds) {
+                        return a.milliseconds - b.milliseconds;
+                    }
+                    return a.seconds - b.seconds;
+                });
+                var place = 1;
+                var genderPlace: { [gend: string]: number } = {}
+                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                current_results[distance].map(result => {
+                    // verify it's a finish result and it isn't DNF/DNF/DNS
+                    if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
+                        result.ranking = place;
+                        place = place + 1;
+                        if (genderPlace[result.gender] === undefined) {
+                            result.gender_ranking = 1;
+                            genderPlace[result.gender] = 2;
+                        } else {
+                            result.gender_ranking = genderPlace[result.gender];
+                            genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                        }
+                        if (ageGroupPlace[result.age_group] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group] = { };
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else if (ageGroupPlace[result.age_group][result.gender] === undefined) {
+                            result.age_ranking = 1;
+                            ageGroupPlace[result.age_group][result.gender] = 2;
+                        } else {
+                            result.age_ranking = ageGroupPlace[result.age_group][result.gender];
+                            ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                        }
+                    } else {
+                        result.ranking = -1;
+                        result.gender_ranking = -1;
+                        result.age_ranking = -1;
+                    }
+                })
+            })
+        }
     }
     const certifications = new Map<string, string>()
     if (state.distances != null) {
@@ -338,10 +513,16 @@ function Results() {
             }
         })
     }
-    const disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
-        || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) 
+    var disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun)
+        || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip)
         ? "*Results are ranked based upon the Chip Time and not the Clock Time."
         : "*Results are ranked based upon the Clock Time and not the Chip Time.";
+    if (state.event!.type === "backyardultra") {
+        disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun)
+        || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip)
+            ? "*Results are ranked based upon the Cumulative Time and not the Elapsed Time."
+            : "*Results are ranked based upon the Elapsed Time and not the Cumulative Time.";
+    }
     document.title = `Chronokeep - ${state.event!.name} Results`
     return (
         <div>
@@ -516,6 +697,22 @@ function Results() {
                                     if (state.event!.type === "time") {
                                         return (
                                             <TimeResultsTable
+                                                distance={distance}
+                                                results={current_results[distance]}
+                                                info={info}
+                                                key={index}
+                                                showTitle={distances.length > 1}
+                                                search={state.search}
+                                                sort_by={state.sort_by}
+                                                rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
+                                                                || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
+                                                age_group_map={age_group_map}
+                                                certification={certifications.get(distance)}
+                                                />
+                                        )
+                                    } else if (state.event!.type === "backyardultra") {
+                                        return (
+                                            <BackyardResultsTable
                                                 distance={distance}
                                                 results={current_results[distance]}
                                                 info={info}
