@@ -8,6 +8,7 @@ import PersonDistance from '../Parts/PersonDistance';
 import { Segment, TimeResult } from '../Interfaces/types';
 import { PersonLoader } from '../loaders/person';
 import { CertificateGenerator } from './Certificate';
+import PersonBackyard from '../Parts/PersonBackyard';
 
 const googleMapsRegex = new RegExp("^https:\\/\\/www\\.google\\.com\\/maps\\/");
 
@@ -38,10 +39,10 @@ function Person() {
     for (const res of state.results) {
         if (res.segment.trim() === "Start") {
             start = res
-        } else if (res.finish && state.event.type !== "time") {
+        } else if (res.finish && state.event.type === "distance") {
             finish = res
         } else {
-            if (state.event.type === "time" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
+            if (state.event.type !== "distance" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
                 finish = res
             }
             results.push(res)
@@ -201,18 +202,24 @@ function Person() {
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
                 <div className="col-lg-8 p-4">
                     <div className="row d-flex justify-content-left align-items-center gx-4 gy-3 mb-4">
-                        { 
+                        { state.event.type !== 'backyardultra' &&
                         <div className="col-sm-8 text-center">
                             <div className="h2 border-bottom">Time</div>
                             <div className="h2">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
                         </div>
                         }
-                        { finishPaceStr.length > 0 && finishSegment !== null &&
+                        { finishPaceStr.length > 0 && finishSegment !== null && state.event.type === 'distance' &&
                         <div className="col-sm-4 text-center">
                             <div className="h4 border-bottom">Pace</div>
                             <div className="h5">{`${finishPaceStr} / ${finishSegment?.distance_unit}`}</div>
                             <div className="h5">{`${finishAltPaceStr}`}</div>
                         </div>
+                        }
+                        { state.event.type === 'time' &&
+                            <div className="col-sm-4 text-center">
+                            <div className="h4 border-bottom">Completed</div>
+                            <div className="h5">{finish.segment}</div>
+                            </div>
                         }
                     </div>
                     {  finish.ranking > 0 &&
@@ -236,25 +243,27 @@ function Person() {
                     </div>
                     }
                 </div>
-                <div className="col-lg-4 p-4">
-                    <div className="row flex-lg-column align-items-center justify-content-stretch p-0 gx-4 gy-3">
-                        { start !== null &&
-                        <div className="col col-cst text-center">
-                            <div className="h5 border-bottom">Start Time</div>
-                            <div className="h5">{FormatTime(start.seconds, start.milliseconds, start)}</div>
+                { state.event.type !== 'backyardultra' &&
+                    <div className="col-lg-4 p-4">
+                        <div className="row flex-lg-column align-items-center justify-content-stretch p-0 gx-4 gy-3">
+                            { start !== null &&
+                            <div className="col col-cst text-center">
+                                <div className="h5 border-bottom">Start Time</div>
+                                <div className="h5">{FormatTime(start.seconds, start.milliseconds, start)}</div>
+                            </div>
+                            }
+                            { finish !== null && finish.type === 0 && state.event.type !== 'backyardultra' &&
+                            <div className="col col-cst text-center">
+                                <div className="h5 border-bottom">Clock Time</div>
+                                <div className="h5">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
+                            </div>
+                            }
                         </div>
-                        }
-                        { finish !== null && finish.type === 0 &&
-                        <div className="col col-cst text-center">
-                            <div className="h5 border-bottom">Clock Time</div>
-                            <div className="h5">{FormatTime(finish.seconds, finish.milliseconds, finish, true)}</div>
-                        </div>
-                        }
                     </div>
-                </div>
+                }
             </div>
             }
-            { !finish && curSegment != null && curSegment.name !== "Finish" &&
+            { !finish && curSegment != null && curSegment.name !== "Finish" && state.event.type !== 'backyardultra' &&
             <div>
                 { curSegment.map_link != null && curSegment.map_link.length > 0 && curSegment.map_link.match(googleMapsRegex) &&
                 <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 mb-4 justify-content-center align-items-center">
@@ -311,13 +320,16 @@ function Person() {
                 </div>
             </div>
             }
-            { Certificate !== null &&
+            { Certificate !== null && state.event.type === 'distance' &&
                 Certificate
             }
             {state.event.type === "time" &&
                 <PersonTime results={results} gender={state.person.gender} />
             }
-            {state.event.type !== "time" &&
+            {state.event.type === "backyardultra" &&
+                <PersonBackyard results={results} gender={state.person.gender} />
+            }
+            {state.event.type === "distance" &&
                 <PersonDistance results={results} gender={state.person.gender} />
             }
         </div>
