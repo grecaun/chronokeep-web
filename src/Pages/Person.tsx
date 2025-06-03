@@ -39,10 +39,10 @@ function Person() {
     for (const res of state.results) {
         if (res.segment.trim() === "Start") {
             start = res
-        } else if (res.finish && state.event.type === "distance") {
+        } else if (res.finish && (state.event.type.length < 1 || state.event.type === "distance")) {
             finish = res
         } else {
-            if (state.event.type !== "distance" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
+            if (state.event.type.length > 0 && state.event.type.length > 0 && state.event.type !== "distance" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
                 finish = res
             }
             results.push(res)
@@ -263,7 +263,7 @@ function Person() {
                 }
             </div>
             }
-            { !finish && curSegment != null && curSegment.name !== "Finish" && state.event.type !== 'backyardultra' &&
+            { finish == null && curSegment != null && curSegment.name !== "Finish" && state.event.type !== 'backyardultra' && state.event.type !== 'time' &&
             <div>
                 { curSegment.map_link != null && curSegment.map_link.length > 0 && curSegment.map_link.match(googleMapsRegex) &&
                 <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 mb-4 justify-content-center align-items-center">
@@ -320,17 +320,17 @@ function Person() {
                 </div>
             </div>
             }
-            { Certificate !== null && state.event.type === 'distance' &&
-                Certificate
-            }
             {state.event.type === "time" &&
                 <PersonTime results={results} gender={state.person.gender} />
             }
             {state.event.type === "backyardultra" &&
                 <PersonBackyard results={results} gender={state.person.gender} />
             }
-            {state.event.type === "distance" &&
+            {state.event.type !== "time" && state.event.type !== "backyardultra" &&
                 <PersonDistance results={results} gender={state.person.gender} />
+            }
+            { Certificate !== null && state.event.type !== "time" && state.event.type !== "backyardultra" &&
+                Certificate
             }
         </div>
     );

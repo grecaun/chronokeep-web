@@ -176,7 +176,7 @@ class ResultsTable extends Component<ResultsTableProps> {
                                 result.gender = result.gender.toLocaleUpperCase();
                                 // Check for NB or NS before consolidating down to 2 characters.
                                 if (result.gender === "NON-BINARY" || result.gender === "NON BINARY" || result.gender === "NONBINARY") {
-                                    result.gender = "NB"
+                                    result.gender = "X"
                                 }
                                 if (result.gender === "NOT SPECIFIED") {
                                     arankStr = grankStr = ""
