@@ -23,19 +23,68 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                 only_age_group = tmp
             }
         }
+        var maxStart = 0;
         results.forEach(res => {
-            if (resMap.has(res.bib)) {
-                // if res comes later than current value, replace current value
-                if (resMap.get(res.bib)!.seconds < res.seconds) {
-                    resMap.set(res.bib, res)
-                }
-            } else {
-                resMap.set(res.bib, res)
+            const hour = (res.occurence / 2);
+            if (hour > maxStart) {
+                maxStart = hour * 2;
             }
         })
+        results.forEach(res => {
+            // Only display the first hour starts or hours that haven't started
+            if ((res.occurence > maxStart || res.occurence === 0) || res.occurence % 2 === 1) {
+                if (resMap.has(res.bib)) {
+                    // if res comes later than current value, replace current value
+                    if (resMap.get(res.bib)!.seconds < res.seconds) {
+                        resMap.set(res.bib, res)
+                    }
+                } else {
+                    resMap.set(res.bib, res)
+                }
+            }
+        })
+        // Check for individuals who started the first hour but did not finish within that hour.
+        const dnfMap: Map<string, TimeResult> = new Map();
         results = Array.from(resMap.values())
+        results.forEach(res => {
+            if (res.occurence === 0 && (res.location === "Start" || res.location === "Start/Finish") && maxStart > 0) {
+                dnfMap.set(res.bib, {
+                    bib: res.bib,
+                    first: res.first,
+                    last: res.last,
+                    seconds: 0,
+                    milliseconds: 0,
+                    chip_seconds: 0,
+                    chip_milliseconds: 0,
+                    gender: res.gender,
+                    occurence: 1,
+                    age_group: res.age_group,
+                    age: res.age,
+                    ranking: res.ranking,
+                    age_ranking: res.age_ranking,
+                    gender_ranking: res.gender_ranking,
+                    finish: true,
+                    segment: 'DNF',
+                    type: 30,
+                    anonymous: res.anonymous,
+                    distance: res.distance,
+                    location: res.location,
+                    local_time: ''
+                })
+            }
+        })
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
+            // don't add the result from results if they are in the DNF map
+            if (!dnfMap.has(res.bib)) {
+                const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
+                const bib = `${res.bib}`
+                if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
+                    dispResults.push(res);
+                }
+            }
+        })
+        dnfMap.forEach(res => {
             const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
             const bib = `${res.bib}`
             if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
@@ -85,6 +134,14 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                 return a.seconds - b.seconds;
             }
             // finally sort by ranking
+            console.log(`Sort by ranking... ${a.last} -- ${b.last}`)
+            // Rankings at 0 or below are not valid, shuffle them to the bottom
+            if (a.ranking <= 0 && b.ranking > 0) {
+                return 1;
+            }
+            if (b.ranking <= 0 && a.ranking > 0) {
+                return -1;
+            }
             return a.ranking - b.ranking
         })
         const chip_time = rank_by_chip ? "Cumulative" : "Elapsed";
@@ -173,7 +230,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                             <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                             <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                             <td className="overflow-hidden-lg text-center">{
-                                                !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                                !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, false)
                                             }</td>
                                             <td className="text-center">{
                                                 !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -192,7 +249,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                         <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                         <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                         <td className="overflow-hidden-lg text-center">{
-                                            !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, true)
+                                            !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, false)
                                         }</td>
                                         <td className="text-center">{
                                             !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
