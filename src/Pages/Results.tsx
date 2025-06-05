@@ -205,7 +205,7 @@ function Results() {
                 const resMap = new Map<string, TimeResult>()
                 state.results[distance].map(result => {
                     if (resMap.has(result.bib)) {
-                        if (result.occurence > resMap.get(result.bib)!.occurence) {
+                        if (result.occurence > resMap.get(result.bib)!.occurence && (result.occurence % 2 === 1 || result.occurence === 0)) {
                             resMap.set(result.bib, result)
                         }
                     } else {
@@ -288,7 +288,7 @@ function Results() {
                 const resMap = new Map<string, TimeResult>()
                 state.results[distance].map(result => {
                     if (resMap.has(result.bib)) {
-                        if (result.occurence > resMap.get(result.bib)!.occurence) {
+                        if (result.occurence > resMap.get(result.bib)!.occurence && (result.occurence % 2 === 1 || result.occurence === 0)) {
                             resMap.set(result.bib, result)
                         }
                     } else {

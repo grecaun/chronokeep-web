@@ -44,11 +44,9 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
             }
         })
         // Check for individuals who started the first hour but did not finish within that hour.
-        const dnfMap: Map<string, TimeResult> = new Map();
-        results = Array.from(resMap.values())
-        results.forEach(res => {
+        resMap.forEach(res => {
             if (res.occurence === 0 && (res.location === "Start" || res.location === "Start/Finish") && maxStart > 0) {
-                dnfMap.set(res.bib, {
+                resMap.set(res.bib, {
                     bib: res.bib,
                     first: res.first,
                     last: res.last,
@@ -73,18 +71,9 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                 })
             }
         })
+        results = Array.from(resMap.values())
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
-            // don't add the result from results if they are in the DNF map
-            if (!dnfMap.has(res.bib)) {
-                const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
-                const bib = `${res.bib}`
-                if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
-                    dispResults.push(res);
-                }
-            }
-        })
-        dnfMap.forEach(res => {
             const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
             const bib = `${res.bib}`
             if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
@@ -230,10 +219,10 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                             <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                             <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                             <td className="overflow-hidden-lg text-center">{
-                                                !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, false)
+                                                !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result)
                                             }</td>
                                             <td className="text-center">{
-                                                !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                                !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
                                             }</td>
                                             <td className="text-center">{segName}</td>
                                         </tr>
@@ -249,10 +238,10 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                         <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                         <td className="overflow-hidden-lg text-center">{grankStr}</td>
                                         <td className="overflow-hidden-lg text-center">{
-                                            !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result, false)
+                                            !rank_by_chip ? FormatTime(result.chip_seconds, result.chip_milliseconds, result) : FormatTime(result.seconds, result.milliseconds, result)
                                         }</td>
                                         <td className="text-center">{
-                                            !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            !rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
                                         }</td>
                                         <td className="text-center">{segName}</td>
                                     </tr>
