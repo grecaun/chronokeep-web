@@ -102,13 +102,6 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {
                 return a.type - b.type;
             }
-            // propogate finish times to the top of the list
-            if (a.finish && !b.finish) {
-                return -1;
-            }
-            if (!a.finish && b.finish) {
-                return 1;
-            }
             // if both values are set to the same ranking (start times with -1 or 0 set essentially)
             // sort by gun time given
             if (a.ranking === b.ranking) {
@@ -175,9 +168,6 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                     arankStr = "";
                                 }
                                 // If not a finish time
-                                if (result.finish !== true) {
-                                    rankStr = arankStr = grankStr = ""
-                                }
                                 if (result.ranking < 1) {
                                     rankStr = arankStr = grankStr = "";
                                 }
