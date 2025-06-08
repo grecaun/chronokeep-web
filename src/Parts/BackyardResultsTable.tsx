@@ -25,9 +25,8 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         }
         var maxStart = 0;
         results.forEach(res => {
-            const hour = (res.occurence / 2);
-            if (hour > maxStart) {
-                maxStart = hour * 2;
+            if (res.occurence % 2 === 1 && maxStart < res.occurence - 1) {
+                maxStart = res.occurence - 1;
             }
         })
         results.forEach(res => {
