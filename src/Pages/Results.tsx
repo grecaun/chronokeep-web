@@ -236,7 +236,9 @@ function Results() {
                         anonymous: result.anonymous,
                         distance: result.distance,
                         location: result.location,
-                        local_time: result.local_time
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
                     });
                 })
                 current_results[distance].sort((a,b) => {
@@ -319,7 +321,9 @@ function Results() {
                         anonymous: result.anonymous,
                         distance: result.distance,
                         location: result.location,
-                        local_time: result.local_time
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
                     });
                 })
                 current_results[distance].sort((a,b) => {
@@ -393,7 +397,9 @@ function Results() {
                         anonymous: result.anonymous,
                         distance: result.distance,
                         location: result.location,
-                        local_time: result.local_time
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
                     });
                 })
                 current_results[distance].sort((a,b) => {
@@ -461,7 +467,9 @@ function Results() {
                         anonymous: result.anonymous,
                         distance: result.distance,
                         location: result.location,
-                        local_time: result.local_time
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
                     });
                 })
                 current_results[distance].sort((a,b) => {

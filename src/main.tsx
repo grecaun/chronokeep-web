@@ -14,6 +14,7 @@ import Logout from './Pages/Logout';
 import Account from './Pages/Account';
 import Events from './Pages/Events';
 import Error from './Pages/Error';
+import Custom from './Pages/Custom';
 import DefaultPage from './Pages/DefaultPage';
 import Certificate, { CertificateNoAPI } from './Pages/Certificate';
 import Unsubscribe from './Pages/Unsubscribe';
@@ -77,6 +78,14 @@ const router = createBrowserRouter([
       {
         path: '/checkin/:slug/:year?/qr',
         element: <QRCode page='registration' />
+      },
+      {
+        path: '/:custom/:slug/:year?',
+        element: <Custom />
+      },
+      {
+        path: '/:custom/:slug/:year?/qr',
+        element: <QRCode page='custom' />
       },
       {
         path: '/remote/login',

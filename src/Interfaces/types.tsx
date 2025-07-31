@@ -40,6 +40,8 @@ export interface TimeResult {
     distance: string
     location: string
     local_time: string
+    division: string
+    division_ranking: number
 }
 
 export interface Key {
