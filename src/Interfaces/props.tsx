@@ -47,6 +47,14 @@ export interface PageProps {
     page: string;
 }
 
+export interface PNTFTableProps {
+    distance: string
+    results: TimeResult[]
+    key: number
+    info: { slug: string | undefined, year: string | undefined }
+    showTitle: boolean
+}
+
 export interface ResultsTableProps {
     distance: string
     results: TimeResult[]

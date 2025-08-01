@@ -14,12 +14,13 @@ import Logout from './Pages/Logout';
 import Account from './Pages/Account';
 import Events from './Pages/Events';
 import Error from './Pages/Error';
-import Custom from './Pages/Custom';
 import DefaultPage from './Pages/DefaultPage';
 import Certificate, { CertificateNoAPI } from './Pages/Certificate';
 import Unsubscribe from './Pages/Unsubscribe';
 import Subscribe from './Pages/Subscribe';
 import Checkin from './Pages/Checkin';
+import PNTF from './Pages/PNTF';
+import YTP from './Pages/YTP';
 
 const router = createBrowserRouter([
   {
@@ -80,12 +81,20 @@ const router = createBrowserRouter([
         element: <QRCode page='registration' />
       },
       {
-        path: '/:custom/:slug/:year?',
-        element: <Custom />
+        path: '/pntf/:slug/:year?',
+        element: <PNTF />
       },
       {
-        path: '/:custom/:slug/:year?/qr',
-        element: <QRCode page='custom' />
+        path: '/pntf/:slug/:year?/qr',
+        element: <QRCode page='pntf' />
+      },
+      {
+        path: '/ytp/:slug/:year?',
+        element: <YTP />
+      },
+      {
+        path: '/ytp/:slug/:year?/qr',
+        element: <QRCode page='ytp' />
       },
       {
         path: '/remote/login',

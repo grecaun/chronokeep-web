@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { ResultsLoader } from '../loaders/results';
 import { TimeResult } from '../Interfaces/types';
 
-function Custom() {
+function YTP() {
     const params = useParams();
     const { state } = ResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
@@ -21,7 +21,6 @@ function Custom() {
         );
     }
     const info = {
-        custom: params.custom?.toLocaleLowerCase(),
         slug: params.slug,
         year: state.year?.year
     }
@@ -29,7 +28,7 @@ function Custom() {
     const results: { [index: string]: TimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
-            if (result.division.trim() !== "") {
+            if (result.division.trim() === "ytp") {
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }
@@ -108,4 +107,4 @@ function Custom() {
     )
 }
 
-export default Custom;
+export default YTP;
