@@ -2,8 +2,9 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
+import { YTPTimeResult } from '../Interfaces/types';
+import YTPScoreTable from '../Parts/YTPScoreTable';
 import { ResultsLoader } from '../loaders/results';
-import { TimeResult } from '../Interfaces/types';
 
 function YTP() {
     const params = useParams();
@@ -24,13 +25,43 @@ function YTP() {
         slug: params.slug,
         year: state.year?.year
     }
-    const distances = Object.keys(state.results)
-    const results: { [index: string]: TimeResult[] } = {}
+    var distances = Object.keys(state.results)
+    const results: { [index: string]: YTPTimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
             if (result.division.trim() === "ytp") {
                 if (results[distance] === undefined) {
                     results[distance] = []
+                }
+                var age = 140
+                var age_group = ""
+                result.gender = result.gender.toLocaleUpperCase();
+                result.gender = result.gender.substring(0,2)
+                if (result.gender === "F" || result.gender === "WO") {
+                    result.gender = "F"
+                } else if (result.gender === "M" || result.gender === "MA") {
+                    result.gender = "M"
+                } else {
+                    result.gender = "X"
+                }
+                if (result.age < 9) {
+                    age_group = `${result.gender} 8/under`
+                    age = 8
+                } else if (result.age < 11) {
+                    age_group = `${result.gender} 9-10`
+                    age = 10
+                } else if (result.age < 13) {
+                    age_group = `${result.gender} 11-12`
+                    age = 12
+                } else if (result.age < 15) {
+                    age_group = `${result.gender} 13-14`
+                    age = 14
+                } else if (result.age < 17) {
+                    age_group = `${result.gender} 15-16`
+                    age = 16
+                } else if (result.age < 19) {
+                    age_group = `${result.gender} 17-18`
+                    age = 18
                 }
                 results[distance].push({
                         bib: result.bib,
@@ -42,8 +73,8 @@ function YTP() {
                         chip_milliseconds: result.chip_milliseconds,
                         gender: result.gender,
                         occurence: result.occurence,
-                        age_group: result.age_group,
-                        age: result.age,
+                        age_group: age_group,
+                        age: age,
                         ranking: result.ranking,
                         age_ranking: result.age_ranking,
                         gender_ranking: result.gender_ranking,
@@ -55,17 +86,23 @@ function YTP() {
                         location: result.location,
                         local_time: result.local_time,
                         division: result.division,
-                        division_ranking: result.division_ranking
+                        division_ranking: result.division_ranking,
+                        cougar_score: 0,
+                        combined_score: 0,
+                        highest_score: 0,
+                        tiger_score: 0,
+                        seward_score: 0
                     })
             }
         })
     })
+    distances = Object.keys(results)
     document.title = `Chronokeep - ${state.event!.name}`
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name}`}</p>
+                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} YTP Series`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
@@ -87,7 +124,15 @@ function YTP() {
                         <div id="results-parent">
                             {
                                 distances.map((distance, index) => {
-                                    return `${distance} ${index}`;
+                                    return (
+                                        <YTPScoreTable
+                                            distance={distance}
+                                            results={results[distance]}
+                                            key={index}
+                                            showTitle={distances.length > 1}
+                                            info={info}
+                                            />
+                                    )
                                 })
                             }
                         </div>

@@ -21,10 +21,6 @@ function PNTF() {
             <Loading />
         );
     }
-    const info = {
-        slug: params.slug,
-        year: state.year?.year
-    }
     const distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
     distances.map(distance => {
@@ -34,7 +30,7 @@ function PNTF() {
                     results[distance] = []
                 }
                 var age_group = "Open"
-                if (result.age >= 40) {
+                if (result.age >= 40 && result.age < 130) {
                     age_group = "Masters"
                 }
                 results[distance].push({
@@ -161,7 +157,6 @@ function PNTF() {
                                         <PNTFResultsTable
                                             distance={distance}
                                             results={results[distance]}
-                                            info={info}
                                             key={index}
                                             showTitle={distances.length > 1}
                                             />

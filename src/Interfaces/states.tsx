@@ -121,6 +121,20 @@ export interface ResultsState extends BaseState {
     distances: CertDistance[] | null
 }
 
+export interface YTPState {
+    prev_standings: {
+        [index: string] : {
+            highest_score: number
+            tiger_score: number
+            seward_score: number
+            age: number
+            gender: string
+            age_group: string
+        }
+    }
+    csv_loaded: boolean
+}
+
 export interface AwardsState {
     numAG: number
     numOV: number

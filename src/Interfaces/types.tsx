@@ -44,6 +44,14 @@ export interface TimeResult {
     division_ranking: number
 }
 
+export interface YTPTimeResult extends TimeResult {
+    cougar_score: number
+    combined_score: number
+    highest_score: number
+    tiger_score: number
+    seward_score: number
+}
+
 export interface Key {
     name: string
     value: string

@@ -24,7 +24,6 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
             }
             genderResults[result.gender].push(result)
         })
-        const genders = Object.keys(genderResults)
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
@@ -45,74 +44,180 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            genders.map(gender => {
-                                var genderString = "Women"
-                                if (gender === "M") {
-                                    "Men"
-                                } else if (gender === "X") {
-                                    "Non-Binary"
+                        { genderResults["W"] && genderResults["W"].length &&
+                            <tr>
+                                <th className='col-xl text-important text-center' colSpan={10}>Women</th>
+                            </tr>
+                        }
+                        { genderResults["W"] && genderResults["W"].length &&
+                            genderResults["W"].map(result => {
+                                // Use variables for displaying rank strings so we can hide if not a finish time
+                                let rankStr = result.gender_ranking.toString()
+                                let arankStr = result.age_ranking.toString()
+                                if (result.age_ranking < 1) {
+                                    arankStr = "";
+                                }
+                                // If ranking is set to -1, or it is a start time then ignore output
+                                // otherwise display the current ranking for that value
+                                if (result.ranking < 1 || result.occurence === 0) {
+                                    rankStr = arankStr = ""
+                                }
+                                // DNF - DNF - DNS
+                                if (result.type === 3 || result.type === 30 || result.type === 31) {
+                                    rankStr = arankStr = ""
+                                }
+                                if (result.age_group === "Open" || result.age_group === "Youth") {
+                                    arankStr = "";
+                                }
+                                if (result.anonymous === true) {
+                                    return (
+                                        <tr key={result.bib}>
+                                            <td className="text-center">{rankStr}</td>
+                                            <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                            <td>{`Bib ${result.bib}`}</td>
+                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                            <td className="overflow-hidden-lg text-center">{
+                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            }</td>
+                                            <td className="text-center">{
+                                                FormatTime(result.seconds, result.milliseconds, result, true)
+                                            }</td>
+                                        </tr>
+                                    );
                                 }
                                 return (
-                                    <div>
-                                        <tr>
-                                            <th className='col-xl text-important text-center' colSpan={10}>{genderString}</th>
+                                    <tr key={result.bib}>
+                                        <td className="text-center">{rankStr}</td>
+                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                        <td className="overflow-hidden-lg text-center">{
+                                            FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                        }</td>
+                                        <td className="text-center">{
+                                            FormatTime(result.seconds, result.milliseconds, result, true)
+                                        }</td>
+                                    </tr>
+                                );
+                            })
+                        }
+                        { genderResults["M"] && genderResults["M"].length > 0 &&
+                            <tr>
+                                <th className='col-xl text-important text-center' colSpan={10}>Men</th>
+                            </tr>
+                        }
+                        { genderResults["M"] && genderResults["M"].length &&
+                            genderResults["M"].map(result => {
+                                // Use variables for displaying rank strings so we can hide if not a finish time
+                                let rankStr = result.gender_ranking.toString()
+                                let arankStr = result.age_ranking.toString()
+                                if (result.age_ranking < 1) {
+                                    arankStr = "";
+                                }
+                                // If ranking is set to -1, or it is a start time then ignore output
+                                // otherwise display the current ranking for that value
+                                if (result.ranking < 1 || result.occurence === 0) {
+                                    rankStr = arankStr = ""
+                                }
+                                // DNF - DNF - DNS
+                                if (result.type === 3 || result.type === 30 || result.type === 31) {
+                                    rankStr = arankStr = ""
+                                }
+                                if (result.age_group === "Open" || result.age_group === "Youth") {
+                                    arankStr = "";
+                                }
+                                if (result.anonymous === true) {
+                                    return (
+                                        <tr key={result.bib}>
+                                            <td className="text-center">{rankStr}</td>
+                                            <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                            <td>{`Bib ${result.bib}`}</td>
+                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                            <td className="overflow-hidden-lg text-center">{
+                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            }</td>
+                                            <td className="text-center">{
+                                                FormatTime(result.seconds, result.milliseconds, result, true)
+                                            }</td>
                                         </tr>
-                                        {
-                                            genderResults[gender].map(result => {
-                                            // Use variables for displaying rank strings so we can hide if not a finish time
-                                            let rankStr = result.ranking.toString()
-                                            let arankStr = result.age_ranking.toString()
-                                            if (result.age_ranking < 1) {
-                                                arankStr = "";
-                                            }
-                                            // If ranking is set to -1, or it is a start time then ignore output
-                                            // otherwise display the current ranking for that value
-                                            if (result.ranking < 1 || result.occurence === 0) {
-                                                rankStr = arankStr = ""
-                                            }
-                                            // DNF - DNF - DNS
-                                            if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                                rankStr = arankStr = ""
-                                            }
-                                            if (result.age_group === "Open" || result.age_group === "Youth") {
-                                                arankStr = "";
-                                            }
-                                            if (result.anonymous === true) {
-                                                return (
-                                                    <tr key={result.bib}>
-                                                        <td className="text-center">{rankStr}</td>
-                                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                                        <td>{`Bib ${result.bib}`}</td>
-                                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                        <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                                        <td className="overflow-hidden-lg text-center">{
-                                                            FormatTime(result.chip_seconds, result.chip_milliseconds, result)
-                                                        }</td>
-                                                        <td className="text-center">{
-                                                            FormatTime(result.seconds, result.milliseconds, result, true)
-                                                        }</td>
-                                                    </tr>
-                                                );
-                                            }
-                                            return (
-                                                <tr key={result.bib}>
-                                                    <td className="text-center">{rankStr}</td>
-                                                    <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                                    <td>{`${result.first} ${result.last}`}</td>
-                                                    <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                    <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                                    <td className="overflow-hidden-lg text-center">{
-                                                        FormatTime(result.chip_seconds, result.chip_milliseconds, result)
-                                                    }</td>
-                                                    <td className="text-center">{
-                                                       FormatTime(result.seconds, result.milliseconds, result, true)
-                                                    }</td>
-                                                </tr>
-                                            );
-                                        })
-                                        }
-                                    </div>
+                                    );
+                                }
+                                return (
+                                    <tr key={result.bib}>
+                                        <td className="text-center">{rankStr}</td>
+                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                        <td className="overflow-hidden-lg text-center">{
+                                            FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                        }</td>
+                                        <td className="text-center">{
+                                            FormatTime(result.seconds, result.milliseconds, result, true)
+                                        }</td>
+                                    </tr>
+                                );
+                            })
+                        }
+                        { genderResults["X"] && genderResults["X"].length &&
+                            <tr>
+                                <th className='col-xl text-important text-center' colSpan={10}>Non-Binary</th>
+                            </tr>
+                        }
+                        { genderResults["X"] && genderResults["X"].length &&
+                            genderResults["X"].map(result => {
+                                // Use variables for displaying rank strings so we can hide if not a finish time
+                                let rankStr = result.gender_ranking.toString()
+                                let arankStr = result.age_ranking.toString()
+                                if (result.age_ranking < 1) {
+                                    arankStr = "";
+                                }
+                                // If ranking is set to -1, or it is a start time then ignore output
+                                // otherwise display the current ranking for that value
+                                if (result.ranking < 1 || result.occurence === 0) {
+                                    rankStr = arankStr = ""
+                                }
+                                // DNF - DNF - DNS
+                                if (result.type === 3 || result.type === 30 || result.type === 31) {
+                                    rankStr = arankStr = ""
+                                }
+                                if (result.age_group === "Open" || result.age_group === "Youth") {
+                                    arankStr = "";
+                                }
+                                if (result.anonymous === true) {
+                                    return (
+                                        <tr key={result.bib}>
+                                            <td className="text-center">{rankStr}</td>
+                                            <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                            <td>{`Bib ${result.bib}`}</td>
+                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                            <td className="overflow-hidden-lg text-center">{
+                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                            }</td>
+                                            <td className="text-center">{
+                                                FormatTime(result.seconds, result.milliseconds, result, true)
+                                            }</td>
+                                        </tr>
+                                    );
+                                }
+                                return (
+                                    <tr key={result.bib}>
+                                        <td className="text-center">{rankStr}</td>
+                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
+                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                        <td className="overflow-hidden-lg text-center">{
+                                            FormatTime(result.chip_seconds, result.chip_milliseconds, result)
+                                        }</td>
+                                        <td className="text-center">{
+                                            FormatTime(result.seconds, result.milliseconds, result, true)
+                                        }</td>
+                                    </tr>
                                 );
                             })
                         }
