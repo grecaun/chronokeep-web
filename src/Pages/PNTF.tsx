@@ -21,7 +21,7 @@ function PNTF() {
             <Loading />
         );
     }
-    const distances = Object.keys(state.results)
+    var distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
@@ -58,39 +58,10 @@ function PNTF() {
                         division: result.division,
                         division_ranking: result.division_ranking
                     })
-            } else if (result.division.trim() === "ytp" && result.finish === true) {
-                if (results[distance] === undefined) {
-                    results[distance] = []
-                }
-                var age_group = "Youth"
-                results[distance].push({
-                        bib: result.bib,
-                        first: result.first,
-                        last: result.last,
-                        seconds: result.seconds,
-                        milliseconds: result.milliseconds,
-                        chip_seconds: result.chip_seconds,
-                        chip_milliseconds: result.chip_milliseconds,
-                        gender: result.gender,
-                        occurence: result.occurence,
-                        age_group: age_group,
-                        age: result.age,
-                        ranking: result.ranking,
-                        age_ranking: result.age_ranking,
-                        gender_ranking: result.gender_ranking,
-                        finish: result.finish,
-                        segment: result.segment,
-                        type: result.type,
-                        anonymous: result.anonymous,
-                        distance: result.distance,
-                        location: result.location,
-                        local_time: result.local_time,
-                        division: result.division,
-                        division_ranking: result.division_ranking
-                    })
             }
         })
     })
+    distances = Object.keys(results)
     distances.map(distance => {
         results[distance].sort((a,b) => {
             if (a.seconds === b.seconds) {
@@ -126,12 +97,12 @@ function PNTF() {
             }
         })
     })
-    document.title = `Chronokeep - ${state.event!.name} PNTF Championship Awards`
+    document.title = `Chronokeep - ${state.event!.name} PNTF Championship`
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} PNTF Championship Awards`}</p>
+                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} PNTF Championship`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
@@ -166,7 +137,7 @@ function PNTF() {
                         </div>
                     </div>
                 </div>
-                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>{"*Results are ranked based upon the Clock Time and not the Chip Time."}</div>
+                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-sm'>{"*Rankings are ranked based upon the Clock Time and not the Chip Time."}</div>
             </div>
             }
             { distances.length === 0 &&

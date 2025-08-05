@@ -141,7 +141,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
-                                if (result.gender === "F" || result.gender === "WO") {
+                                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
                                     result.gender = "W"
                                 }
                                 if (result.gender === "M" || result.gender === "MA") {

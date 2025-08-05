@@ -5,8 +5,9 @@ import { useParams } from 'react-router-dom';
 import { YTPTimeResult } from '../Interfaces/types';
 import YTPScoreTable from '../Parts/YTPScoreTable';
 import { ResultsLoader } from '../loaders/results';
+import { PageProps } from '../Interfaces/props';
 
-function YTP() {
+function YTP(props: PageProps) {
     const params = useParams();
     const { state } = ResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
@@ -37,7 +38,7 @@ function YTP() {
                 var age_group = ""
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
-                if (result.gender === "F" || result.gender === "WO") {
+                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
                     result.gender = "F"
                 } else if (result.gender === "M" || result.gender === "MA") {
                     result.gender = "M"
@@ -122,7 +123,7 @@ function YTP() {
                             }
                         </ul>
                         <div id="results-parent">
-                            {
+                            {   props.page === "series" &&
                                 distances.map((distance, index) => {
                                     return (
                                         <YTPScoreTable
@@ -133,6 +134,11 @@ function YTP() {
                                             info={info}
                                             />
                                     )
+                                })
+                            }
+                            { props.page === "championship" &&
+                                distances.map((distance, index) => {
+                                    return (`${distance} ${index}`)
                                 })
                             }
                         </div>

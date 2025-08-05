@@ -90,11 +90,19 @@ const router = createBrowserRouter([
       },
       {
         path: '/ytp/:slug/:year?',
-        element: <YTP />
+        element: <YTP page='championship'/>
       },
       {
         path: '/ytp/:slug/:year?/qr',
         element: <QRCode page='ytp' />
+      },
+      {
+        path: '/ytp-series/:slug/:year?',
+        element: <YTP page='series'/>
+      },
+      {
+        path: '/ytp-series/:slug/:year?/qr',
+        element: <QRCode page='ytp-series' />
       },
       {
         path: '/remote/login',
@@ -144,6 +152,6 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <RouterProvider router={router} future={{ v7_startTransition: true, }}/>
   </React.StrictMode>,
 )

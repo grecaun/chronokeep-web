@@ -29,6 +29,12 @@ function QRCode(props: PageProps) {
         pageType = "Awards"
     } else if (state.page === "registration") {
         pageType = "Registration"
+    } else if (state.page === "pntf") {
+        pageType = "PNTF Championship"
+    } else if (state.page === "ytp") {
+        pageType = "YTP"
+    } else if (state.page === "ytp-series") {
+        pageType = "YTP Series"
     }
     document.title = `Chronokeep - ${codeName} QRCode`;
     return (

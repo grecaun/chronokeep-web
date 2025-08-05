@@ -66,7 +66,9 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                     anonymous: res.anonymous,
                     distance: res.distance,
                     location: res.location,
-                    local_time: ''
+                    local_time: '',
+                    division: res.division,
+                    division_ranking: res.division_ranking,
                 })
             }
         })
@@ -191,7 +193,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
-                                if (result.gender === "F" || result.gender === "WO") {
+                                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
                                     result.gender = "W"
                                 }
                                 if (result.gender === "M" || result.gender === "MA") {

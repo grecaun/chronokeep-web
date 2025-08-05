@@ -150,7 +150,7 @@ class AwardsTable extends Component<AwardsProps> {
                                                             <th className="col-xl">Name</th>
                                                             <th className="overflow-hidden-sm col-sm text-center">Age</th>
                                                             <th className="overflow-hidden-lg col-lg text-center">Chip Time</th>
-                                                            <th className="col-lg text-center">Time</th>
+                                                            <th className="col-lg text-center">Clock Time</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
