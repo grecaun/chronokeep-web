@@ -9,6 +9,9 @@ function YTPAwardsTable(props: YTPTableProps) {
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
         if (a.gender == b.gender){
             if (a.age == b.age) {
+                if (a.seconds === b.seconds) {
+                    return a.milliseconds - b.milliseconds
+                }
                 return a.seconds - b.seconds
             }
             return a.age - b.age
@@ -36,9 +39,9 @@ function YTPAwardsTable(props: YTPTableProps) {
                 <div className="awards-header text-important text-center" key={distance} id={distance}>{distance}</div>
             }
             { ageGroups.map(group => {
-                return (                            
+                return (
                     <div key={group}>
-                    { 
+                    {
                         ageResults[group].length > 0 &&
                         <div className="table-responsive-sm m-3" key={group} id={group}>
                             <table className="table table-sm">

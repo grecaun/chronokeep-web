@@ -102,8 +102,9 @@ function PNTF() {
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} PNTF Championship`}</p>
-                    <p className="text-important h4">{DateString(state.year!.date_time)}</p>
+                    <p className="text-important mb-0 mt-1 h1">{`${state.event!.name}`}</p>
+                    <p className="text-important mb-2 mt-0 h2">PNTF Championship Rankings</p>
+                    <p className="text-important h5">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
             { distances.length > 0 &&

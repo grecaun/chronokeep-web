@@ -6,6 +6,7 @@ import { YTPTimeResult } from '../Interfaces/types';
 import YTPScoreTable from '../Parts/YTPScoreTable';
 import { ResultsLoader } from '../loaders/results';
 import { PageProps } from '../Interfaces/props';
+import YTPAwardsTable from '../Parts/YTPAwardsTable';
 
 function YTP(props: PageProps) {
     const params = useParams();
@@ -30,38 +31,42 @@ function YTP(props: PageProps) {
     const results: { [index: string]: YTPTimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
-            if (result.division.trim() === "ytp") {
+            if (result.division.trim() === "ytp" && result.finish === true) {
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }
                 var age = 140
                 var age_group = ""
+                var gender: string
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
                 if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
                     result.gender = "F"
+                    gender = "Female"
                 } else if (result.gender === "M" || result.gender === "MA") {
                     result.gender = "M"
+                    gender = "Male"
                 } else {
                     result.gender = "X"
+                    gender = "Non-Binary"
                 }
                 if (result.age < 9) {
-                    age_group = `${result.gender} 8/under`
+                    age_group = `${gender} 8/under`
                     age = 8
                 } else if (result.age < 11) {
-                    age_group = `${result.gender} 9-10`
+                    age_group = `${gender} 9-10`
                     age = 10
                 } else if (result.age < 13) {
-                    age_group = `${result.gender} 11-12`
+                    age_group = `${gender} 11-12`
                     age = 12
                 } else if (result.age < 15) {
-                    age_group = `${result.gender} 13-14`
+                    age_group = `${gender} 13-14`
                     age = 14
                 } else if (result.age < 17) {
-                    age_group = `${result.gender} 15-16`
+                    age_group = `${gender} 15-16`
                     age = 16
                 } else if (result.age < 19) {
-                    age_group = `${result.gender} 17-18`
+                    age_group = `${gender} 17-18`
                     age = 18
                 }
                 results[distance].push({
@@ -99,12 +104,14 @@ function YTP(props: PageProps) {
     })
     distances = Object.keys(results)
     document.title = `Chronokeep - ${state.event!.name}`
+    const ytpType = props.page === 'series' ? 'Series' : 'Awards'
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} YTP Series`}</p>
-                    <p className="text-important h4">{DateString(state.year!.date_time)}</p>
+                    <p className="text-important mb-0 mt-1 h1">{`${state.event!.name}`}</p>
+                    <p className="text-important mb-2 mt-0 h2">{`YTP ${ytpType}`}</p>
+                    <p className="text-important h5">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
             { distances.length > 0 &&
@@ -138,7 +145,15 @@ function YTP(props: PageProps) {
                             }
                             { props.page === "championship" &&
                                 distances.map((distance, index) => {
-                                    return (`${distance} ${index}`)
+                                    return (
+                                        <YTPAwardsTable
+                                            distance={distance}
+                                            results={results[distance]}
+                                            key={index}
+                                            showTitle={distances.length > 1}
+                                            info={info}
+                                            />
+                                    )
                                 })
                             }
                         </div>

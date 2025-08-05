@@ -4,7 +4,7 @@ import { CSVLoader } from '../loaders/csv';
 import Loading from './Loading';
 
 function YTPScoreTable(props: YTPTableProps) {
-    let results = props.results;
+    const results = props.results;
     const distance = props.distance;
     const showTitle = props.showTitle;
     const info = props.info;
@@ -14,14 +14,14 @@ function YTPScoreTable(props: YTPTableProps) {
             <Loading />
         );
     }
-    var overall_win = 0
-    var overall_f_win = 0
+    var overall_win: number
+    var overall_f_win: number
     const prev_participants: { [index: string]: boolean } = {}
     results.map(result => {
-        if (overall_win === 0 || overall_win > result.seconds) {
+        if (overall_win === undefined || overall_win === 0 || (overall_win > result.seconds && result.seconds > 0)) {
             overall_win = result.seconds
         }
-        if (result.gender === "F" && (overall_f_win === 0 || overall_f_win > result.seconds)) {
+        if (result.gender === "F" && (overall_f_win === undefined || overall_f_win === 0 || (overall_f_win > result.seconds && result.seconds > 0))) {
             overall_f_win = result.seconds
         }
         if (state.prev_standings[`${result.first} ${result.last}`] !== undefined) {
@@ -86,13 +86,14 @@ function YTPScoreTable(props: YTPTableProps) {
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
         if (a.gender == b.gender){
             if (a.age == b.age) {
-                return b.cougar_score - a.cougar_score
+                return b.combined_score - a.combined_score
             }
             return a.age - b.age
         }
         return a.gender.localeCompare(b.gender)
     })
     const ageRanks: { [index: string]: number } = {}
+    const ageResults: { [index: string]: YTPTimeResult[] } = {}
     sorted.map(result => {
         if (ageRanks[result.age_group] === undefined || ageRanks[result.age_group] <= 0) {
             ageRanks[result.age_group] = 1
@@ -100,60 +101,63 @@ function YTPScoreTable(props: YTPTableProps) {
         result.age_ranking = ageRanks[result.age_group]
         result.ranking = ageRanks[result.age_group]
         ageRanks[result.age_group] = ageRanks[result.age_group] + 1
+        if (result.highest_score > 0) {
+            if (ageResults[result.age_group] === undefined) {
+                ageResults[result.age_group] = []
+            }
+            ageResults[result.age_group].push(result)
+        }
     })
+    const ageGroups = Object.keys(ageResults)
     return (
-        <div className="table-responsive-sm m-3" key={distance} id={distance}>
-            <table className="table table-sm">
-                <thead>
-                    { showTitle &&
-                    <tr>
-                        <th className="table-distance-header text-important text-center" colSpan={10}>{distance}</th>
-                    </tr>
-                    }
-                    <tr>
-                        <th className="col-lg">Name</th>
-                        <th className="col-sm text-center">Place</th>
-                        <th className="col-md text-center">Category</th>
-                        <th className="overflow-hidden-lg col-md text-center">Tiger</th>
-                        <th className="overflow-hidden-lg col-md text-center">Seward</th>
-                        <th className="overflow-hidden-sm col-md text-center">Highest</th>
-                        <th className="overflow-hidden-sm col-md text-center">Cougar</th>
-                        <th className="col-md text-center">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div>
+            { showTitle &&
+                <div className="awards-header text-important text-center" key={distance} id={distance}>{distance}</div>
+            }
+            { ageGroups.map(group => {
+                return(
+                    <div key={group}>
                     {
-                        sorted.map(result => {
-                            if (result.anonymous === true) {
-                                return (
-                                    <tr key={result.bib}>
-                                        <td>{`Bib ${result.bib}`}</td>
-                                        <td className="text-center">{result.combined_score > 0 ? result.ranking : ""}</td>
-                                        <td className="text-center">{result.age_group}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
-                                        <td className="overflow-hidden-sm text-center">{result.highest_score > 0 ? result.highest_score.toFixed(2): "-"}</td>
-                                        <td className="overflow-hidden-sm text-center">{result.cougar_score > 0 ? result.cougar_score.toFixed(2): "-"}</td>
-                                        <td className="text-center">{result.combined_score > 0 ? result.combined_score.toFixed(2): "-"}</td>
+                        ageResults[group].length > 0 &&
+                        <div className="table-responsive-sm m-3" key={group} id={group}>
+                            <table className="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th className="table-distance-header text-important text-center" colSpan={10}>{group}</th>
                                     </tr>
-                                );
-                            }
-                            return (
-                                <tr key={result.bib}>
-                                    <td>{`${result.first} ${result.last}`}</td>
-                                    <td className="text-center">{result.combined_score > 0 ? result.ranking : ""}</td>
-                                    <td className="text-center">{result.age_group}</td>
-                                    <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
-                                    <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
-                                    <td className="overflow-hidden-sm text-center">{result.highest_score > 0 ? result.highest_score.toFixed(2): "-"}</td>
-                                    <td className="overflow-hidden-sm text-center">{result.cougar_score > 0 ? result.cougar_score.toFixed(2): "-"}</td>
-                                    <td className="text-center">{result.combined_score > 0 ? result.combined_score.toFixed(2): "-"}</td>
-                                </tr>
-                            );
-                        })
+                                    <tr>
+                                        <th className="col-lg">Name</th>
+                                        <th className="col-sm text-center">Place</th>
+                                        <th className="overflow-hidden-lg col-md text-center">Tiger</th>
+                                        <th className="overflow-hidden-lg col-md text-center">Seward</th>
+                                        <th className="overflow-hidden-sm col-md text-center">Highest</th>
+                                        <th className="overflow-hidden-sm col-md text-center">Cougar</th>
+                                        <th className="col-md text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    ageResults[group].map(result => {
+                                        return (
+                                            <tr key={result.bib}>
+                                                <td>{`${result.first} ${result.last}`}</td>
+                                                <td className="text-center">{result.combined_score > 0 ? result.ranking : ""}</td>
+                                                <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-sm text-center">{result.highest_score > 0 ? result.highest_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-sm text-center">{result.cougar_score > 0 ? result.cougar_score.toFixed(2): "-"}</td>
+                                                <td className="text-center">{result.combined_score > 0 ? result.combined_score.toFixed(2): "-"}</td>
+                                            </tr>
+                                        );
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                        </div>
                     }
-                </tbody>
-            </table>
+                    </div>
+                )
+            })}
         </div>
     )
 }
