@@ -117,7 +117,6 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                 return a.seconds - b.seconds;
             }
             // finally sort by ranking
-            console.log(`Sort by ranking... ${a.last} -- ${b.last}`)
             // Rankings at 0 or below are not valid, shuffle them to the bottom
             if (a.ranking <= 0 && b.ranking > 0) {
                 return 1;

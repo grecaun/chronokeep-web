@@ -8,7 +8,6 @@ function YTPScoreTable(props: YTPTableProps) {
     const distance = props.distance;
     const showTitle = props.showTitle;
     const info = props.info;
-    console.log(`https://downloads.chronokeep.com/${info.slug}/${info.year}/${distance}/ytp-standings.csv`)
     const { state } = CSVLoader(`https://downloads.chronokeep.com/${info.slug}/${info.year}/${distance}/ytp-standings.csv`)
     if (state.csv_loaded === false) {
         return (

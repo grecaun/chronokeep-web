@@ -10,18 +10,14 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
         const fetchResults = async () => {
             await fetch(url)
                 .then(response => {
-                    console.log(response)
                     if (response.status !== 200) {
                         return "";
                     }
                     return response.text();
                 })
                 .then(data => {
-                    console.log(data)
                     const rows = data.split('\n');
-                    console.log(rows)
                     const headers = rows[0].split(',');
-                    console.log(headers)
                     var first_ix = -1;
                     var last_ix = -1;
                     var old_ix = -1;
@@ -90,7 +86,6 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                             }
                         }
                     }
-                    console.log(state.prev_standings);
                     state.csv_loaded = true
                 })
                 .catch(error => {
