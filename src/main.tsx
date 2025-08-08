@@ -82,18 +82,26 @@ const router = createBrowserRouter([
       },
       {
         path: '/pntf/:slug/:year?',
-        element: <PNTF />
+        element: <PNTF page='rankings' />
       },
       {
         path: '/pntf/:slug/:year?/qr',
         element: <QRCode page='pntf' />
       },
       {
-        path: '/ytp/:slug/:year?',
+        path: '/pntf-awards/:slug/:year?',
+        element: <PNTF page='awards' />
+      },
+      {
+        path: '/pntf-awards/:slug/:year?/qr',
+        element: <QRCode page='pntf-awards' />
+      },
+      {
+        path: '/ytp-awards/:slug/:year?',
         element: <YTP page='championship'/>
       },
       {
-        path: '/ytp/:slug/:year?/qr',
+        path: '/ytp-awards/:slug/:year?/qr',
         element: <QRCode page='ytp' />
       },
       {

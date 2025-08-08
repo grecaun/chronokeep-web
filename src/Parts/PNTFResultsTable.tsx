@@ -5,10 +5,10 @@ import { PNTFTableProps } from '../Interfaces/props';
 
 class PNTFResultsTable extends Component<PNTFTableProps> {
     render() {
-        let results = this.props.results;
+        const results = this.props.results;
         const distance = this.props.distance;
         const showTitle = this.props.showTitle;
-        let genderResults: { [index: string]: TimeResult[] } = {}
+        const genderResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
             result.gender = result.gender.toLocaleUpperCase();
             result.gender = result.gender.substring(0,2)
@@ -37,7 +37,8 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                             <th className="col-sm text-center">Place</th>
                             <th className="col-sm text-center">Masters</th>
                             <th className="col-lg">Name</th>
-                            <th className="overflow-hidden-lg col-sm text-center">Bib</th>
+                            <th className="overflow-hidden-lg col-sm text-center">Overall</th>
+                            <th className="overflow-hidden-lg col-md text-center">Age Group</th>
                             <th className="overflow-hidden-sm col-sm text-center">Age</th>
                             <th className="overflow-hidden-sm col-md text-center"><a href="#disclaimer" className="nav-link m-0 p-0">Chip Time*</a></th>
                             <th className="col-md text-center">Clock Time</th>
@@ -52,30 +53,47 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["W"] && genderResults["W"].length &&
                             genderResults["W"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                let rankStr = result.gender_ranking.toString()
-                                let arankStr = result.age_ranking.toString()
+                                var rankStr = result.gender_ranking.toString()
+                                var dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
-                                    arankStr = "";
+                                    dRankStr = "";
                                 }
                                 // If ranking is set to -1, or it is a start time then ignore output
                                 // otherwise display the current ranking for that value
                                 if (result.ranking < 1 || result.occurence === 0) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
                                 // DNF - DNF - DNS
                                 if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
-                                if (result.age_group === "Open" || result.age_group === "Youth") {
-                                    arankStr = "";
+                                if (result.division === "Open" || result.division === "Youth") {
+                                    dRankStr = "";
+                                }
+                                var suffix = ''
+                                const rem = result.age_ranking % 10
+                                if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
+                                    suffix = 'th'
+                                } else if (rem === 1) {
+                                    suffix = 'st'
+                                } else if (rem === 2) {
+                                    suffix = 'nd'
+                                } else if (rem === 3) {
+                                    suffix = 'rd'
+                                }
+                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                const ageGroupSplit = result.age_group.split(' ')
+                                if (ageGroupSplit.length > 1) {
+                                    ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
                                 if (result.anonymous === true) {
                                     return (
                                         <tr key={result.bib}>
                                             <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{arankStr}</td>
+                                            <td className="text-center">{dRankStr}</td>
                                             <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                             <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                             <td className="overflow-hidden-sm text-center">{
                                                 FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -89,9 +107,10 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{arankStr}</td>
+                                        <td className="text-center">{dRankStr}</td>
                                         <td>{`${result.first} ${result.last}`}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                         <td className="overflow-hidden-sm text-center">{
                                             FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -111,30 +130,47 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["M"] && genderResults["M"].length &&
                             genderResults["M"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                let rankStr = result.gender_ranking.toString()
-                                let arankStr = result.age_ranking.toString()
+                                var rankStr = result.gender_ranking.toString()
+                                var dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
-                                    arankStr = "";
+                                    dRankStr = "";
                                 }
                                 // If ranking is set to -1, or it is a start time then ignore output
                                 // otherwise display the current ranking for that value
                                 if (result.ranking < 1 || result.occurence === 0) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
                                 // DNF - DNF - DNS
                                 if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
-                                if (result.age_group === "Open" || result.age_group === "Youth") {
-                                    arankStr = "";
+                                if (result.division === "Open" || result.division === "Youth") {
+                                    dRankStr = "";
+                                }
+                                var suffix = ''
+                                const rem = result.age_ranking % 10
+                                if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
+                                    suffix = 'th'
+                                } else if (rem === 1) {
+                                    suffix = 'st'
+                                } else if (rem === 2) {
+                                    suffix = 'nd'
+                                } else if (rem === 3) {
+                                    suffix = 'rd'
+                                }
+                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                const ageGroupSplit = result.age_group.split(' ')
+                                if (ageGroupSplit.length > 1) {
+                                    ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
                                 if (result.anonymous === true) {
                                     return (
                                         <tr key={result.bib}>
                                             <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{arankStr}</td>
+                                            <td className="text-center">{dRankStr}</td>
                                             <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                             <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                             <td className="overflow-hidden-sm text-center">{
                                                 FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -148,9 +184,10 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{arankStr}</td>
+                                        <td className="text-center">{dRankStr}</td>
                                         <td>{`${result.first} ${result.last}`}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                         <td className="overflow-hidden-sm text-center">{
                                             FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -170,30 +207,47 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["X"] && genderResults["X"].length &&
                             genderResults["X"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                let rankStr = result.gender_ranking.toString()
-                                let arankStr = result.age_ranking.toString()
+                                var rankStr = result.gender_ranking.toString()
+                                var dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
-                                    arankStr = "";
+                                    dRankStr = "";
                                 }
                                 // If ranking is set to -1, or it is a start time then ignore output
                                 // otherwise display the current ranking for that value
                                 if (result.ranking < 1 || result.occurence === 0) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
                                 // DNF - DNF - DNS
                                 if (result.type === 3 || result.type === 30 || result.type === 31) {
-                                    rankStr = arankStr = ""
+                                    rankStr = dRankStr = ""
                                 }
-                                if (result.age_group === "Open" || result.age_group === "Youth") {
-                                    arankStr = "";
+                                if (result.division === "Open" || result.division === "Youth") {
+                                    dRankStr = "";
+                                }
+                                var suffix = ''
+                                const rem = result.age_ranking % 10
+                                if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
+                                    suffix = 'th'
+                                } else if (rem === 1) {
+                                    suffix = 'st'
+                                } else if (rem === 2) {
+                                    suffix = 'nd'
+                                } else if (rem === 3) {
+                                    suffix = 'rd'
+                                }
+                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                const ageGroupSplit = result.age_group.split(' ')
+                                if (ageGroupSplit.length > 1) {
+                                    ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
                                 if (result.anonymous === true) {
                                     return (
                                         <tr key={result.bib}>
                                             <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{arankStr}</td>
+                                            <td className="text-center">{dRankStr}</td>
                                             <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                             <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                             <td className="overflow-hidden-sm text-center">{
                                                 FormatTime(result.chip_seconds, result.chip_milliseconds, result)
@@ -207,9 +261,10 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{arankStr}</td>
+                                        <td className="text-center">{dRankStr}</td>
                                         <td>{`${result.first} ${result.last}`}</td>
-                                        <td className="overflow-hidden-lg text-center">{result.bib}</td>
+                                        <td className="overflow-hidden-lg text-center">{result.ranking}</td>
+                                        <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                         <td className="overflow-hidden-sm text-center">{
                                             FormatTime(result.chip_seconds, result.chip_milliseconds, result)

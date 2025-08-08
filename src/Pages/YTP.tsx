@@ -96,8 +96,8 @@ function YTP(props: PageProps) {
         })
     })
     distances = Object.keys(results)
-    document.title = `Chronokeep - ${state.event!.name}`
     const pageSubTitle = props.page === 'series' ? 'YTP Series' : 'PNTF Youth Trail Championship / YTP Race Awards'
+    document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">

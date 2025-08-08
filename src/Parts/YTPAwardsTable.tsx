@@ -36,8 +36,10 @@ function YTPAwardsTable(props: YTPTableProps) {
         if (gendResults[result.gender] === undefined) {
             gendResults[result.gender] = []
         }
-        ageResults[result.age_group].push(result)
-        if (result.gender_ranking <= 5) {
+        if (result.age_ranking <= 3) {
+            ageResults[result.age_group].push(result)
+        }
+        if (result.gender_ranking <= 3) {
             gendResults[result.gender].push(result)
         }
     })
