@@ -84,41 +84,115 @@ function YTPScoreTable(props: YTPTableProps) {
         }
     })
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
-        if (a.gender == b.gender){
-            if (a.age == b.age) {
-                return b.combined_score - a.combined_score
-            }
-            return a.age - b.age
-        }
-        return a.gender.localeCompare(b.gender)
+        return b.combined_score - a.combined_score
     })
+    var ranking: number = 1
     const ageRanks: { [index: string]: number } = {}
+    const gendRanks: { [index:string]: number } = {}
     const ageResults: { [index: string]: YTPTimeResult[] } = {}
+    const gendResults: { [index: string]: YTPTimeResult[] } = {}
     sorted.map(result => {
         if (ageRanks[result.age_group] === undefined || ageRanks[result.age_group] <= 0) {
             ageRanks[result.age_group] = 1
         }
+        if (gendRanks[result.gender] === undefined || gendRanks[result.gender] <= 0) {
+            gendRanks[result.gender] = 1
+        }
+        result.ranking = ranking
         result.age_ranking = ageRanks[result.age_group]
-        result.ranking = ageRanks[result.age_group]
+        result.gender_ranking = gendRanks[result.gender]
+        ranking = ranking + 1
         ageRanks[result.age_group] = ageRanks[result.age_group] + 1
+        gendRanks[result.gender] = gendRanks[result.gender] + 1
         if (result.highest_score > 0) {
             if (ageResults[result.age_group] === undefined) {
                 ageResults[result.age_group] = []
             }
+            if (gendResults[result.gender] === undefined) {
+                gendResults[result.gender] = []
+            }
             ageResults[result.age_group].push(result)
+            if (result.gender_ranking <= 5) {
+                gendResults[result.gender].push(result)
+            }
         }
     })
-    const ageGroups = Object.keys(ageResults)
+    const ageGroups: string[] = [
+        "Female 8/under",
+        "Female 9-10",
+        "Female 11-12",
+        "Female 13-14",
+        "Female 15-16",
+        "Female 17-18",
+        "Male 8/under",
+        "Male 9-10",
+        "Male 11-12",
+        "Male 13-14",
+        "Male 15-16",
+        "Male 17-18",
+        "Non-Binary 8/under",
+        "Non-Binary 9-10",
+        "Non-Binary 11-12",
+        "Non-Binary 13-14",
+        "Non-Binary 15-16",
+        "Non-Binary 17-18"
+    ]
+    const genders = Object.keys(gendResults)
+    console.log(ageResults)
     return (
         <div>
             { showTitle &&
                 <div className="awards-header text-important text-center" key={distance} id={distance}>{distance}</div>
             }
+            { genders.map(gender => {
+                return(
+                    <div key={gender}>
+                    {
+                        gendResults[gender] !== undefined && gendResults[gender].length > 0 &&
+                        <div className="table-responsive-sm m-3" key={gender} id={gender}>
+                            <table className="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th className="table-distance-header text-important text-center" colSpan={10}>{gender === 'F' ? 'Female Overall' : gender === 'M' ? 'Male Overall' : 'Non-Binary Overall'}</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="col-lg">Name</th>
+                                        <th className="col-sm text-center">Place</th>
+                                        <th className="overflow-hidden-lg col-md text-center">Tiger</th>
+                                        <th className="overflow-hidden-lg col-md text-center">Seward</th>
+                                        <th className="overflow-hidden-sm col-md text-center">Highest</th>
+                                        <th className="overflow-hidden-sm col-md text-center">Cougar</th>
+                                        <th className="col-md text-center">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    gendResults[gender].map(result => {
+                                        return (
+                                            <tr key={result.bib}>
+                                                <td>{`${result.first} ${result.last}`}</td>
+                                                <td className="text-center">{result.combined_score > 0 ? result.gender_ranking : ""}</td>
+                                                <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-sm text-center">{result.highest_score > 0 ? result.highest_score.toFixed(2): "-"}</td>
+                                                <td className="overflow-hidden-sm text-center">{result.cougar_score > 0 ? result.cougar_score.toFixed(2): "-"}</td>
+                                                <td className="text-center">{result.combined_score > 0 ? result.combined_score.toFixed(2): "-"}</td>
+                                            </tr>
+                                        );
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    </div>
+                )
+            })}
             { ageGroups.map(group => {
                 return(
                     <div key={group}>
                     {
-                        ageResults[group].length > 0 &&
+                        ageResults[group] !== undefined && ageResults[group].length > 0 &&
                         <div className="table-responsive-sm m-3" key={group} id={group}>
                             <table className="table table-sm">
                                 <thead>
@@ -141,7 +215,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                         return (
                                             <tr key={result.bib}>
                                                 <td>{`${result.first} ${result.last}`}</td>
-                                                <td className="text-center">{result.combined_score > 0 ? result.ranking : ""}</td>
+                                                <td className="text-center">{result.combined_score > 0 ? result.age_ranking : ""}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
                                                 <td className="overflow-hidden-sm text-center">{result.highest_score > 0 ? result.highest_score.toFixed(2): "-"}</td>
