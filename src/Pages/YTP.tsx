@@ -35,7 +35,6 @@ function YTP(props: PageProps) {
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }
-                var age = 140
                 var age_group = ""
                 var gender: string
                 result.gender = result.gender.toLocaleUpperCase();
@@ -52,22 +51,16 @@ function YTP(props: PageProps) {
                 }
                 if (result.age < 9) {
                     age_group = `${gender} 8/under`
-                    age = 8
                 } else if (result.age < 11) {
                     age_group = `${gender} 9-10`
-                    age = 10
                 } else if (result.age < 13) {
                     age_group = `${gender} 11-12`
-                    age = 12
                 } else if (result.age < 15) {
                     age_group = `${gender} 13-14`
-                    age = 14
                 } else if (result.age < 17) {
                     age_group = `${gender} 15-16`
-                    age = 16
                 } else if (result.age < 19) {
                     age_group = `${gender} 17-18`
-                    age = 18
                 }
                 results[distance].push({
                         bib: result.bib,
@@ -80,7 +73,7 @@ function YTP(props: PageProps) {
                         gender: result.gender,
                         occurence: result.occurence,
                         age_group: age_group,
-                        age: age,
+                        age: result.age,
                         ranking: result.ranking,
                         age_ranking: result.age_ranking,
                         gender_ranking: result.gender_ranking,

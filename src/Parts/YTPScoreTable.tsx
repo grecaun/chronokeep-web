@@ -112,7 +112,7 @@ function YTPScoreTable(props: YTPTableProps) {
                 gendResults[result.gender] = []
             }
             ageResults[result.age_group].push(result)
-            if (result.gender_ranking <= 5) {
+            if (result.gender_ranking <= 3) {
                 gendResults[result.gender].push(result)
             }
         }
@@ -138,7 +138,6 @@ function YTPScoreTable(props: YTPTableProps) {
         "Non-Binary 17-18"
     ]
     const genders = Object.keys(gendResults)
-    console.log(ageResults)
     return (
         <div>
             { showTitle &&
