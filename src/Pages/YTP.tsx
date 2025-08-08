@@ -104,13 +104,13 @@ function YTP(props: PageProps) {
     })
     distances = Object.keys(results)
     document.title = `Chronokeep - ${state.event!.name}`
-    const ytpType = props.page === 'series' ? 'Series' : 'Awards'
+    const pageSubTitle = props.page === 'series' ? 'YTP Series' : 'PNTF Youth Trail Championship / YTP Race Awards'
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-0 mt-1 h1">{`${state.event!.name}`}</p>
-                    <p className="text-important mb-2 mt-0 h2">{`YTP ${ytpType}`}</p>
+                    <p className="text-important mb-2 mt-0 h2">{pageSubTitle}</p>
                     <p className="text-important h5">{DateString(state.year!.date_time)}</p>
                 </div>
             </div>
