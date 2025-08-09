@@ -199,7 +199,7 @@ function PNTF(props: PageProps) {
                                     )
                                 })
                             }
-                            { props.page === 'awards' &&
+                            { props.page === 'pntf-awards' &&
                                 distances.map((distance, index) => {
                                     return (
                                         <PNTFAwardsTable
