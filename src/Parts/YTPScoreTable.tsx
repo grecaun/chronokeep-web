@@ -18,17 +18,17 @@ function YTPScoreTable(props: YTPTableProps) {
     var overall_f_win: number
     const prev_participants: { [index: string]: boolean } = {}
     results.map(result => {
+        if (state.prev_standings[`${result.first} ${result.last}`] !== undefined) {
+            result.highest_score = state.prev_standings[`${result.first} ${result.last}`].highest_score
+            result.tiger_score = state.prev_standings[`${result.first} ${result.last}`].tiger_score
+            result.seward_score = state.prev_standings[`${result.first} ${result.last}`].seward_score
+            prev_participants[`${result.first} ${result.last}`] = true
         if (overall_win === undefined || overall_win === 0 || (overall_win > result.seconds && result.seconds > 0)) {
             overall_win = result.seconds
         }
         if (result.gender === "F" && (overall_f_win === undefined || overall_f_win === 0 || (overall_f_win > result.seconds && result.seconds > 0))) {
             overall_f_win = result.seconds
         }
-        if (state.prev_standings[`${result.first} ${result.last}`] !== undefined) {
-            result.highest_score = state.prev_standings[`${result.first} ${result.last}`].highest_score
-            result.tiger_score = state.prev_standings[`${result.first} ${result.last}`].tiger_score
-            result.seward_score = state.prev_standings[`${result.first} ${result.last}`].seward_score
-            prev_participants[`${result.first} ${result.last}`] = true
         }
     })
     results.map(result => {
