@@ -31,6 +31,8 @@ function QRCode(props: PageProps) {
         pageType = "Registration"
     } else if (state.page === "pntf") {
         pageType = "PNTF Championship Rankings"
+    } else if (state.page === "pntf-awards") {
+        pageType = "PNTF Championship Awards"
     } else if (state.page === "ytp") {
         pageType = "YTP Awards"
     } else if (state.page === "ytp-series") {
