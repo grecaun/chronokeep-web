@@ -11,9 +11,9 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
         const divisionResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
             var gender = ''
-            if (result.gender === 'Woman' || result.gender === 'F' || result.gender === 'W') {
+            if (result.gender === 'Woman' || result.gender === 'F' || result.gender === 'W' || result.gender === 'Female') {
                 gender = "Women's"
-            } else if (result.gender === 'Man' || result.gender === 'M') {
+            } else if (result.gender === 'Man' || result.gender === 'M' || result.gender === 'Male') {
                 gender = "Men's"
             } else {
                 gender = "Non-Binary"
