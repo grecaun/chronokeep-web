@@ -133,6 +133,8 @@ export interface YTPState {
         }
     }
     csv_loaded: boolean
+    limit_display: boolean
+    display_gender: boolean
 }
 
 export interface AwardsState {

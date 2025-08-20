@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 export function CSVLoader(url: string): { state: YTPState, setState: React.Dispatch<React.SetStateAction<YTPState>> } {
     const [state, setState] = useState<YTPState>({
         prev_standings: {},
-        csv_loaded: false
+        csv_loaded: false,
+        limit_display: false,
+        display_gender: false
     });
     useEffect(() => {
         const fetchResults = async () => {
@@ -61,7 +63,7 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                             var age = 140
                             var age_group = ""
                             if (splitCategory[2] !== undefined) {
-                                age_group = `${gender} ${splitCategory[2]}`.trim()
+                                age_group = `${splitCategory[1]} ${splitCategory[2]}`.trim()
                                 if (splitCategory[2].startsWith('8')) {
                                     age = 8
                                 } else if (splitCategory[2].endsWith('10')) {

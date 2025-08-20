@@ -1,3 +1,4 @@
+import { Checkbox, FormControlLabel } from '@mui/material';
 import { YTPTableProps } from '../Interfaces/props';
 import { YTPTimeResult } from '../Interfaces/types';
 import { CSVLoader } from '../loaders/csv';
@@ -8,12 +9,27 @@ function YTPScoreTable(props: YTPTableProps) {
     const distance = props.distance;
     const showTitle = props.showTitle;
     const info = props.info;
-    const { state } = CSVLoader(`https://downloads.chronokeep.com/${info.slug}/${info.year}/${distance}/ytp-standings.csv`)
+    const { state, setState } = CSVLoader(`https://downloads.chronokeep.com/${info.slug}/${info.year}/${distance}/ytp-standings.csv`)
     if (state.csv_loaded === false) {
         return (
             <Loading />
         );
     }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setState({
+            ...state,
+            limit_display: e.target.checked,
+        })
+    }
+
+    const handleChangeGender = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setState({
+            ...state,
+            display_gender: e.target.checked,
+        })
+    }
+
     var overall_win: number
     var overall_f_win: number
     const prev_participants: { [index: string]: boolean } = {}
@@ -23,12 +39,12 @@ function YTPScoreTable(props: YTPTableProps) {
             result.tiger_score = state.prev_standings[`${result.first} ${result.last}`].tiger_score
             result.seward_score = state.prev_standings[`${result.first} ${result.last}`].seward_score
             prev_participants[`${result.first} ${result.last}`] = true
-        if (overall_win === undefined || overall_win === 0 || (overall_win > result.seconds && result.seconds > 0)) {
-            overall_win = result.seconds
-        }
-        if (result.gender === "F" && (overall_f_win === undefined || overall_f_win === 0 || (overall_f_win > result.seconds && result.seconds > 0))) {
-            overall_f_win = result.seconds
-        }
+            if (overall_win === undefined || overall_win === 0 || (overall_win > result.seconds && result.seconds > 0)) {
+                overall_win = result.seconds
+            }
+            if (result.gender === "F" && (overall_f_win === undefined || overall_f_win === 0 || (overall_f_win > result.seconds && result.seconds > 0))) {
+                overall_f_win = result.seconds
+            }
         }
     })
     results.map(result => {
@@ -39,6 +55,9 @@ function YTPScoreTable(props: YTPTableProps) {
                 result.cougar_score = overall_win / result.seconds
             }
             result.cougar_score = result.cougar_score * 100
+            if (result.cougar_score > 100) {
+                result.cougar_score = 100.0
+            }
         } else {
             result.cougar_score = 0
         }
@@ -77,14 +96,23 @@ function YTPScoreTable(props: YTPTableProps) {
                 division_ranking: 0,
                 cougar_score: 0.00,
                 combined_score: 0.00,
-                highest_score: 0.00,
-                tiger_score: 0.00,
-                seward_score: 0.00
+                highest_score: state.prev_standings[name].highest_score,
+                tiger_score: state.prev_standings[name].tiger_score,
+                seward_score: state.prev_standings[name].seward_score
             })
         }
     })
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
-        return b.combined_score - a.combined_score
+        // Combined scores at the top
+        if (a.combined_score != 0 || b.combined_score != 0) {
+            return b.combined_score - a.combined_score
+        }
+        // Runners who ran cougar are next
+        if (a.cougar_score != 0 || b.cougar_score != 0) {
+            return b.cougar_score - a.cougar_score
+        }
+        // Finally those who participated in a previous race
+        return b.highest_score - a.highest_score
     })
     var ranking: number = 1
     const ageRanks: { [index: string]: number } = {}
@@ -98,23 +126,29 @@ function YTPScoreTable(props: YTPTableProps) {
         if (gendRanks[result.gender] === undefined || gendRanks[result.gender] <= 0) {
             gendRanks[result.gender] = 1
         }
-        result.ranking = ranking
-        result.age_ranking = ageRanks[result.age_group]
-        result.gender_ranking = gendRanks[result.gender]
-        ranking = ranking + 1
-        ageRanks[result.age_group] = ageRanks[result.age_group] + 1
-        gendRanks[result.gender] = gendRanks[result.gender] + 1
         if (result.highest_score > 0) {
-            if (ageResults[result.age_group] === undefined) {
-                ageResults[result.age_group] = []
-            }
-            if (gendResults[result.gender] === undefined) {
-                gendResults[result.gender] = []
-            }
+            result.ranking = ranking
+            result.age_ranking = ageRanks[result.age_group]
+            result.gender_ranking = gendRanks[result.gender]
+            ranking = ranking + 1
+            ageRanks[result.age_group] = ageRanks[result.age_group] + 1
+            gendRanks[result.gender] = gendRanks[result.gender] + 1
+        } else {
+            result.ranking = 0
+            result.age_ranking = 0
+            result.gender_ranking = 0
+        }
+        if (ageResults[result.age_group] === undefined) {
+            ageResults[result.age_group] = []
+        }
+        if (gendResults[result.gender] === undefined) {
+            gendResults[result.gender] = []
+        }
+        if (state.limit_display !== true || (ageResults[result.age_group].length < 3 && result.combined_score > 0)) {
             ageResults[result.age_group].push(result)
-            if (result.gender_ranking <= 3) {
-                gendResults[result.gender].push(result)
-            }
+        }
+        if ((result.gender_ranking <= 3 && result.gender_ranking > 0) || (state.limit_display === false && state.display_gender === true)) {
+            gendResults[result.gender].push(result)
         }
     })
     const ageGroups: string[] = [
@@ -140,10 +174,35 @@ function YTPScoreTable(props: YTPTableProps) {
     const genders = Object.keys(gendResults)
     return (
         <div>
+            <div className="row container-lg md-max-width mx-auto p-0 my-2 justify-content-center">
+                <div className='col-md-6 d-flex justify-content-center'>
+                    <FormControlLabel
+                        label='Limit Display to Completions & Top 3'
+                        control={
+                            <Checkbox
+                                checked={state.limit_display === true}
+                                onChange={handleChange}
+                                />
+                        }
+                    />
+                </div>
+                <div className='col-md-6 d-flex justify-content-center'>
+                    <FormControlLabel
+                        label='Display Gender Results'
+                        control={
+                            <Checkbox
+                                checked={state.display_gender === true || state.limit_display===true}
+                                onChange={handleChangeGender}
+                                disabled={state.limit_display===true}
+                                />
+                        }
+                    />
+                </div>
+            </div>
             { showTitle &&
                 <div className="awards-header text-important text-center" key={distance} id={distance}>{distance}</div>
             }
-            { genders.map(gender => {
+            { (state.limit_display === true || state.display_gender === true) && genders.map(gender => {
                 return(
                     <div key={gender}>
                     {
@@ -187,7 +246,7 @@ function YTPScoreTable(props: YTPTableProps) {
                     </div>
                 )
             })}
-            { ageGroups.map(group => {
+            { (state.limit_display === true || state.display_gender === false) && ageGroups.map(group => {
                 return(
                     <div key={group}>
                     {
