@@ -24,6 +24,9 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
                 divisionResults[result.division] = []
             }
             if (result.age >= 40 && (divisionResults[`${gender} Open`] === undefined || (divisionResults[`${gender} Open`].length < 5 && (divisionResults[`${gender} Open`].length <= divisionResults[result.division].length)))) {
+                if (divisionResults[`${gender} Open`] === undefined) {
+                    divisionResults[`${gender} Open`] = []
+                }
                 divisionResults[`${gender} Open`].push(result)
             } else {
                 divisionResults[result.division].push(result)
