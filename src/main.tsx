@@ -82,7 +82,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/pntf/:slug/:year?',
-        element: <PNTF page='rankings' />
+        element: <PNTF page='pntf' />
       },
       {
         path: '/pntf/:slug/:year?/qr',

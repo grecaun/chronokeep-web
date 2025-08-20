@@ -227,7 +227,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                 {
                                     gendResults[gender].map(result => {
                                         return (
-                                            <tr key={result.bib}>
+                                            <tr key={`${result.first}${result.last}-gend`}>
                                                 <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                                 <td className="text-center">{result.combined_score > 0 ? result.gender_ranking : ""}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
@@ -271,7 +271,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                 {
                                     ageResults[group].map(result => {
                                         return (
-                                            <tr key={result.bib}>
+                                            <tr key={`${result.first}${result.last}`}>
                                                 <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                                 <td className="text-center">{result.combined_score > 0 ? result.age_ranking : ""}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
