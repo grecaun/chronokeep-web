@@ -96,7 +96,7 @@ function YTPAwardsTable(props: YTPTableProps) {
                                             <tr key={result.bib}>
                                                 <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                 <td className="text-center">{result.gender_ranking}</td>
-                                                <td>{`${result.first} ${result.last}`}</td>
+                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                                 <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                 <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                 <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
@@ -138,7 +138,7 @@ function YTPAwardsTable(props: YTPTableProps) {
                                             <tr key={result.bib}>
                                                 <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                 <td className="text-center">{result.age_ranking}</td>
-                                                <td>{`${result.first} ${result.last}`}</td>
+                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                                 <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                 <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                 <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>

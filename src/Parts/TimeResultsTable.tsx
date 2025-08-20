@@ -114,7 +114,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                                 }
                                 let grankStr = result.gender_ranking.toString()
                                 if (result.gender_ranking < 1) {
-                                    arankStr = "";
+                                    grankStr = "";
                                 }
                                 // If not a finish time
                                 if (result.finish !== true) {
@@ -147,26 +147,11 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                                 if (result.gender === "M" || result.gender === "MA") {
                                     result.gender = "M"
                                 }
-                                if (result.anonymous === true) {
-                                    return (
-                                        <tr key={result.bib}>
-                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                            <td className="text-center">{rankStr}</td>
-                                            <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`Bib ${result.bib}`}</Link></td>
-                                            <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                            <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.gender}</td>
-                                            <td className="overflow-hidden-lg text-center">{grankStr}</td>
-                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                            <td className="text-center">{segName}</td>
-                                        </tr>
-                                    );
-                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                         <td className="text-center">{rankStr}</td>
-                                        <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{`${result.first} ${result.last}`}</Link></td>
+                                        <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                         <td className="overflow-hidden-lg text-center">{result.gender}</td>

@@ -137,23 +137,11 @@ class TimeResultsTable extends Component<AwardsProps> {
                                                                 if (segName === "Finish") {
                                                                     segName = "Lap " + result.occurence;
                                                                 }
-                                                                if (result.anonymous === true) {
-                                                                    return (
-                                                                        <tr key={result.bib}>
-                                                                            <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                                            <td className="text-center">{rankStr}</td>
-                                                                            <td>{`Bib ${result.bib}`}</td>
-                                                                            <td className="overflow-hidden-lg text-center">{result.age}</td>
-                                                                            <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
-                                                                            <td className="text-center">{segName}</td>
-                                                                        </tr>
-                                                                    );
-                                                                }
                                                                 return (
                                                                     <tr key={result.bib}>
                                                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                                         <td className="text-center">{rankStr}</td>
-                                                                        <td>{`${result.first} ${result.last}`}</td>
+                                                                        <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                                                         <td className="overflow-hidden-lg text-center">{result.age}</td>
                                                                         <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result)}</td>
                                                                         <td className="text-center">{segName}</td>

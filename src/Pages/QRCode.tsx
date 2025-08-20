@@ -33,10 +33,12 @@ function QRCode(props: PageProps) {
         pageType = "PNTF Championship Rankings"
     } else if (state.page === "pntf-awards") {
         pageType = "PNTF Championship Awards"
-    } else if (state.page === "ytp") {
+    } else if (state.page === "ytp-awards") {
         pageType = "YTP Awards"
     } else if (state.page === "ytp-series") {
         pageType = "YTP Series"
+    } else if (state.page === "pntf-youth") {
+        pageType = "PNTF Youth Championship Results"
     }
     document.title = `Chronokeep - ${codeName} QRCode`;
     return (

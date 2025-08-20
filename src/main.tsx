@@ -98,19 +98,27 @@ const router = createBrowserRouter([
       },
       {
         path: '/ytp-awards/:slug/:year?',
-        element: <YTP page='championship'/>
+        element: <YTP page='ytp-awards'/>
       },
       {
         path: '/ytp-awards/:slug/:year?/qr',
-        element: <QRCode page='ytp' />
+        element: <QRCode page='ytp-awards' />
       },
       {
         path: '/ytp-series/:slug/:year?',
-        element: <YTP page='series'/>
+        element: <YTP page='ytp-series'/>
       },
       {
         path: '/ytp-series/:slug/:year?/qr',
         element: <QRCode page='ytp-series' />
+      },
+      {
+        path: '/pntf-youth/:slug/:year?',
+        element: <YTP page='pntf-youth'/>
+      },
+      {
+        path: '/pntf-youth/:slug/:year?/qr',
+        element: <QRCode page='pntf-youth' />
       },
       {
         path: '/remote/login',

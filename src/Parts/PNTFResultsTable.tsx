@@ -86,29 +86,11 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
-                                if (result.anonymous === true) {
-                                    return (
-                                        <tr key={result.bib}>
-                                            <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{dRankStr}</td>
-                                            <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
-                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
-                                            <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                            <td className="overflow-hidden-sm text-center">{
-                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
-                                            }</td>
-                                            <td className="text-center">{
-                                                FormatTime(result.seconds, result.milliseconds, result, true)
-                                            }</td>
-                                        </tr>
-                                    );
-                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
                                         <td className="text-center">{dRankStr}</td>
-                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
@@ -163,29 +145,11 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
-                                if (result.anonymous === true) {
-                                    return (
-                                        <tr key={result.bib}>
-                                            <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{dRankStr}</td>
-                                            <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
-                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
-                                            <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                            <td className="overflow-hidden-sm text-center">{
-                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
-                                            }</td>
-                                            <td className="text-center">{
-                                                FormatTime(result.seconds, result.milliseconds, result, true)
-                                            }</td>
-                                        </tr>
-                                    );
-                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
                                         <td className="text-center">{dRankStr}</td>
-                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
@@ -240,29 +204,11 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
                                 }
-                                if (result.anonymous === true) {
-                                    return (
-                                        <tr key={result.bib}>
-                                            <td className="text-center">{rankStr}</td>
-                                            <td className="text-center">{dRankStr}</td>
-                                            <td>{`Bib ${result.bib}`}</td>
-                                            <td className="overflow-hidden-lg text-center">{result.ranking}</td>
-                                            <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
-                                            <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                            <td className="overflow-hidden-sm text-center">{
-                                                FormatTime(result.chip_seconds, result.chip_milliseconds, result)
-                                            }</td>
-                                            <td className="text-center">{
-                                                FormatTime(result.seconds, result.milliseconds, result, true)
-                                            }</td>
-                                        </tr>
-                                    );
-                                }
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
                                         <td className="text-center">{dRankStr}</td>
-                                        <td>{`${result.first} ${result.last}`}</td>
+                                        <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
                                         <td className="overflow-hidden-sm text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>

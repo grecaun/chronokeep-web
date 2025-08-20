@@ -7,6 +7,7 @@ import YTPScoreTable from '../Parts/YTPScoreTable';
 import { ResultsLoader } from '../loaders/results';
 import { PageProps } from '../Interfaces/props';
 import YTPAwardsTable from '../Parts/YTPAwardsTable';
+import PNTFYouthTable from '../Parts/PNTFYouthTable';
 
 function YTP(props: PageProps) {
     const params = useParams();
@@ -96,7 +97,7 @@ function YTP(props: PageProps) {
         })
     })
     distances = Object.keys(results)
-    const pageSubTitle = props.page === 'series' ? 'YTP Series' : 'PNTF Youth Trail Championship / YTP Race Awards'
+    const pageSubTitle = props.page === 'ytp-series' ? 'YTP Series' : props.page === 'pntf-youth' ? 'PNTF Youth Trail Championship Results' : 'PNTF Youth Trail Championship / YTP Race Awards'
     document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
     return (
         <div>
@@ -123,7 +124,7 @@ function YTP(props: PageProps) {
                             }
                         </ul>
                         <div id="results-parent">
-                            {   props.page === "series" &&
+                            {   props.page === "ytp-series" &&
                                 distances.map((distance, index) => {
                                     return (
                                         <YTPScoreTable
@@ -136,10 +137,23 @@ function YTP(props: PageProps) {
                                     )
                                 })
                             }
-                            { props.page === "championship" &&
+                            { props.page === "ytp-awards" &&
                                 distances.map((distance, index) => {
                                     return (
                                         <YTPAwardsTable
+                                            distance={distance}
+                                            results={results[distance]}
+                                            key={index}
+                                            showTitle={distances.length > 1}
+                                            info={info}
+                                            />
+                                    )
+                                })
+                            }
+                            { props.page === "pntf-youth" &&
+                                distances.map((distance, index) => {
+                                    return (
+                                        <PNTFYouthTable
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
