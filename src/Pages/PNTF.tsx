@@ -160,7 +160,7 @@ function PNTF(props: PageProps) {
             }
         })
     })
-    const pageSubTitle = props.page === 'rankings' ? 'PNTF Championship Rankings' : 'PNTF Championship Awards'
+    const pageSubTitle = props.page === 'pntf' ? 'PNTF Championship Rankings' : 'PNTF Championship Awards'
     document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
     return (
         <div>
@@ -187,7 +187,7 @@ function PNTF(props: PageProps) {
                             }
                         </ul>
                         <div id="results-parent">
-                            { props.page === 'rankings' &&
+                            { props.page === 'pntf' &&
                                 distances.map((distance, index) => {
                                     return (
                                         <PNTFResultsTable
@@ -199,7 +199,7 @@ function PNTF(props: PageProps) {
                                     )
                                 })
                             }
-                            { props.page === 'awards' &&
+                            { props.page === 'pntf-awards' &&
                                 distances.map((distance, index) => {
                                     return (
                                         <PNTFAwardsTable

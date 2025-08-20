@@ -23,7 +23,9 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
             if (divisionResults[result.division] === undefined) {
                 divisionResults[result.division] = []
             }
-            if (result.division_ranking <= 5){
+            if (result.age >= 40 && (divisionResults[`${gender} Open`] === undefined || (divisionResults[`${gender} Open`].length < 5 && (divisionResults[`${gender} Open`].length <= divisionResults[result.division].length)))) {
+                divisionResults[`${gender} Open`].push(result)
+            } else {
                 divisionResults[result.division].push(result)
             }
         })
@@ -35,7 +37,22 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
             "Non-Binary Open",
             "Non-Binary Masters",
         ]
-        console.log(divisionResults)
+        for (var i=0; i<=5; i+=2) {
+            if (divisionResults[divisions[i]] !== undefined && divisionResults[divisions[i+1]] !== undefined) {
+                while (divisionResults[divisions[i]].length < 5 && divisionResults[divisions[i+1]].length > 5) {
+                    const missing_ix = divisionResults[divisions[i]].length
+                    const change_result = divisionResults[divisions[i+1]].splice(missing_ix, 1)
+                    divisionResults[divisions[i]].push(change_result[i])
+                }
+            }
+        }
+        divisions.map(division => {
+            if (divisionResults[division] !== undefined) {
+                while (divisionResults[division].length > 5) {
+                    divisionResults[division].pop()
+                }
+            }
+        })
         return (
             <div>
                 { showTitle &&
@@ -63,11 +80,11 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
                                     </thead>
                                     <tbody>
                                     {
-                                        divisionResults[division].map(result => {
+                                        divisionResults[division].map((result, index) => {
                                             return (
                                                 <tr key={result.bib}>
                                                     <td className="overflow-hidden-sm text-center">{result.bib}</td>
-                                                    <td className="text-center">{result.division_ranking}</td>
+                                                    <td className="text-center">{index+1}</td>
                                                     <td>{`${result.first} ${result.last}`}</td>
                                                     <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                     <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
