@@ -97,7 +97,6 @@ function YTPScoreTable(props: YTPTableProps) {
                                 }
                                 arankStr = `${result.age_ranking}${suffix} ${result.age_group}`
                             }
-                            console.log(arankStr)
                             if (result.gender_ranking < 1) {
                                 grankStr = "";
                             }
