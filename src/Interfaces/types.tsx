@@ -137,3 +137,21 @@ export enum RankingType {
     Gun = 1,
     Chip
 }
+
+export interface SeriesDistance {
+    year: string
+    name: string
+    value: number
+    type: string
+}
+
+export interface Series {
+    name: string
+    distances: SeriesDistance[]
+    best: number
+}
+
+export interface SeriesYear {
+    display_year: number
+    series: Series[]
+}

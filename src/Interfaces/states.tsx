@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, CertDistance, Distance, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from "./types"
+import { Account, CertDistance, Distance, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SeriesYear, SmsSubscription, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -124,6 +124,8 @@ export interface ResultsState extends BaseState {
 export interface MultiResultsState extends BaseState {
     event: Event | null
     results: { [index: string]:{ [index: string]: TimeResult[] } }
+    years: SeriesYear[] | null
+    selected_year: SeriesYear | null
 }
 
 export interface YTPState {

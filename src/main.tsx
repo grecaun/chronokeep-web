@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/series/:slug/:year?',
-        element: <Series page='series' />
+        element: <Series />
       },
       {
         path: '/series/:slug/:year?/qr',
