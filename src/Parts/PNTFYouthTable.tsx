@@ -145,7 +145,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                 <tr key={result.bib}>
                                     <td className="overflow-hidden-lg text-center">{result.bib}</td>
                                     <td className="text-center">{rankStr}</td>
-                                    <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
+                                    <td><Link to={`/pntf-youth/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                     <td className="overflow-hidden-sm text-center">{arankStr}</td>
                                     <td className="overflow-hidden-lg text-center">{result.gender}</td>
                                     <td className="overflow-hidden-lg text-center">{grankStr}</td>

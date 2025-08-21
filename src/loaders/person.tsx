@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export function PersonLoader(params: Params<string>): PersonState {
     const [state, setState] = useState<PersonState>({
-        page: 'person',
+        page: params.page === undefined ? 'results' : params.page,
         status: 0,
         loading: true,
         error: false,

@@ -2,11 +2,13 @@ import { Component } from 'react';
 import FormatTime from './FormatTime';
 import { TimeResult } from '../Interfaces/types';
 import { AwardsProps } from '../Interfaces/props';
+import { Link } from 'react-router-dom';
 
 class AwardsTable extends Component<AwardsProps> {
     render() {
         const results = this.props.results;
         const distance = this.props.distance;
+        const info = this.props.info;
         const showTitle = this.props.showTitle;
         results.sort((a, b) => {
             // sort all DNF and DNS to the bottom
@@ -187,7 +189,7 @@ class AwardsTable extends Component<AwardsProps> {
                                                                     <tr key={result.bib}>
                                                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                                         <td className="text-center">{rankStr}</td>
-                                                                        <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                                        <td><Link to={`/awards/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                                         <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                                         <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                                         <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>

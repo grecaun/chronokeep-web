@@ -3,6 +3,7 @@ import { YTPTableProps } from '../Interfaces/props';
 import { YTPTimeResult } from '../Interfaces/types';
 import { CSVLoader } from '../loaders/csv';
 import Loading from './Loading';
+import { Link } from 'react-router-dom';
 
 function YTPScoreTable(props: YTPTableProps) {
     const results = props.results;
@@ -228,7 +229,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                     gendResults[gender].map(result => {
                                         return (
                                             <tr key={`${result.first}${result.last}-gend`}>
-                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                <td><Link to={`/ytp-series/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                 <td className="text-center">{result.combined_score > 0 ? result.gender_ranking : ""}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>
@@ -272,7 +273,7 @@ function YTPScoreTable(props: YTPTableProps) {
                                     ageResults[group].map(result => {
                                         return (
                                             <tr key={`${result.first}${result.last}`}>
-                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                <td><Link to={`/ytp-series/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                 <td className="text-center">{result.combined_score > 0 ? result.age_ranking : ""}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.tiger_score > 0 ? result.tiger_score.toFixed(2): "-"}</td>
                                                 <td className="overflow-hidden-lg text-center">{result.seward_score > 0 ? result.seward_score.toFixed(2): "-"}</td>

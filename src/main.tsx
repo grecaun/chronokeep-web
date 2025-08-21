@@ -21,6 +21,7 @@ import Subscribe from './Pages/Subscribe';
 import Checkin from './Pages/Checkin';
 import PNTF from './Pages/PNTF';
 import YTP from './Pages/YTP';
+import Series from './Pages/Series';
 
 const router = createBrowserRouter([
   {
@@ -65,7 +66,7 @@ const router = createBrowserRouter([
         element: <QRCode page='results' />
       },
       {
-        path: '/results/:slug/:year/:bib',
+        path: '/:page/:slug/:year/:bib',
         element: <Person />
       },
       {
@@ -79,6 +80,14 @@ const router = createBrowserRouter([
       {
         path: '/checkin/:slug/:year?/qr',
         element: <QRCode page='registration' />
+      },
+      {
+        path: '/series/:slug/:year?',
+        element: <Series page='series' />
+      },
+      {
+        path: '/series/:slug/:year?/qr',
+        element: <QRCode page='series' />
       },
       {
         path: '/pntf/:slug/:year?',

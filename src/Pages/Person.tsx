@@ -186,7 +186,7 @@ function Person() {
                     <div className="text-center text-important display-4 m-0">{`${pretty_year} ${state.event.name}`}</div>
                     <div className="text-center text-important text-secondary m-0 mt-2">{DateString(state.year.date_time)}</div>
                 </div>
-                <div className="mx-auto fit-width mt-3"><Link to={`/results/${state.event.slug}/${state.year.year}`} className="btn btn-danger btn-chronokeep">Back</Link></div>
+                <div className="mx-auto fit-width mt-3"><Link to={`/${state.page}/${state.event.slug}/${state.year.year}`} className="btn btn-danger btn-chronokeep">Back</Link></div>
             </div>
             <div className="container-sm sm-max-width m-5 mt-0 p-4 mx-auto shadow">
                 <div className="p-2">

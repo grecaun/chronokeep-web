@@ -48,6 +48,7 @@ export interface PageProps {
 }
 
 export interface PNTFTableProps {
+    info: { slug: string | undefined, year: string | undefined }
     distance: string
     results: TimeResult[]
     key: number

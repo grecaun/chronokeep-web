@@ -2,11 +2,13 @@ import { Component } from 'react';
 import FormatTime from './FormatTime';
 import { TimeResult } from '../Interfaces/types';
 import { PNTFTableProps } from '../Interfaces/props';
+import { Link } from 'react-router-dom';
 
 class PNTFAwardsTable extends Component<PNTFTableProps> {
     render() {
         const results = this.props.results;
         const distance = this.props.distance;
+        const info = this.props.info;
         const showTitle = this.props.showTitle;
         const divisionResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
@@ -88,7 +90,7 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
                                                 <tr key={result.bib}>
                                                     <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                     <td className="text-center">{index+1}</td>
-                                                    <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                    <td><Link to={`/pntf-awards/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                     <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                     <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                     <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>

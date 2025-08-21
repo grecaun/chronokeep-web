@@ -23,6 +23,10 @@ function PNTF(props: PageProps) {
             <Loading />
         );
     }
+    const info = {
+        slug: params.slug,
+        year: state.year?.year
+    }
     var distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
     distances.map(distance => {
@@ -191,6 +195,7 @@ function PNTF(props: PageProps) {
                                 distances.map((distance, index) => {
                                     return (
                                         <PNTFResultsTable
+                                            info={info}
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
@@ -203,6 +208,7 @@ function PNTF(props: PageProps) {
                                 distances.map((distance, index) => {
                                     return (
                                         <PNTFAwardsTable
+                                            info={info}
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}

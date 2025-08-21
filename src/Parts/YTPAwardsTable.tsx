@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { YTPTableProps } from '../Interfaces/props';
 import { YTPTimeResult } from '../Interfaces/types';
 import FormatTime from './FormatTime';
@@ -5,6 +6,7 @@ import FormatTime from './FormatTime';
 function YTPAwardsTable(props: YTPTableProps) {
     let results = props.results;
     const distance = props.distance;
+    const info = props.info;
     const showTitle = props.showTitle;
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
         if (a.seconds === b.seconds) {
@@ -96,7 +98,7 @@ function YTPAwardsTable(props: YTPTableProps) {
                                             <tr key={result.bib}>
                                                 <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                 <td className="text-center">{result.gender_ranking}</td>
-                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                <td><Link to={`/ytp-awards/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                 <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                 <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                 <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
@@ -138,7 +140,7 @@ function YTPAwardsTable(props: YTPTableProps) {
                                             <tr key={result.bib}>
                                                 <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                                 <td className="text-center">{result.age_ranking}</td>
-                                                <td>{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</td>
+                                                <td><Link to={`/ytp-awards/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                                 <td className="overflow-hidden-sm text-center">{result.age}</td>
                                                 <td className="overflow-hidden-lg text-center">{FormatTime(result.chip_seconds, result.chip_milliseconds, result)}</td>
                                                 <td className="text-center">{FormatTime(result.seconds, result.milliseconds, result, true)}</td>
