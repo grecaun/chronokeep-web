@@ -68,6 +68,11 @@ export interface GetResultsResponse extends GetEventResponse {
     event_year: EventYear
 }
 
+export interface GetMultiResultsResponse {
+    event: Event
+    results: { [index: string]: { [index: string]: TimeResult[] } }
+}
+
 export interface AddResultsResponse {
     count: number
 }

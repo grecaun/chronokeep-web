@@ -121,6 +121,11 @@ export interface ResultsState extends BaseState {
     distances: CertDistance[] | null
 }
 
+export interface MultiResultsState extends BaseState {
+    event: Event | null
+    results: { [index: string]:{ [index: string]: TimeResult[] } }
+}
+
 export interface YTPState {
     prev_standings: {
         [index: string] : {
