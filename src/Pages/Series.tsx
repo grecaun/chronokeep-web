@@ -102,93 +102,95 @@ function SeriesPage() {
     })
     // go through all of the results and rank the results for each event
     seriesByName.forEach((series, name) => {
-        // Go through all of the series results and make sure every event for a person is part of that series
-        seriesResults[name].map(oneRes => {
-            Object.keys(oneRes.results).map(yearDistKey => {
-                if (seriesMap.get(yearDistKey)!.name !== name) {
-                    oneRes.results.delete(yearDistKey)
-                }
-            })
-        })
-        // Rank participants in every distance
-        series.distances.map(dist => {
-            const yearDistKey = `${dist.year} ${dist.name}`
-            // go through the results for the series and sort by ranking/time for that event
-            // put everyone who didn't participate in that event at the bottom
-            seriesResults[name].sort((a,b) => {
-                if (!a.results.has(yearDistKey) && !b.results.has(yearDistKey)) {
-                    return 0
-                }
-                // Push results that have a result for that year to the top
-                if (a.results.has(yearDistKey) && !b.results.has(yearDistKey)) {
-                    return -1
-                }
-                if (b.results.has(yearDistKey) && !a.results.has(yearDistKey)) {
-                    return 1
-                }
-                if (a.results.get(yearDistKey)!.ranking == a.results.get(yearDistKey)!.ranking) {
-                    if (a.results.get(yearDistKey)!.seconds === b.results.get(yearDistKey)!.seconds) {
-                        return a.results.get(yearDistKey)!.milliseconds - b.results.get(yearDistKey)!.milliseconds
+        if (seriesResults[name] !== undefined) {
+            // Go through all of the series results and make sure every event for a person is part of that series
+            seriesResults[name].map(oneRes => {
+                Object.keys(oneRes.results).map(yearDistKey => {
+                    if (seriesMap.get(yearDistKey)!.name !== name) {
+                        oneRes.results.delete(yearDistKey)
                     }
-                    return a.results.get(yearDistKey)!.seconds - b.results.get(yearDistKey)!.seconds
-                }
-                return a.results.get(yearDistKey)!.ranking - b.results.get(yearDistKey)!.ranking
+                })
             })
-            var ranking: number = 1
+            // Rank participants in every distance
+            series.distances.map(dist => {
+                const yearDistKey = `${dist.year} ${dist.name}`
+                // go through the results for the series and sort by ranking/time for that event
+                // put everyone who didn't participate in that event at the bottom
+                seriesResults[name].sort((a,b) => {
+                    if (!a.results.has(yearDistKey) && !b.results.has(yearDistKey)) {
+                        return 0
+                    }
+                    // Push results that have a result for that year to the top
+                    if (a.results.has(yearDistKey) && !b.results.has(yearDistKey)) {
+                        return -1
+                    }
+                    if (b.results.has(yearDistKey) && !a.results.has(yearDistKey)) {
+                        return 1
+                    }
+                    if (a.results.get(yearDistKey)!.ranking == a.results.get(yearDistKey)!.ranking) {
+                        if (a.results.get(yearDistKey)!.seconds === b.results.get(yearDistKey)!.seconds) {
+                            return a.results.get(yearDistKey)!.milliseconds - b.results.get(yearDistKey)!.milliseconds
+                        }
+                        return a.results.get(yearDistKey)!.seconds - b.results.get(yearDistKey)!.seconds
+                    }
+                    return a.results.get(yearDistKey)!.ranking - b.results.get(yearDistKey)!.ranking
+                })
+                var ranking: number = 1
+                seriesResults[name].map(res => {
+                    if (res.results.has(yearDistKey)) {
+                        res.results.get(yearDistKey)!.ranking = ranking
+                        ranking += 1
+                        // set pace -- use DIVISION for mi/km designation and DIVISION_RANKING for pace in seconds
+                        res.results.get(yearDistKey)!.division = seriesDistanceMap.get(yearDistKey)!.type
+                        res.results.get(yearDistKey)!.division_ranking = Math.floor(res.results.get(yearDistKey)!.seconds / seriesDistanceMap.get(yearDistKey)!.value)
+                    }
+                })
+            })
+            // Calculate total event points and average pace
             seriesResults[name].map(res => {
-                if (res.results.has(yearDistKey)) {
-                    res.results.get(yearDistKey)!.ranking = ranking
-                    ranking += 1
-                    // set pace -- use DIVISION for mi/km designation and DIVISION_RANKING for pace in seconds
-                    res.results.get(yearDistKey)!.division = seriesDistanceMap.get(yearDistKey)!.type
-                    res.results.get(yearDistKey)!.division_ranking = Math.floor(res.results.get(yearDistKey)!.seconds / seriesDistanceMap.get(yearDistKey)!.value)
+                const rankings: number[] = []
+                const paces: number[] = []
+                res.results.forEach(tRes => {
+                    rankings.push(tRes.ranking)
+                    paces.push(tRes.division_ranking)
+                    res.pace_type = tRes.division
+                })
+                rankings.sort((a,b) => { return a - b })
+                paces.sort((a,b) => { return a - b })
+                // ensure they've completed enough races to count
+                if (seriesByName.has(name) && (rankings.length >= seriesByName.get(name)!.best || paces.length >= seriesByName.get(name)!.best)) {
+                    for (var i=0; i<seriesByName.get(name)!.best; i++) {
+                        res.series_points += rankings[i]
+                        res.average_pace += paces[i]
+                    }
+                    res.average_pace = Math.floor(res.average_pace / seriesByName.get(name)!.best)
                 }
             })
-        })
-        // Calculate total event points and average pace
-        seriesResults[name].map(res => {
-            const rankings: number[] = []
-            const paces: number[] = []
-            res.results.forEach(tRes => {
-                rankings.push(tRes.ranking)
-                paces.push(tRes.division_ranking)
-                res.pace_type = tRes.division
-            })
-            rankings.sort((a,b) => { return a - b })
-            paces.sort((a,b) => { return a - b })
-            // ensure they've completed enough races to count
-            if (seriesByName.has(name) && (rankings.length >= seriesByName.get(name)!.best || paces.length >= seriesByName.get(name)!.best)) {
-                for (var i=0; i<seriesByName.get(name)!.best; i++) {
-                    res.series_points += rankings[i]
-                    res.average_pace += paces[i]
+            // Sort results by event points -> average pace
+            seriesResults[name].sort((a,b) => {
+                if (a.series_points === b.series_points) {
+                    return a.average_pace - b.average_pace
                 }
-                res.average_pace = Math.floor(res.average_pace / seriesByName.get(name)!.best)
-            }
-        })
-        // Sort results by event points -> average pace
-        seriesResults[name].sort((a,b) => {
-            if (a.series_points === b.series_points) {
-                return a.average_pace - b.average_pace
-            }
-            return a.series_points - b.series_points
-        })
-        var ranking: number = 1;
-        var gender_ranking: Map<string, number> = new Map<string, number>()
-        var age_ranking: Map<string, number> = new Map<string, number>()
-        seriesResults[name].map(result => {
-            if (!gender_ranking.has(result.gender)) {
-                gender_ranking.set(result.gender, 1)
-            }
-            if (!age_ranking.has(`${result.gender}${result.age_group}`)) {
-                age_ranking.set(`${result.gender}${result.age_group}`, 1)
-            }
-            result.ranking = ranking
-            result.gender_ranking = gender_ranking.get(result.gender)!
-            result.age_ranking = age_ranking.get(`${result.gender}${result.age_group}`)!
-            ranking += 1
-            gender_ranking.set(result.gender, gender_ranking.get(result.gender)!+1)
-            age_ranking.set(`${result.gender}${result.age_group}`, age_ranking.get(`${result.gender}${result.age_group}`)!+1)
-        })
+                return a.series_points - b.series_points
+            })
+            var ranking: number = 1;
+            var gender_ranking: Map<string, number> = new Map<string, number>()
+            var age_ranking: Map<string, number> = new Map<string, number>()
+            seriesResults[name].map(result => {
+                if (!gender_ranking.has(result.gender)) {
+                    gender_ranking.set(result.gender, 1)
+                }
+                if (!age_ranking.has(`${result.gender}${result.age_group}`)) {
+                    age_ranking.set(`${result.gender}${result.age_group}`, 1)
+                }
+                result.ranking = ranking
+                result.gender_ranking = gender_ranking.get(result.gender)!
+                result.age_ranking = age_ranking.get(`${result.gender}${result.age_group}`)!
+                ranking += 1
+                gender_ranking.set(result.gender, gender_ranking.get(result.gender)!+1)
+                age_ranking.set(`${result.gender}${result.age_group}`, age_ranking.get(`${result.gender}${result.age_group}`)!+1)
+            })
+        }
     })
     const pageSubTitle = 'Series Results'
     document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
@@ -215,6 +217,13 @@ function SeriesPage() {
                             />
                     )
                 })}
+            </div>
+            }
+            { Object.keys(seriesResults).length === 0 &&
+            <div className="container-lg lg-max-width shadow-sm p-5 mb-3 border border-light">
+                <div className="text-center">
+                    <h2>No results to display.</h2>
+                </div>
             </div>
             }
         </div>
