@@ -202,6 +202,19 @@ function SeriesPage() {
                     <p className="text-important mb-2 mt-0 h2">{pageSubTitle}</p>
                     <p className="text-important h5">{state.selected_year?.display_year === undefined? '' : state.selected_year?.display_year}</p>
                 </div>
+                { state.years !== null && state.years.length > 1 && 
+                    <div className="col-md-2 nav flex-md-column justify-content-center p-0">
+                        {
+                            state.years.map((year, index) => {
+                                let className = "nav-link text-center text-important text-secondary"
+                                if (year.display_year === state.selected_year!.display_year) {
+                                    className = "nav-link disabled text-center text-important text-dark"
+                                }
+                                return <a href={`/series/${params.slug}/${year.display_year}`} key={`year${index}`} className={className}>{year.display_year}</a>
+                            })
+                        }
+                    </div>
+                }
             </div>
             { Object.keys(seriesResults).length > 0 &&
             <div id="results-parent">
