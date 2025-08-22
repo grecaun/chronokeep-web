@@ -199,7 +199,7 @@ function PNTF(props: PageProps) {
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             />
                                     )
                                 })
@@ -212,7 +212,7 @@ function PNTF(props: PageProps) {
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             />
                                     )
                                 })

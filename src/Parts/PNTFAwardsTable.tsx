@@ -9,7 +9,7 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
         const results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         const divisionResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
             var gender = ''

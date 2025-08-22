@@ -1,5 +1,5 @@
 import KeyInfo from "../Parts/KeyInfo";
-import { Account, Event, EventYear, Key, Participant, TimeResult, YTPTimeResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, SeriesResult, TimeResult, YTPTimeResult } from "./types";
 import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
@@ -52,7 +52,7 @@ export interface PNTFTableProps {
     distance: string
     results: TimeResult[]
     key: number
-    showTitle: boolean
+    show_title: boolean
 }
 
 export interface YTPTableProps {
@@ -60,7 +60,7 @@ export interface YTPTableProps {
     distance: string
     results: YTPTimeResult[]
     key: number
-    showTitle: boolean
+    show_title: boolean
 }
 
 export interface ResultsTableProps {
@@ -68,12 +68,20 @@ export interface ResultsTableProps {
     results: TimeResult[]
     key: number
     info: { slug: string | undefined, year: string | undefined }
-    showTitle: boolean
+    show_title: boolean
     search: string
     sort_by: number
     rank_by_selected: boolean
     age_group_map: Map<number, string>
     certification: string | undefined
+}
+
+export interface SeriesResultsTableProps {
+    name: string
+    results: SeriesResult[]
+    distances: string[]
+    show_title: boolean
+    search: string
 }
 
 export interface CheckinRowProps {

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 function YTPScoreTable(props: YTPTableProps) {
     const results = props.results;
     const distance = props.distance;
-    const showTitle = props.showTitle;
+    const showTitle = props.show_title;
     const info = props.info;
     const { state, setState } = CSVLoader(`https://downloads.chronokeep.com/${info.slug}/${info.year}/${distance}/ytp-standings.csv`)
     if (state.csv_loaded === false) {

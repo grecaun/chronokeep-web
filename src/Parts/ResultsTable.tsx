@@ -9,7 +9,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         let results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         const search = this.props.search;
         var sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();

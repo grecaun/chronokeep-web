@@ -9,7 +9,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
         const results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         const genderResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
             result.gender = result.gender.toLocaleUpperCase();

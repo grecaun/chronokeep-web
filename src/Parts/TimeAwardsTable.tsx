@@ -10,7 +10,7 @@ class TimeResultsTable extends Component<AwardsProps> {
         const results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         const genders: string[] = [];
         const lastDict: {[index: string]: TimeResult} = {};
         results.forEach(result => {

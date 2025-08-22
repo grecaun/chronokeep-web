@@ -212,7 +212,7 @@ export default function Awards() {
                                             results={state.results[distance]}
                                             info={info}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             numberAG={awardsState.numAG}
                                             numberOV={awardsState.numOV}
                                             overallInc={awardsState.overallInc}
@@ -232,7 +232,7 @@ export default function Awards() {
                                             results={state.results[distance]}
                                             info={info}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             numberAG={awardsState.numAG}
                                             numberOV={awardsState.numOV}
                                             overallInc={awardsState.overallInc}
