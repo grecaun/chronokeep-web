@@ -74,7 +74,7 @@ function YTPAwardsTable(props: YTPTableProps) {
             { genders.map(gender => {
                 return(
                     <div key={gender}>
-                        { gendResults.has(gender) && gendResults.get(gender)!.length > 0 &&
+                        { gendResults[gender] && gendResults[gender].length > 0 &&
                         <div className="table-responsive-sm m-3" key={gender} id={gender}>
                             <table className="table table-sm">
                                 <thead>
@@ -115,7 +115,7 @@ function YTPAwardsTable(props: YTPTableProps) {
             { ageGroups.map(group => {
                 return (
                     <div key={group}>
-                    { ageResults.has(group) && ageResults.get(group)!.length > 0 &&
+                    { ageResults[group] && ageResults[group].length > 0 &&
                     <div className="table-responsive-sm m-3" key={group} id={group}>
                         <table className="table table-sm">
                             <thead>
@@ -133,7 +133,7 @@ function YTPAwardsTable(props: YTPTableProps) {
                             </thead>
                             <tbody>
                             {
-                                ageResults.get(group)!.map(result => {
+                                ageResults[group].map(result => {
                                     return (
                                         <tr key={result.bib}>
                                             <td className="overflow-hidden-sm text-center">{result.bib}</td>
