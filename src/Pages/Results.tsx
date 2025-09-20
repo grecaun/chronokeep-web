@@ -710,7 +710,7 @@ function Results() {
                                                 results={current_results[distance]}
                                                 info={info}
                                                 key={index}
-                                                showTitle={distances.length > 1}
+                                                show_title={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
                                                 rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
@@ -727,7 +727,7 @@ function Results() {
                                                 results={current_results[distance]}
                                                 info={info}
                                                 key={index}
-                                                showTitle={distances.length > 1}
+                                                show_title={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
                                                 rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
@@ -744,7 +744,7 @@ function Results() {
                                                 results={current_results[distance]}
                                                 info={info}
                                                 key={index}
-                                                showTitle={distances.length > 1}
+                                                show_title={distances.length > 1}
                                                 search={state.search}
                                                 sort_by={state.sort_by}
                                                 rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 

@@ -155,3 +155,18 @@ export interface SeriesYear {
     display_year: number
     series: Series[]
 }
+
+export interface SeriesResult {
+    first: string
+    last: string
+    gender: string
+    age: number
+    age_group: string
+    series_points: number
+    average_pace: number
+    pace_type: string
+    results: Map<string, TimeResult>
+    ranking: number
+    gender_ranking: number
+    age_ranking: number
+}

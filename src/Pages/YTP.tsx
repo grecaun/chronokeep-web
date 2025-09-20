@@ -131,7 +131,7 @@ function YTP(props: PageProps) {
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             info={info}
                                             />
                                     )
@@ -144,7 +144,7 @@ function YTP(props: PageProps) {
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             info={info}
                                             />
                                     )
@@ -157,7 +157,7 @@ function YTP(props: PageProps) {
                                             distance={distance}
                                             results={results[distance]}
                                             key={index}
-                                            showTitle={distances.length > 1}
+                                            show_title={distances.length > 1}
                                             info={info}
                                             />
                                     )

@@ -7,7 +7,7 @@ function YTPScoreTable(props: YTPTableProps) {
     const results = props.results;
     const distance = props.distance;
     const info = props.info;
-    const showTitle = props.showTitle;
+    const showTitle = props.show_title;
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
         // sort all DNF and DNS to the bottom
         if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {

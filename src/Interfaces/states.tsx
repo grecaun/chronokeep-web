@@ -128,17 +128,17 @@ export interface MultiResultsState extends BaseState {
     selected_year: SeriesYear | null
 }
 
+export interface YTPScore {
+    highest_score: number
+    tiger_score: number
+    seward_score: number
+    age: number
+    gender: string
+    age_group: string
+}
+
 export interface YTPState {
-    prev_standings: {
-        [index: string] : {
-            highest_score: number
-            tiger_score: number
-            seward_score: number
-            age: number
-            gender: string
-            age_group: string
-        }
-    }
+    prev_standings: { [index:string]: YTPScore }
     csv_loaded: boolean
     limit_display: boolean
     display_gender: boolean

@@ -9,7 +9,7 @@ class AwardsTable extends Component<AwardsProps> {
         const results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         results.sort((a, b) => {
             // sort all DNF and DNS to the bottom
             if (a.type === 3 || a.type >= 30 || b.type === 3 || b.type >= 30) {

@@ -4,11 +4,9 @@ import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
 import { ResultsLoader } from '../loaders/results';
 import { TimeResult } from '../Interfaces/types';
-import PNTFResultsTable from '../Parts/PNTFResultsTable';
-import { PageProps } from '../Interfaces/props';
 import PNTFAwardsTable from '../Parts/PNTFAwardsTable';
 
-function PNTF(props: PageProps) {
+function TeamResults() {
     const params = useParams();
     const { state } = ResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
@@ -27,66 +25,33 @@ function PNTF(props: PageProps) {
         slug: params.slug,
         year: state.year?.year
     }
-    let distances = Object.keys(state.results)
+    var distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
+    const teamResults: { [index: string]: { [index: string]: TimeResult[] } } = {}
+    const teamCount: {  [index: string]: { [index:string]: { members: number, women: number } } } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
-            if (result.division.trim() === "pntf" && result.finish === true) {
-                if (results[distance] === undefined) {
-                    results[distance] = []
+            if (result.division.trim().length > 0 && result.finish === true) {
+                if (teamCount[result.distance] === undefined) {
+                    teamCount[result.distance] = {}
                 }
-                let gender: string
+                if (teamCount[result.distance][result.division] === undefined) {
+                    teamCount[result.distance][result.division] = { members: 0, women: 0 }
+                }
+                teamCount[result.distance][result.division].members += 1
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
                 if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
-                    result.gender = "F"
-                    gender = "Female"
+                    result.gender = "W"
+                    teamCount[result.distance][result.division].women += 1
                 } else if (result.gender === "M" || result.gender === "MA") {
                     result.gender = "M"
-                    gender = "Male"
                 } else {
                     result.gender = "X"
-                    gender = "Non-Binary"
                 }
-                let division = "Open"
-                if (result.age >= 40 && result.age < 130) {
-                    division = "Masters"
-                }
-                let age_group = ""
-                if (result.age / 5 < 4) {
-                    age_group = `${gender} Under 20`
-                } else if (result.age / 5 < 5) {
-                    age_group = `${gender} 20-24`
-                } else if (result.age / 5 < 6) {
-                    age_group = `${gender} 25-29`
-                } else if (result.age / 5 < 7) {
-                    age_group = `${gender} 30-34`
-                } else if (result.age / 5 < 8) {
-                    age_group = `${gender} 35-39`
-                } else if (result.age / 5 < 9) {
-                    age_group = `${gender} 40-44`
-                } else if (result.age / 5 < 10) {
-                    age_group = `${gender} 45-49`
-                } else if (result.age / 5 < 11) {
-                    age_group = `${gender} 50-54`
-                } else if (result.age / 5 < 12) {
-                    age_group = `${gender} 55-59`
-                } else if (result.age / 5 < 13) {
-                    age_group = `${gender} 60-64`
-                } else if (result.age / 5 < 14) {
-                    age_group = `${gender} 65-69`
-                } else if (result.age / 5 < 15) {
-                    age_group = `${gender} 70-74`
-                } else if (result.age / 5 < 16) {
-                    age_group = `${gender} 75-79`
-                } else if (result.age / 5 < 17) {
-                    age_group = `${gender} 80-84`
-                } else if (result.age / 5 < 18) {
-                    age_group = `${gender} 85-89`
-                } else if (result.age / 5 < 19) {
-                    age_group = `${gender} 90-94`
-                } else if (result.age / 5 < 20) {
-                    age_group = `${gender} 95-99`
+                teamCount[result.division].women
+                if (results[distance] === undefined) {
+                    results[distance] = []
                 }
                 results[distance].push({
                         bib: result.bib,
@@ -98,7 +63,7 @@ function PNTF(props: PageProps) {
                         chip_milliseconds: result.chip_milliseconds,
                         gender: result.gender,
                         occurence: result.occurence,
-                        age_group: age_group,
+                        age_group: result.age_group,
                         age: result.age,
                         ranking: result.ranking,
                         age_ranking: result.age_ranking,
@@ -110,26 +75,26 @@ function PNTF(props: PageProps) {
                         distance: result.distance,
                         location: result.location,
                         local_time: result.local_time,
-                        division: division,
+                        division: result.division,
                         division_ranking: result.division_ranking
                     })
             }
         })
     })
+    // Update rankings to only use rankings for finishers of the team event.
     distances = Object.keys(results)
     distances.map(distance => {
         results[distance].sort((a,b) => {
-            if (a.seconds === b.seconds) {
-                return a.milliseconds - b.milliseconds;
-            }
-            return a.seconds - b.seconds;
+            return a.ranking - b.ranking;
         })
-        let place = 1;
-        const genderPlace: { [gend: string]: number } = {}
-        const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-        const divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        var place = 1;
+        var genderPlace: { [gend: string]: number } = {}
+        var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        var divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
         results[distance].map(result => {
-            if (result.finish === true) {
+            // Limit rankings to only teams with at least 4 finishers, 2 of which must be women
+            if (teamCount[distance] !== undefined && teamCount[distance][result.division] !== undefined &&
+                teamCount[distance][result.division].members >= 4 && teamCount[distance][result.division].women >= 2) {
                 result.ranking = place;
                 place = place + 1;
                 if (genderPlace[result.gender] === undefined) {
@@ -161,10 +126,108 @@ function PNTF(props: PageProps) {
                     result.division_ranking = divisionPlace[result.division][result.gender]
                     divisionPlace[result.division][result.gender] = divisionPlace[result.division][result.gender] + 1
                 }
+                if (teamResults[distance] === undefined) {
+                    teamResults[distance] = {}
+                }
+                if (teamResults[distance][result.division] === undefined) {
+                    teamResults[distance][result.division] = []
+                }
+                teamResults[distance][result.division].push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
+                    })
             }
         })
     })
-    const pageSubTitle = props.page === 'pntf' ? 'PNTF Championship Rankings' : 'PNTF Championship Awards'
+    const teamPoints: {  [index: string]:
+                        { [index:string]:
+                            { ranking: number,
+                                points: number,
+                                firstWoman: TimeResult | undefined,
+                                secondWoman: TimeResult | undefined,
+                                thirdResult: TimeResult | undefined,
+                                fourthResult: TimeResult | undefined }
+                            }
+                        } = {}
+    const teamPlacements: {  [index: string]:
+                            { ranking: number,
+                                points: number,
+                                firstWoman: TimeResult | undefined,
+                                secondWoman: TimeResult | undefined,
+                                thirdResult: TimeResult | undefined,
+                                fourthResult: TimeResult | undefined }[]
+                        } = {}
+    distances.map(distance => {
+        teamPoints[distance] = {}
+        teamPlacements[distance] = []
+        const teams = Object.keys(teamResults[distance])
+        teams.map(team => {
+            teamPoints[distance][team] =
+            {
+                ranking: 0,
+                points: 0,
+                firstWoman: undefined,
+                secondWoman: undefined,
+                thirdResult: undefined,
+                fourthResult: undefined
+            }
+            teamResults[distance][team].map(res => {
+                if (teamPoints[distance][team].firstWoman === undefined && res.gender === "W") {
+                    teamPoints[distance][team].firstWoman = res
+                    teamPoints[distance][team].points += res.ranking
+                } else if (teamPoints[distance][team].secondWoman === undefined && res.gender === "W") {
+                    teamPoints[distance][team].secondWoman = res
+                    teamPoints[distance][team].points += res.ranking
+                } else if (teamPoints[distance][team].thirdResult === undefined) {
+                    teamPoints[distance][team].thirdResult = res
+                    teamPoints[distance][team].points += res.ranking
+                } else if (teamPoints[distance][team].fourthResult === undefined) {
+                    teamPoints[distance][team].fourthResult = res
+                    teamPoints[distance][team].points += res.ranking
+                }
+            })
+            teamPlacements[distance].push(teamPoints[distance][team])
+        })
+        teamPlacements[distance].sort((a,b) => {
+            if (a.firstWoman !== undefined && a.secondWoman !== undefined && a.thirdResult && a.fourthResult &&
+                b.firstWoman !== undefined && b.secondWoman !== undefined && b.thirdResult && b.fourthResult) {
+                return a.points - b.points
+            }
+            if (a.firstWoman !== undefined && a.secondWoman !== undefined && a.thirdResult && a.fourthResult) {
+                return 1
+            }
+            return -1
+        })
+        var place = 1
+        teamPlacements[distance].map(teamPlace => {
+            if (teamPlace.firstWoman !== undefined && teamPlace.secondWoman !== undefined && teamPlace.thirdResult && teamPlace.fourthResult) {
+                teamPlace.ranking = place
+                place += 1
+            }
+        })
+    })
+    const pageSubTitle = 'Team Rankings'
     document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
     return (
         <div>
@@ -191,21 +254,7 @@ function PNTF(props: PageProps) {
                             }
                         </ul>
                         <div id="results-parent">
-                            { props.page === 'pntf' &&
-                                distances.map((distance, index) => {
-                                    return (
-                                        <PNTFResultsTable
-                                            info={info}
-                                            distance={distance}
-                                            results={results[distance]}
-                                            key={index}
-                                            show_title={distances.length > 1}
-                                            />
-                                    )
-                                })
-                            }
-                            { props.page === 'pntf-awards' &&
-                                distances.map((distance, index) => {
+                            { distances.map((distance, index) => {
                                     return (
                                         <PNTFAwardsTable
                                             info={info}
@@ -234,4 +283,4 @@ function PNTF(props: PageProps) {
     )
 }
 
-export default PNTF;
+export default TeamResults;

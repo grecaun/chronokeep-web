@@ -21,7 +21,7 @@ import Subscribe from './Pages/Subscribe';
 import Checkin from './Pages/Checkin';
 import PNTF from './Pages/PNTF';
 import YTP from './Pages/YTP';
-import Series from './Pages/Series';
+import SeriesPage from './Pages/Series';
 
 const router = createBrowserRouter([
   {
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/series/:slug/:year?',
-        element: <Series />
+        element: <SeriesPage />
       },
       {
         path: '/series/:slug/:year?/qr',

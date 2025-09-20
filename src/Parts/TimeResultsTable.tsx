@@ -10,7 +10,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
         let results = this.props.results;
         const distance = this.props.distance;
         const info = this.props.info;
-        const showTitle = this.props.showTitle;
+        const showTitle = this.props.show_title;
         const search = this.props.search;
         const sort_by = this.props.sort_by;
         const resMap = new Map<string, TimeResult>()
@@ -81,7 +81,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                     <thead>
                         {showTitle &&
                             <tr>
-                                <td className="table-distance-header text-important text-center" colSpan={10}>{distance}
+                                <td className="table-distance-header text-important text-center" colSpan={9}>{distance}
                                     { this.props.certification !== undefined &&
                                     <div className='chronokeep-certification'>Course Certification: {this.props.certification}</div>
                                     }

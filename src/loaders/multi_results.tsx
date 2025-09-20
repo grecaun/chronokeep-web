@@ -37,6 +37,10 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
                                 state.selected_year = year;
                             }
                         }
+                    } else {
+                        state.status = 404
+                        state.error = true
+                        state.message = "Not Found"
                     }
                 })
                 .catch(error => {
@@ -84,6 +88,10 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
                         state.error = true
                         console.error("There was an error!", error)
                     });
+            } else {
+                state.status = 404
+                state.error = true
+                state.message = "Not Found"
             }
             setState({
                 ...state
