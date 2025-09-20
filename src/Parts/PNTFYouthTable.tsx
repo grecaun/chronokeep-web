@@ -36,7 +36,7 @@ function YTPScoreTable(props: YTPTableProps) {
         // finally sort by ranking
         return a.ranking - b.ranking
     })
-    var ranking: number = 1
+    let ranking: number = 1
     const ageRanks: { [index: string]: number } = {}
     const gendRanks: { [index:string]: number } = {}
     sorted.map(result => {
@@ -84,7 +84,7 @@ function YTPScoreTable(props: YTPTableProps) {
                             if (result.age_ranking < 1) {
                                 arankStr = "";
                             } else {
-                                var suffix = ''
+                                let suffix = ''
                                 const rem = result.age_ranking % 10
                                 if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
                                     suffix = 'th'

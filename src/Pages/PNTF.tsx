@@ -27,7 +27,7 @@ function PNTF(props: PageProps) {
         slug: params.slug,
         year: state.year?.year
     }
-    var distances = Object.keys(state.results)
+    let distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
@@ -35,7 +35,7 @@ function PNTF(props: PageProps) {
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }
-                var gender: string
+                let gender: string
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
                 if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
@@ -48,11 +48,11 @@ function PNTF(props: PageProps) {
                     result.gender = "X"
                     gender = "Non-Binary"
                 }
-                var division = "Open"
+                let division = "Open"
                 if (result.age >= 40 && result.age < 130) {
                     division = "Masters"
                 }
-                var age_group = ""
+                let age_group = ""
                 if (result.age / 5 < 4) {
                     age_group = `${gender} Under 20`
                 } else if (result.age / 5 < 5) {
@@ -124,10 +124,10 @@ function PNTF(props: PageProps) {
             }
             return a.seconds - b.seconds;
         })
-        var place = 1;
-        var genderPlace: { [gend: string]: number } = {}
-        var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-        var divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        let place = 1;
+        const genderPlace: { [gend: string]: number } = {}
+        const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        const divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
         results[distance].map(result => {
             if (result.finish === true) {
                 result.ranking = place;

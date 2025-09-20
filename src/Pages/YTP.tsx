@@ -28,7 +28,7 @@ function YTP(props: PageProps) {
         slug: params.slug,
         year: state.year?.year
     }
-    var distances = Object.keys(state.results)
+    let distances = Object.keys(state.results)
     const results: { [index: string]: YTPTimeResult[] } = {}
     distances.map(distance => {
         state.results[distance].map(result => {
@@ -36,8 +36,8 @@ function YTP(props: PageProps) {
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }
-                var age_group = ""
-                var gender: string
+                let age_group = ""
+                let gender: string
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
                 if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {

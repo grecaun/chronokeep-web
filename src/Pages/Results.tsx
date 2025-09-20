@@ -4,7 +4,7 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
-import { EventYear, RankingType, ResultsParticipant, SmsSubscription, TimeResult } from '../Interfaces/types';
+import { EventYear, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
 import { ResultsState, SortByItem } from '../Interfaces/states';
@@ -34,16 +34,16 @@ function showModal(state: ResultsState, setState: React.Dispatch<React.SetStateA
     })
 }
 
-async function addSubscription(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, resetForm: any) {
+async function addSubscription(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, resetForm: () => void) {
     try {
         const success = await SendAddSmsSubscription(
-            state.event?.slug!,
-            state.year?.year!,
-            state.subscription?.bib!,
-            state.subscription?.first!,
-            state.subscription?.last!,
-            state.subscription?.phone!
-        )
+            state.event!.slug,
+            state.year!.year,
+            state.subscription!.bib,
+            state.subscription!.first,
+            state.subscription!.last,
+            state.subscription!.phone
+        ).catch().then()
         if (success === true) {
             hideModal(state, setState, true)
             resetForm()
@@ -55,11 +55,11 @@ async function addSubscription(state: ResultsState, setState: React.Dispatch<Rea
     }
 }
 
-async function removeSubscriptions(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, phone: string, resetForm: any) {
+async function removeSubscriptions(state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>>, phone: string, resetForm: () => void) {
     try {
         const success = await SendRemoveSmsSubscription(
-            state.event?.slug!,
-            state.year?.year!,
+            state.event!.slug,
+            state.year!.year,
             phone,
         )
         if (success === true) {
@@ -146,10 +146,9 @@ function Results() {
     }
 
     const handleChangeRanking = (e: React.ChangeEvent<HTMLInputElement>) => {
-        var rbc = e.target.checked
         setState({
             ...state,
-            rank_by_selected: rbc,
+            rank_by_selected: e.target.checked,
         })
     }
 
@@ -163,7 +162,7 @@ function Results() {
     const textAllowedTime = new Date(Date.parse(state.year!.date_time) + (1000 * 60 * 60 * 24 * state.year!.days_allowed))
     const nowDate = new Date(Date.now())
     const days_allowed = state.year?.days_allowed ?? 0;
-    var current_results = state.results;
+    let current_results = state.results;
     const age_groups: Set<string> = new Set<string>()
     distances.map(distance => {
         state.results[distance].map(result => {
@@ -182,7 +181,7 @@ function Results() {
         const twoStart: number = +g2.split('-')[0]
         return oneStart - twoStart
     })
-    var cur_value = 3;
+    let cur_value = 3;
     const age_group_map: Map<number, string> = new Map<number, string>()
     sorted_age_groups.map(age_group => {
         const new_option = { value: cur_value, label: `Show Only: ${age_group}` }
@@ -190,7 +189,9 @@ function Results() {
         cur_value++
         options.push(new_option)
     })
-    var ranking_checkbox_text = "Rank by Chip Time"
+    const segment_map: Map<string, Segment> = new Map<string, Segment>();
+    // Get segments and insert into map
+    let ranking_checkbox_text = "Rank by Chip Time"
     if (state.default_ranking_type === RankingType.Chip) {
         ranking_checkbox_text = "Rank by Clock Time"
     }
@@ -251,9 +252,9 @@ function Results() {
                     // larger is better and should come first
                     return b.occurence - a.occurence;
                 });
-                var place = 1;
-                var genderPlace: { [gend: string]: number } = {}
-                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                let place = 1;
+                const genderPlace: { [gend: string]: number } = {}
+                const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
                 current_results[distance].map(result => {
                     // verify it's a finish result and it isn't DNF/DNF/DNS
                     if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
@@ -336,9 +337,9 @@ function Results() {
                     // larger is better and should come first
                     return b.occurence - a.occurence;
                 });
-                var place = 1;
-                var genderPlace: { [gend: string]: number } = {}
-                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                let place = 1;
+                const genderPlace: { [gend: string]: number } = {}
+                const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
                 current_results[distance].map(result => {
                     // verify it's a finish result and it isn't DNF/DNF/DNS
                     if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
@@ -408,9 +409,9 @@ function Results() {
                     }
                     return a.chip_seconds - b.chip_seconds;
                 });
-                var place = 1;
-                var genderPlace: { [gend: string]: number } = {}
-                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                let place = 1;
+                const genderPlace: { [gend: string]: number } = {}
+                const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
                 current_results[distance].map(result => {
                     // verify it's a finish result and it isn't DNF/DNF/DNS
                     if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
@@ -478,9 +479,9 @@ function Results() {
                     }
                     return a.seconds - b.seconds;
                 });
-                var place = 1;
-                var genderPlace: { [gend: string]: number } = {}
-                var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+                let place = 1;
+                const genderPlace: { [gend: string]: number } = {}
+                const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
                 current_results[distance].map(result => {
                     // verify it's a finish result and it isn't DNF/DNF/DNS
                     if (result.finish === true && result.type !== 3 && result.type !== 30 && result.type !== 31) {
@@ -521,7 +522,7 @@ function Results() {
             }
         })
     }
-    var disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun)
+    let disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun)
         || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip)
         ? "*Results are ranked based upon the Chip Time and not the Clock Time."
         : "*Results are ranked based upon the Clock Time and not the Chip Time.";
@@ -577,7 +578,7 @@ function Results() {
                                     id="sms-modal"
                                     show={state.show_sms_modal}
                                     handleClose={() => { hideModal(state, setState, false) }}
-                                    save={() => { addSubscription(state, setState, resetForm)} }
+                                    save={() => { void addSubscription(state, setState, resetForm) } }
                                     title="Warning"
                                     text="By subscribing to text alerts for this participant you acknowledge that you are the owner of this phone number or authorized on their behalf to consent to receive sms messages. Standard messaging rates apply."
                                     saveText="Subscribe"
@@ -599,7 +600,7 @@ function Results() {
                                         filterOptions={filterOptions}
                                         getOptionLabel={option => `${option.first} ${option.last}`}
                                         onChange={(_e, value) => {
-                                            setFieldValue(
+                                            void setFieldValue(
                                                 "part_id",
                                                 value !== null ? value : initialValues.part_id
                                             );
@@ -716,6 +717,7 @@ function Results() {
                                                                 || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
+                                                segment_map={segment_map}
                                                 />
                                         )
                                     } else if (state.event!.type === "backyardultra") {
@@ -732,6 +734,7 @@ function Results() {
                                                                 || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
+                                                segment_map={segment_map}
                                                 />
                                         )
                                     } else {
@@ -748,6 +751,7 @@ function Results() {
                                                                 || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
+                                                segment_map={segment_map}
                                                 />
                                         )
                                     }
@@ -780,7 +784,7 @@ function Results() {
                             unsubscribe_success: false,
                             unsubscribe_error: false,
                         })
-                        removeSubscriptions(state, setState, phone, resetForm)
+                        void removeSubscriptions(state, setState, phone, resetForm)
                     }}
                     validationSchema={Yup.object().shape({
                         phone: Yup.string().matches(phoneRegex, 'Phone number not valid. 10 digits expected. Ex: 123-555-1234 1235551234 etc.').required('Phone number is required.')

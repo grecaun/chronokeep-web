@@ -44,7 +44,7 @@ const FormatTime = (seconds: number, milliseconds: number, result: TimeResult, n
 }
 
 export const FormatPace = (seconds: number) => {
-    let minutes = Math.floor(seconds / 60).toString();
+    const minutes = Math.floor(seconds / 60).toString();
     let sec = (seconds % 60).toString();
     // Change seconds into a string starting with 0 if its less than 10, i.e. 09
     sec = Number(sec) < 10 ? `0${sec}`.toString() : sec;
@@ -53,14 +53,14 @@ export const FormatPace = (seconds: number) => {
 
 export const FormatAltPace = (seconds: number, distance: string) => {
     if (distance === "km") {
-        let translatedSeconds = Math.floor(seconds * 1.609344);
-        let minutes = Math.floor(translatedSeconds / 60).toString();
+        const translatedSeconds = Math.floor(seconds * 1.609344);
+        const minutes = Math.floor(translatedSeconds / 60).toString();
         let sec = (translatedSeconds % 60).toString();
         sec = Number(sec) < 10 ? `0${sec}`.toString() : sec;
         return (`${minutes}:${sec} / mi`);
     } else if (distance === "mi") {
-        let translatedSeconds = Math.floor(seconds * 0.6213712);
-        let minutes = Math.floor(translatedSeconds / 60).toString();
+        const translatedSeconds = Math.floor(seconds * 0.6213712);
+        const minutes = Math.floor(translatedSeconds / 60).toString();
         let sec = (translatedSeconds % 60).toString();
         sec = Number(sec) < 10 ? `0${sec}`.toString() : sec;
         return (`${minutes}:${sec} / km`);

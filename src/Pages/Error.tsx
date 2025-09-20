@@ -5,6 +5,7 @@ import Footer from "../Parts/Footer";
 
 function Error() {
     const err = useRouteError();
+    const location = useLocation();
     if (isRouteErrorResponse(err)) {
         document.title = `Chronokeep - Error`
         let msg: string = err.statusText;
@@ -14,7 +15,6 @@ function Error() {
                 msg = data.message;
             }
         }
-        const location = useLocation();
         const pageName = location.pathname.split("/")[1];
         return (
             <div>

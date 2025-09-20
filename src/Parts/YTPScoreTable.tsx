@@ -31,8 +31,8 @@ function YTPScoreTable(props: YTPTableProps) {
         })
     }
 
-    var overall_win: number
-    var overall_f_win: number
+    let overall_win: number
+    let overall_f_win: number
     const prev_participants: { [index: string]: boolean } = {}
     results.map(result => {
         if (state.prev_standings[`${result.first} ${result.last}`] !== undefined) {
@@ -115,7 +115,7 @@ function YTPScoreTable(props: YTPTableProps) {
         // Finally those who participated in a previous race
         return b.highest_score - a.highest_score
     })
-    var ranking: number = 1
+    let ranking: number = 1
     const ageRanks: { [index: string]: number } = {}
     const gendRanks: { [index:string]: number } = {}
     const ageResults: { [index: string]: YTPTimeResult[] } = {}

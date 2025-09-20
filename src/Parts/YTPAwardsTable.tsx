@@ -4,7 +4,7 @@ import { YTPTimeResult } from '../Interfaces/types';
 import FormatTime from './FormatTime';
 
 function YTPAwardsTable(props: YTPTableProps) {
-    let results = props.results;
+    const results = props.results;
     const distance = props.distance;
     const info = props.info;
     const showTitle = props.showTitle;
@@ -14,7 +14,7 @@ function YTPAwardsTable(props: YTPTableProps) {
         }
         return a.seconds - b.seconds
     })
-    var ranking: number = 1
+    let ranking: number = 1
     const ageRanks: { [index: string]: number } = {}
     const gendRanks: { [index: string]: number } = {}
     const ageResults: { [index: string]: YTPTimeResult[] } = {}

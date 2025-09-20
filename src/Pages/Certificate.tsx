@@ -19,7 +19,7 @@ function Certificate() {
 
     const name: string = `${state.person.first} ${state.person.last}`;
     let event: string = `${state.year.year} ${state.event.name}`;
-    let certificate: string = state.cert_distance != null ? state.cert_distance.certification : '';
+    const certificate: string = state.cert_distance != null ? state.cert_distance.certification : '';
     if (state.single_distance === false) {
         event = `${state.year.year} ${state.event.name} ${state.person.distance}`;
     }
@@ -69,7 +69,7 @@ export function CertificateGenerator(
         <div>
             { displayCert === false &&
                 <div className="mx-auto fit-width mt-3">
-                    <button className="btn btn-danger btn-chronokeep" onClick={downloadImage}>Download Finisher Certificate</button>
+                    <button className="btn btn-danger btn-chronokeep" onClick={void downloadImage}>Download Finisher Certificate</button>
                 </div>
             }
             <div className="mx-auto fit-width">

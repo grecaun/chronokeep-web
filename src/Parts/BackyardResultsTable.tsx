@@ -12,10 +12,10 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         const info = this.props.info;
         const showTitle = this.props.showTitle;
         const search = this.props.search;
-        var sort_by = this.props.sort_by;
+        let sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
         const rank_by_chip = this.props.rank_by_selected;
-        var only_age_group = ""
+        let only_age_group = ""
         if (sort_by > 2) {
             sort_by = 1;
             const tmp = this.props.age_group_map.get(this.props.sort_by)
@@ -23,7 +23,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
                 only_age_group = tmp
             }
         }
-        var maxStart = 0;
+        let maxStart = 0;
         results.forEach(res => {
             if (res.occurence % 2 === 1 && maxStart < res.occurence - 1) {
                 maxStart = res.occurence - 1;

@@ -55,8 +55,8 @@ function Person() {
     segments.sort((a, b) => {
         return a.distance_value - b.distance_value;
     })
-    let latestResult: TimeResult | null = results.length > 0 ? results[results.length-1] : null;
-    let prevResult: TimeResult | null = results.length > 1 ? results[results.length-2] : start ?? null;
+    const latestResult: TimeResult | null = results.length > 0 ? results[results.length-1] : null;
+    const prevResult: TimeResult | null = results.length > 1 ? results[results.length-2] : start ?? null;
     let prevSegment: Segment | null = null;
     let curSegment: Segment | null = null;
     let nextSegment: Segment | null = null;
@@ -110,7 +110,7 @@ function Person() {
 
     // Difference between paces. Runners usually slow down so this will be a positive value,
     // if they make a negative split then this will be negative.
-    let paceDiff = segmentPace - overallPace;
+    const paceDiff = segmentPace - overallPace;
     // estimated time to next (segment pace & segment pace + segment/overall pace diff)
     let estimatedNext: Date | null = null;
     let estimatedNextChip = "";

@@ -20,12 +20,12 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                 .then(data => {
                     const rows = data.split('\n');
                     const headers = rows[0].split(',');
-                    var first_ix = -1;
-                    var last_ix = -1;
-                    var old_ix = -1;
-                    var seward_ix = -1;
-                    var tiger_ix = -1;
-                    var category_ix = -1;
+                    let first_ix = -1;
+                    let last_ix = -1;
+                    let old_ix = -1;
+                    let seward_ix = -1;
+                    let tiger_ix = -1;
+                    let category_ix = -1;
                     for (let i = 0; i < headers.length; i++) {
                         const head = headers[i].trim().toLocaleLowerCase()
                         if (head === "first") {
@@ -50,7 +50,7 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                             const seward = seward_ix >= 0 ? +columns[seward_ix] : 0;
                             const category = category_ix >= 0 ? columns[category_ix] : "YTP Unknown 0-140"
                             const splitCategory = category.split(' ')
-                            var gender = ""
+                            let gender = ""
                             if (splitCategory[1] !== undefined) {
                                 if (splitCategory[1] === "Female") {
                                     gender = "F"
@@ -60,8 +60,8 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                                     gender = "X"
                                 }
                             }
-                            var age = 140
-                            var age_group = ""
+                            let age = 140
+                            let age_group = ""
                             if (splitCategory[2] !== undefined) {
                                 age_group = `${splitCategory[1]} ${splitCategory[2]}`.trim()
                                 if (splitCategory[2].startsWith('8')) {

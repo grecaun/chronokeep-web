@@ -1,5 +1,5 @@
 import KeyInfo from "../Parts/KeyInfo";
-import { Account, Event, EventYear, Key, Participant, TimeResult, YTPTimeResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, Segment, TimeResult, YTPTimeResult } from "./types";
 import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
@@ -74,6 +74,7 @@ export interface ResultsTableProps {
     rank_by_selected: boolean
     age_group_map: Map<number, string>
     certification: string | undefined
+    segment_map: Map<string, Segment>
 }
 
 export interface CheckinRowProps {

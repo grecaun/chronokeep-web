@@ -12,7 +12,7 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
         const showTitle = this.props.showTitle;
         const divisionResults: { [index: string]: TimeResult[] } = {}
         results.map(result => {
-            var gender = ''
+            let gender = ''
             if (result.gender === 'Woman' || result.gender === 'F' || result.gender === 'W' || result.gender === 'Female') {
                 gender = "Women's"
             } else if (result.gender === 'Man' || result.gender === 'M' || result.gender === 'Male') {
@@ -42,7 +42,7 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
             "Non-Binary Open",
             "Non-Binary Masters",
         ]
-        for (var i=0; i<=5; i+=2) {
+        for (let i=0; i<=5; i+=2) {
             if (divisionResults[divisions[i]] !== undefined && divisionResults[divisions[i+1]] !== undefined) {
                 while (divisionResults[divisions[i]].length < 5 && divisionResults[divisions[i+1]].length > 5) {
                     const missing_ix = divisionResults[divisions[i]].length

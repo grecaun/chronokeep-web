@@ -55,8 +55,8 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["W"] && genderResults["W"].length &&
                             genderResults["W"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                var rankStr = result.gender_ranking.toString()
-                                var dRankStr = result.division_ranking.toString()
+                                let rankStr = result.gender_ranking.toString()
+                                let dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
                                     dRankStr = "";
                                 }
@@ -72,7 +72,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (result.division === "Open" || result.division === "Youth") {
                                     dRankStr = "";
                                 }
-                                var suffix = ''
+                                let suffix = ''
                                 const rem = result.age_ranking % 10
                                 if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
                                     suffix = 'th'
@@ -83,7 +83,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 } else if (rem === 3) {
                                     suffix = 'rd'
                                 }
-                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                let ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
                                 const ageGroupSplit = result.age_group.split(' ')
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
@@ -114,8 +114,8 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["M"] && genderResults["M"].length &&
                             genderResults["M"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                var rankStr = result.gender_ranking.toString()
-                                var dRankStr = result.division_ranking.toString()
+                                let rankStr = result.gender_ranking.toString()
+                                let dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
                                     dRankStr = "";
                                 }
@@ -131,7 +131,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (result.division === "Open" || result.division === "Youth") {
                                     dRankStr = "";
                                 }
-                                var suffix = ''
+                                let suffix = ''
                                 const rem = result.age_ranking % 10
                                 if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
                                     suffix = 'th'
@@ -142,7 +142,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 } else if (rem === 3) {
                                     suffix = 'rd'
                                 }
-                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                let ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
                                 const ageGroupSplit = result.age_group.split(' ')
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`
@@ -173,8 +173,8 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         { genderResults["X"] && genderResults["X"].length &&
                             genderResults["X"].map(result => {
                                 // Use variables for displaying rank strings so we can hide if not a finish time
-                                var rankStr = result.gender_ranking.toString()
-                                var dRankStr = result.division_ranking.toString()
+                                let rankStr = result.gender_ranking.toString()
+                                let dRankStr = result.division_ranking.toString()
                                 if (result.age_ranking < 1) {
                                     dRankStr = "";
                                 }
@@ -190,7 +190,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 if (result.division === "Open" || result.division === "Youth") {
                                     dRankStr = "";
                                 }
-                                var suffix = ''
+                                let suffix = ''
                                 const rem = result.age_ranking % 10
                                 if (result.age_ranking === 11 || result.age_ranking === 12 || result.age_ranking === 13 || (rem !== 1 && rem !== 2 && rem !== 3)) {
                                     suffix = 'th'
@@ -201,7 +201,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 } else if (rem === 3) {
                                     suffix = 'rd'
                                 }
-                                var ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
+                                let ageGroupRanking = `${result.age_ranking}${suffix} ${result.age_group}`
                                 const ageGroupSplit = result.age_group.split(' ')
                                 if (ageGroupSplit.length > 1) {
                                     ageGroupRanking = `${result.age_ranking}${suffix} ${ageGroupSplit[1]}`

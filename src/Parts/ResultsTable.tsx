@@ -11,10 +11,11 @@ class ResultsTable extends Component<ResultsTableProps> {
         const info = this.props.info;
         const showTitle = this.props.showTitle;
         const search = this.props.search;
-        var sort_by = this.props.sort_by;
+        let sort_by = this.props.sort_by;
         const resMap: Map<string, TimeResult> = new Map();
+        const segMap = this.props.segment_map;
         const rank_by_chip = this.props.rank_by_selected;
-        var only_age_group = ""
+        let only_age_group = ""
         if (sort_by > 2) {
             sort_by = 1;
             const tmp = this.props.age_group_map.get(this.props.sort_by)
@@ -70,12 +71,30 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (!a.finish && b.finish) {
                 return 1;
             }
+            const aSeg = a.segment.trim();
+            const bSeg = b.segment.trim();
             // propogate start times below other results (but not below DNS/DNF)
-            if (a.segment.trim() === "Start" && b.segment.trim() !== "Start") {
+            if (aSeg === "Start" && bSeg !== "Start") {
                 return 1;
             }
-            if (a.segment.trim() !== "Start" && b.segment.trim() === "Start") {
+            if (aSeg !== "Start" && bSeg === "Start") {
                 return -1;
+            }
+            // if segments are defined and they have numeric values then sort by that distance value
+            if (segMap.has(aSeg) && segMap.has(bSeg)) {
+                const aSegDist = segMap.get(aSeg)!.distance_value;
+                const bSegDist = segMap.get(bSeg)!.distance_value;
+                if (aSegDist > 0 || bSegDist > 0) {
+                    return bSegDist - aSegDist;
+                }
+            }
+            // Workaround for the API not giving segments when giving results.
+            if (a.ranking == b.ranking && aSeg !== "Start" && bSeg !== "Start") {
+                // Rank later results at the same ranking as higher values.
+                if (a.seconds == b.seconds) {
+                    return b.milliseconds - a.milliseconds;
+                }
+                return b.seconds - a.seconds;
             }
             // sort by occurrence again! only if the location is the same this time though
             // the occurrence being higher doesn't always indicate that the runner is ahead of another runner

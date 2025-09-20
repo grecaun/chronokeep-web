@@ -100,7 +100,7 @@ class LinkedAccounts extends Component<LinkedAccountsProps, LinkedAccountsState>
                                         <div className="chronokeep-linked-account-name chronokeep-label align-items-center col-auto m-2">{account.name}</div>
                                         <div className="col-auto align-items-center text-center m-0">
                                             <button className="btn btn-danger btn-chronokeep" onClick={() => {
-                                                userService.removeLinkedAccount(account.email);
+                                                void userService.removeLinkedAccount(account.email);
                                                 const newAccounts: Account[] = []
                                                 accounts.map(a => {
                                                     if (a.email != account.email) {

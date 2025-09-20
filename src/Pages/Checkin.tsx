@@ -49,7 +49,7 @@ function Checkin() {
     }
     document.title = `Chronokeep - ${state.year!.year} ${state.event!.name} Check-in`
     const distances = new Set<string>();
-    const participants = state.participants.filter((part, _index) => state.search.length < 1 || part.first.toLocaleLowerCase().indexOf(state.search) >=0 || part.last.toLocaleLowerCase().indexOf(state.search) >=0);
+    const participants = state.participants.filter(part => state.search.length < 1 || part.first.toLocaleLowerCase().indexOf(state.search) >=0 || part.last.toLocaleLowerCase().indexOf(state.search) >=0);
     for (let i=0; i<state.participants.length; i++) {
         distances.add(state.participants[i].distance)
     }
