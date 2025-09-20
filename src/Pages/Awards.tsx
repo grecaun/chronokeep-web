@@ -7,6 +7,7 @@ import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { AwardsState } from '../Interfaces/states';
 import { ResultsLoader } from '../loaders/results';
+import { Segment } from '../Interfaces/types';
 
 function pushHistory(state: AwardsState, setSearchParams: SetURLSearchParams): void {
     setSearchParams(params => {
@@ -86,6 +87,7 @@ export default function Awards() {
         masters: (searchParams.get("mas")) === "true"
     });
     const age_group_map: Map<number, string> = new Map<number, string>();
+    const segment_map: Map<string, Segment> = new Map<string, Segment>();
     useEffect(() => {
         pushHistory(awardsState, setSearchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -223,6 +225,7 @@ export default function Awards() {
                                             rank_by_selected={state.rank_by_selected}
                                             age_group_map={age_group_map}
                                             certification={undefined}
+                                            segment_map={segment_map}
                                             />
                                     )
                                 } else {
@@ -243,6 +246,7 @@ export default function Awards() {
                                             rank_by_selected={state.rank_by_selected}
                                             age_group_map={age_group_map}
                                             certification={undefined}
+                                            segment_map={segment_map}
                                             />
                                     )
                                 }
