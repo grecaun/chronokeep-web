@@ -135,7 +135,7 @@ function SeriesPage() {
                     }
                     return a.results.get(yearDistKey)!.ranking - b.results.get(yearDistKey)!.ranking
                 })
-                var ranking: number = 1
+                let ranking: number = 1
                 seriesResults[name].map(res => {
                     if (res.results.has(yearDistKey)) {
                         res.results.get(yearDistKey)!.ranking = ranking
@@ -159,7 +159,7 @@ function SeriesPage() {
                 paces.sort((a,b) => { return a - b })
                 // ensure they've completed enough races to count
                 if (seriesByName.has(name) && (rankings.length >= seriesByName.get(name)!.best || paces.length >= seriesByName.get(name)!.best)) {
-                    for (var i=0; i<seriesByName.get(name)!.best; i++) {
+                    for (let i=0; i<seriesByName.get(name)!.best; i++) {
                         res.series_points += rankings[i]
                         res.average_pace += paces[i]
                     }
@@ -173,9 +173,9 @@ function SeriesPage() {
                 }
                 return a.series_points - b.series_points
             })
-            var ranking: number = 1;
-            var gender_ranking: Map<string, number> = new Map<string, number>()
-            var age_ranking: Map<string, number> = new Map<string, number>()
+            let ranking: number = 1;
+            const gender_ranking: Map<string, number> = new Map<string, number>()
+            const age_ranking: Map<string, number> = new Map<string, number>()
             seriesResults[name].map(result => {
                 if (!gender_ranking.has(result.gender)) {
                     gender_ranking.set(result.gender, 1)

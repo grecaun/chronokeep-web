@@ -44,8 +44,8 @@ class SeriesResultsTable extends Component<SeriesResultsTableProps> {
                             <th className="overflow-hidden-sm col-sm text-center">Gender</th>
                             <th className="overflow-hidden-sm col-md text-center">Age Grp</th>
                             { distances && distances.map(distance => {
-                                var splitDist = distance.split(' ')
-                                var dist = distance
+                                const splitDist = distance.split(' ')
+                                let dist = distance
                                 if (splitDist.length > 2) {
                                     dist = `${splitDist[1]} ${splitDist[2]}`
                                 } else if (splitDist.length > 1) {
@@ -107,7 +107,7 @@ class SeriesResultsTable extends Component<SeriesResultsTableProps> {
                                         <td className="overflow-hidden-sm text-center">{grankStr.length > 0 ? `${grankStr} ${result.gender}` : grankStr}</td>
                                         <td className="overflow-hidden-sm text-center">{arankStr.length > 0 ? `${arankStr} ${result.gender} ${result.age_group}` : arankStr}</td>
                                         { distances && distances.map(distance => {
-                                            var visibleStr = ''
+                                            let visibleStr = ''
                                             if (result.results.has(distance)) {
                                                 const res = result.results.get(distance)!
                                                 visibleStr = `${res.ranking} - ${FormatPace(res.division_ranking)}/${res.division}`
