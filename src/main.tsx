@@ -22,6 +22,7 @@ import Checkin from './Pages/Checkin';
 import PNTF from './Pages/PNTF';
 import YTP from './Pages/YTP';
 import SeriesPage from './Pages/Series';
+import TeamResults from './Pages/TeamResults';
 
 const router = createBrowserRouter([
   {
@@ -128,6 +129,14 @@ const router = createBrowserRouter([
       {
         path: '/pntf-youth/:slug/:year?/qr',
         element: <QRCode page='pntf-youth' />
+      },
+      {
+        path: '/team-results/:slug/:year?',
+        element: <TeamResults />
+      },
+      {
+        path: '/team-results/:slug/:year?/qr',
+        element: <QRCode page='team-results' />
       },
       {
         path: '/remote/login',

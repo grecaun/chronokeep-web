@@ -39,6 +39,8 @@ function QRCode(props: PageProps) {
         pageType = "YTP Series"
     } else if (state.page === "pntf-youth") {
         pageType = "PNTF Youth Championship Results"
+    } else if (state.page === "team-results") {
+        pageType = "Team Results"
     }
     document.title = `Chronokeep - ${codeName} QRCode`;
     return (

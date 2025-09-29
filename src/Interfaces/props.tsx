@@ -1,5 +1,5 @@
 import KeyInfo from "../Parts/KeyInfo";
-import { Account, Event, EventYear, Key, Participant, SeriesResult, Segment, TimeResult, YTPTimeResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, SeriesResult, Segment, TimeResult, YTPTimeResult, TeamResult } from "./types";
 import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
@@ -59,6 +59,14 @@ export interface YTPTableProps {
     info: { slug: string | undefined, year: string | undefined }
     distance: string
     results: YTPTimeResult[]
+    key: number
+    show_title: boolean
+}
+
+export interface TeamResultTableProps {
+    info: { slug: string | undefined, year: string | undefined }
+    distance: string
+    results: TeamResult[]
     key: number
     show_title: boolean
 }

@@ -3,8 +3,8 @@ import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams } from 'react-router-dom';
 import { ResultsLoader } from '../loaders/results';
-import { TimeResult } from '../Interfaces/types';
-import PNTFAwardsTable from '../Parts/PNTFAwardsTable';
+import { TeamResult, TimeResult } from '../Interfaces/types';
+import TeamResultsTable from '../Parts/TeamResultsTable';
 
 function TeamResults() {
     const params = useParams();
@@ -25,7 +25,7 @@ function TeamResults() {
         slug: params.slug,
         year: state.year?.year
     }
-    var distances = Object.keys(state.results)
+    let distances = Object.keys(state.results)
     const results: { [index: string]: TimeResult[] } = {}
     const teamResults: { [index: string]: { [index: string]: TimeResult[] } } = {}
     const teamCount: {  [index: string]: { [index:string]: { members: number, women: number } } } = {}
@@ -87,22 +87,22 @@ function TeamResults() {
         results[distance].sort((a,b) => {
             return a.ranking - b.ranking;
         })
-        var place = 1;
-        var genderPlace: { [gend: string]: number } = {}
-        var ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-        var divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        let ranking = 1;
+        const genderPlace: { [gend: string]: number } = {}
+        const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
+        const divisionPlace: { [age_group: string]: { [gend: string]: number } } = {}
         results[distance].map(result => {
             // Limit rankings to only teams with at least 4 finishers, 2 of which must be women
             if (teamCount[distance] !== undefined && teamCount[distance][result.division] !== undefined &&
                 teamCount[distance][result.division].members >= 4 && teamCount[distance][result.division].women >= 2) {
-                result.ranking = place;
-                place = place + 1;
+                result.ranking = ranking;
+                ranking += 1;
                 if (genderPlace[result.gender] === undefined) {
                     result.gender_ranking = 1;
                     genderPlace[result.gender] = 2;
                 } else {
                     result.gender_ranking = genderPlace[result.gender];
-                    genderPlace[result.gender] = genderPlace[result.gender] + 1;
+                    genderPlace[result.gender] += 1;
                 }
                 if (ageGroupPlace[result.age_group] === undefined) {
                     result.age_ranking = 1;
@@ -113,7 +113,7 @@ function TeamResults() {
                     ageGroupPlace[result.age_group][result.gender] = 2;
                 } else {
                     result.age_ranking = ageGroupPlace[result.age_group][result.gender];
-                    ageGroupPlace[result.age_group][result.gender] = ageGroupPlace[result.age_group][result.gender] + 1;
+                    ageGroupPlace[result.age_group][result.gender] += 1;
                 }
                 if (divisionPlace[result.division] === undefined) {
                     result.division_ranking = 1
@@ -124,7 +124,7 @@ function TeamResults() {
                     divisionPlace[result.division][result.gender] = 2
                 } else {
                     result.division_ranking = divisionPlace[result.division][result.gender]
-                    divisionPlace[result.division][result.gender] = divisionPlace[result.division][result.gender] + 1
+                    divisionPlace[result.division][result.gender] += 1
                 }
                 if (teamResults[distance] === undefined) {
                     teamResults[distance] = {}
@@ -160,24 +160,8 @@ function TeamResults() {
             }
         })
     })
-    const teamPoints: {  [index: string]:
-                        { [index:string]:
-                            { ranking: number,
-                                points: number,
-                                firstWoman: TimeResult | undefined,
-                                secondWoman: TimeResult | undefined,
-                                thirdResult: TimeResult | undefined,
-                                fourthResult: TimeResult | undefined }
-                            }
-                        } = {}
-    const teamPlacements: {  [index: string]:
-                            { ranking: number,
-                                points: number,
-                                firstWoman: TimeResult | undefined,
-                                secondWoman: TimeResult | undefined,
-                                thirdResult: TimeResult | undefined,
-                                fourthResult: TimeResult | undefined }[]
-                        } = {}
+    const teamPoints: { [index: string]: { [index:string]: TeamResult } } = {}
+    const teamPlacements: { [index: string]: TeamResult[]} = {}
     distances.map(distance => {
         teamPoints[distance] = {}
         teamPlacements[distance] = []
@@ -185,6 +169,7 @@ function TeamResults() {
         teams.map(team => {
             teamPoints[distance][team] =
             {
+                name: team,
                 ranking: 0,
                 points: 0,
                 firstWoman: undefined,
@@ -208,23 +193,6 @@ function TeamResults() {
                 }
             })
             teamPlacements[distance].push(teamPoints[distance][team])
-        })
-        teamPlacements[distance].sort((a,b) => {
-            if (a.firstWoman !== undefined && a.secondWoman !== undefined && a.thirdResult && a.fourthResult &&
-                b.firstWoman !== undefined && b.secondWoman !== undefined && b.thirdResult && b.fourthResult) {
-                return a.points - b.points
-            }
-            if (a.firstWoman !== undefined && a.secondWoman !== undefined && a.thirdResult && a.fourthResult) {
-                return 1
-            }
-            return -1
-        })
-        var place = 1
-        teamPlacements[distance].map(teamPlace => {
-            if (teamPlace.firstWoman !== undefined && teamPlace.secondWoman !== undefined && teamPlace.thirdResult && teamPlace.fourthResult) {
-                teamPlace.ranking = place
-                place += 1
-            }
         })
     })
     const pageSubTitle = 'Team Rankings'
@@ -256,10 +224,10 @@ function TeamResults() {
                         <div id="results-parent">
                             { distances.map((distance, index) => {
                                     return (
-                                        <PNTFAwardsTable
+                                        <TeamResultsTable
                                             info={info}
                                             distance={distance}
-                                            results={results[distance]}
+                                            results={teamPlacements[distance]}
                                             key={index}
                                             show_title={distances.length > 1}
                                             />

@@ -52,6 +52,16 @@ export interface YTPTimeResult extends TimeResult {
     seward_score: number
 }
 
+export interface TeamResult {
+    name: string
+    ranking: number
+    points: number
+    firstWoman: TimeResult | undefined
+    secondWoman: TimeResult | undefined
+    thirdResult: TimeResult | undefined
+    fourthResult: TimeResult | undefined
+}
+
 export interface Key {
     name: string
     value: string
