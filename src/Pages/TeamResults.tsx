@@ -49,7 +49,6 @@ function TeamResults() {
                 } else {
                     result.gender = "X"
                 }
-                teamCount[result.division].women
                 if (results[distance] === undefined) {
                     results[distance] = []
                 }

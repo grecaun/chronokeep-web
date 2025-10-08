@@ -34,12 +34,12 @@ function TeamResultsTable(props: TeamResultTableProps) {
                 <thead>
                     { showTitle &&
                     <tr>
-                        <th className="table-distance-header text-important text-center" colSpan={10}>{distance}</th>
+                        <th className="table-distance-header text-important text-center" colSpan={7}>{distance}</th>
                     </tr>
                     }
                     <tr>
                         <th className="col-sm text-center">Place</th>
-                        <th className="col-xl">Team Name</th>
+                        <th className="col-lg">Team Name</th>
                         <th className="col-sm text-center">Points</th>
                         <th className="overflow-hidden-sm col-md text-center">1 W</th>
                         <th className="overflow-hidden-sm col-md text-center">2 W</th>
@@ -47,19 +47,21 @@ function TeamResultsTable(props: TeamResultTableProps) {
                         <th className="overflow-hidden-sm col-md text-center">4</th>
                     </tr>
                 </thead>
-                { sorted.map(result => {
-                    return(
-                        <tr key={result.ranking}>
-                            <td className="text-center">{result.ranking}</td>
-                            <td>{result.name}</td>
-                            <td className="text-center">{result.points}</td>
-                            <td className="overflow-hidden-sm text-center">{`${result.firstWoman?.first} ${result.firstWoman?.last} - ${result.firstWoman?.ranking}`}</td>
-                            <td className="overflow-hidden-sm text-center">{`${result.secondWoman?.first} ${result.secondWoman?.last} - ${result.secondWoman?.ranking}`}</td>
-                            <td className="overflow-hidden-sm text-center">{`${result.thirdResult?.first} ${result.thirdResult?.last} - ${result.thirdResult?.ranking}`}</td>
-                            <td className="overflow-hidden-sm text-center">{`${result.fourthResult?.first} ${result.fourthResult?.last} - ${result.fourthResult?.ranking}`}</td>
-                        </tr>
-                    )
-                })}
+                <tbody>
+                    { sorted.map(result => {
+                        return(
+                            <tr key={result.ranking}>
+                                <td className="text-center">{result.ranking}</td>
+                                <td>{result.name}</td>
+                                <td className="text-center">{result.points}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.firstWoman?.first} ${result.firstWoman?.last} - ${result.firstWoman?.ranking}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.secondWoman?.first} ${result.secondWoman?.last} - ${result.secondWoman?.ranking}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.thirdResult?.first} ${result.thirdResult?.last} - ${result.thirdResult?.ranking}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.fourthResult?.first} ${result.fourthResult?.last} - ${result.fourthResult?.ranking}`}</td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
             </table>
         </div>
     )
