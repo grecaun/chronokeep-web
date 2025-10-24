@@ -1,5 +1,6 @@
 import { TeamResultTableProps } from '../Interfaces/props';
 import { TeamResult } from '../Interfaces/types';
+import FormatTime from './FormatTime';
 
 function TeamResultsTable(props: TeamResultTableProps) {
     const results = props.results;
@@ -54,10 +55,10 @@ function TeamResultsTable(props: TeamResultTableProps) {
                                 <td className="text-center">{result.ranking}</td>
                                 <td>{result.name}</td>
                                 <td className="text-center">{result.points}</td>
-                                <td className="overflow-hidden-sm text-center">{`${result.firstWoman?.first} ${result.firstWoman?.last} - ${result.firstWoman?.ranking}`}</td>
-                                <td className="overflow-hidden-sm text-center">{`${result.secondWoman?.first} ${result.secondWoman?.last} - ${result.secondWoman?.ranking}`}</td>
-                                <td className="overflow-hidden-sm text-center">{`${result.thirdResult?.first} ${result.thirdResult?.last} - ${result.thirdResult?.ranking}`}</td>
-                                <td className="overflow-hidden-sm text-center">{`${result.fourthResult?.first} ${result.fourthResult?.last} - ${result.fourthResult?.ranking}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.firstWoman?.first} ${result.firstWoman?.last} - ${result.firstWoman?.ranking}`}<br/>{`${FormatTime(result.firstWoman!.seconds, result.firstWoman!.milliseconds, result.firstWoman!)}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.secondWoman?.first} ${result.secondWoman?.last} - ${result.secondWoman?.ranking}`}<br/>{`${FormatTime(result.secondWoman!.seconds, result.secondWoman!.milliseconds, result.secondWoman!)}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.thirdResult?.first} ${result.thirdResult?.last} - ${result.thirdResult?.ranking}`}<br/>{`${FormatTime(result.thirdResult!.seconds, result.thirdResult!.milliseconds, result.thirdResult!)}`}</td>
+                                <td className="overflow-hidden-sm text-center">{`${result.fourthResult?.first} ${result.fourthResult?.last} - ${result.fourthResult?.ranking}`}<br/>{`${FormatTime(result.fourthResult!.seconds, result.fourthResult!.milliseconds, result.fourthResult!)}`}</td>
                             </tr>
                         )
                     })}
