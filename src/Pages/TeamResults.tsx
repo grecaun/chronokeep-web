@@ -30,8 +30,8 @@ function TeamResults() {
     const teamResults: { [index: string]: { [index: string]: TimeResult[] } } = {}
     const teamCount: {  [index: string]: { [index:string]: { members: number, women: number } } } = {}
     distances.map(distance => {
-        state.results[distance].map(result => {
-            if (result.division.trim().length > 0 && result.finish === true) {
+        state.results[distance].map(result => {                             // Types 30+ are DNF or DNS and 3 is the old DNF
+            if (result.division.trim().length > 0 && result.finish === true && result.type < 30 && result.type !== 3) {
                 if (teamCount[result.distance] === undefined) {
                     teamCount[result.distance] = {}
                 }
