@@ -60,8 +60,9 @@ export function CertificateGenerator(
                 link.click();
             }).catch((err) => {
                 console.error(`unable to download image ${err}`);
+            }).finally(() =>{
+                certificate.style.display = displayCert ? "block" : "none";
             })
-            certificate.style.display = displayCert ? "block" : "none";
         }
     }
 
