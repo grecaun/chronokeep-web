@@ -45,21 +45,23 @@ export function CertificateGenerator(
     certification: string,
     displayCert: boolean = true
 ) {
-    const downloadImage = async () => {
-        try {
-            const certificate = document.getElementById("certificate");
-            if (certificate !== null) {
-                certificate.style.display = "block";
-                const dataUrl = await toPng(certificate);
+    const downloadImage = () => {
+        const certificate = document.getElementById("certificate");
+        if (certificate !== null) {
+            certificate.style.display = "block";
+            toPng(certificate).then((dataUrl) =>{
+                console.log("0")
                 const link = document.createElement('a');
-                link.download = 'finisher-certificate.png';
+                console.log("1")
                 link.href = dataUrl;
+                console.log("2")
+                link.download = 'finisher-certificate.png';
+                console.log("3")
                 link.click();
-                certificate.style.display = displayCert ? "block" : "none";
-            }
-        }
-        catch {
-            console.error("unable to download image");
+            }).catch((err) => {
+                console.error(`unable to download image ${err}`);
+            })
+            certificate.style.display = displayCert ? "block" : "none";
         }
     }
 
@@ -69,7 +71,7 @@ export function CertificateGenerator(
         <div>
             { displayCert === false &&
                 <div className="mx-auto fit-width mt-3">
-                    <button className="btn btn-danger btn-chronokeep" onClick={void downloadImage}>Download Finisher Certificate</button>
+                    <button className="btn btn-danger btn-chronokeep" onClick={downloadImage}>Download Finisher Certificate</button>
                 </div>
             }
             <div className="mx-auto fit-width">
