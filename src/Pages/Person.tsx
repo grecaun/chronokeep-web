@@ -10,7 +10,7 @@ import { PersonLoader } from '../loaders/person';
 import { CertificateGenerator } from './Certificate';
 import PersonBackyard from '../Parts/PersonBackyard';
 
-const googleMapsRegex = new RegExp("^https:\\/\\/www\\.google\\.com\\/maps\\/");
+const mapsRegex = new RegExp("^http(s)?:\\/\\/(www\\.)?(google\\.com\\/maps|caltopo\\.com\\/m)\\/");
 
 function MapsFrame(link: string) {
     return (
@@ -208,7 +208,8 @@ function Person() {
                             <div className="h2">{FormatTime(finish.chip_seconds, finish.chip_milliseconds, finish, true)}</div>
                         </div>
                         }
-                        { finishPaceStr.length > 0 && finishSegment !== null && state.event.type === 'distance' &&
+                        { finishPaceStr.length > 0 && finishSegment !== null &&
+                            (state.event.type === 'distance' || state.event.type.length == 0) &&
                         <div className="col-sm-4 text-center">
                             <div className="h4 border-bottom">Pace</div>
                             <div className="h5">{`${finishPaceStr} / ${finishSegment?.distance_unit}`}</div>
@@ -265,7 +266,7 @@ function Person() {
             }
             { finish == null && curSegment != null && curSegment.name !== "Finish" && state.event.type !== 'backyardultra' && state.event.type !== 'time' &&
             <div>
-                { curSegment.map_link != null && curSegment.map_link.length > 0 && curSegment.map_link.match(googleMapsRegex) &&
+                { curSegment.map_link != null && curSegment.map_link.length > 0 && curSegment.map_link.match(mapsRegex) &&
                 <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 mb-4 justify-content-center align-items-center">
                     {MapsFrame(curSegment.map_link)}
                 </div>
