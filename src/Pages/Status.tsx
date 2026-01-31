@@ -69,7 +69,7 @@ function Status() {
                                         map[num] = 1
                                     }
                                 }
-                                const loops = Math.ceil((max - min) / 10)
+                                const loops = Math.ceil(max - min)
                                 if (nonIntegerBib === true) {
                                     return(
                                         <div key={`distance${index}`}>
@@ -82,35 +82,18 @@ function Status() {
                                             { distances.length > 1 &&
                                                 <div className="table-distance-header text-important text-center">{distance}</div>
                                             }
-                                            { [...Array<number>(loops)].map((_, i) => {
-                                                const start = min + (i*10)
-                                                const stat_map: { [index: number]: number } = {}
-                                                for (let x = 0; x < 10; x ++) {
-                                                    if ((start+x) in map) {
-                                                        stat_map[x] = map[start+x]
-                                                    } else {
-                                                        stat_map[x] = 0
-                                                    }
-                                                }
+                                        <div className={`row status-row`} key={`status${i}`}>
+                                            { map.map((status, i) => {
+                                                const bib = min + i;
                                                 let last_row = ''
                                                 if (loops - 1 === i) {
-                                                    last_row = 'row-last'
+                                                    last_row = 'status-last'
                                                 }
                                                 return (
-                                                    <div className={`row status-row`} key={`status${i}`}>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[0]}`}>{start}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[1]}`}>{start+1}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[2]}`}>{start+2}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[3]}`}>{start+3}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[4]}`}>{start+4}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[5]}`}>{start+5}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[6]}`}>{start+6}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[7]}`}>{start+7}</div>
-                                                        <div className={`col ${last_row} status-col status-${stat_map[8]}`}>{start+8}</div>
-                                                        <div className={`col ${last_row} status-col status-last status-${stat_map[9]}`}>{start+9}</div>
-                                                    </div>
+                                                    <div className={`col ${last_row} status-col status-${status}`}>{bib}</div>
                                                 )
-                                            })}
+                                            }) }
+                                        </div>
                                     </div>
                                 )
                             })
