@@ -69,7 +69,8 @@ function Status() {
                                         map[num] = 1
                                     }
                                 }
-                                const loops = Math.ceil(max - min)
+                                console.log(`Distance - ${distance} - min - ${min} - max - ${max}`)
+                                const loops = Math.ceil((max - min)/10)
                                 if (nonIntegerBib === true) {
                                     return(
                                         <div key={`distance${index}`}>
@@ -77,6 +78,7 @@ function Status() {
                                         </div>
                                     )
                                 }
+                                console.log(`Distance - ${distance} - min - ${min} - max - ${max} - loops - ${loops}`)
                                 return (
                                     <div className="table-responsive-sm m-3" key={distance} id={distance}>
                                             { distances.length > 1 &&
@@ -99,15 +101,15 @@ function Status() {
                                                     last_row_md = 'row-last-md'
                                                 }
                                                 return (
-                                                    <div className={`row status-row`} key={`status${i}`}>
-                                                        <div className={`row col-md-6`} key={`status${i}`}>
+                                                    <div className={`row status-row`} key={`status-${i}-0`}>
+                                                        <div className={`row col-md-6`} key={`status-${i}-1`}>
                                                             <div className={`col ${last_row_md} status-col status-${stat_map[0]}`}>{start}</div>
                                                             <div className={`col ${last_row_md} status-col status-${stat_map[1]}`}>{start+1}</div>
                                                             <div className={`col ${last_row_md} status-col status-${stat_map[2]}`}>{start+2}</div>
                                                             <div className={`col ${last_row_md} status-col status-${stat_map[3]}`}>{start+3}</div>
                                                             <div className={`col ${last_row_md} status-col status-last-md status-${stat_map[4]}`}>{start+4}</div>
                                                         </div>
-                                                        <div className={`row col-md-6 ${last_row}`} key={`status${i}`}>
+                                                        <div className={`row col-md-6 ${last_row}`} key={`status-${i}-2`}>
                                                             <div className={`col ${last_row} status-col status-${stat_map[5]}`}>{start+5}</div>
                                                             <div className={`col ${last_row} status-col status-${stat_map[6]}`}>{start+6}</div>
                                                             <div className={`col ${last_row} status-col status-${stat_map[7]}`}>{start+7}</div>
