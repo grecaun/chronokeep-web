@@ -69,7 +69,6 @@ function Status() {
                                         map[num] = 1
                                     }
                                 }
-                                console.log(`Distance - ${distance} - min - ${min} - max - ${max}`)
                                 const loops = Math.ceil((max - min)/10)
                                 if (nonIntegerBib === true) {
                                     return(
@@ -78,7 +77,6 @@ function Status() {
                                         </div>
                                     )
                                 }
-                                console.log(`Distance - ${distance} - min - ${min} - max - ${max} - loops - ${loops}`)
                                 return (
                                     <div className="table-responsive-sm m-3" key={distance} id={distance}>
                                             { distances.length > 1 &&
