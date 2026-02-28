@@ -243,18 +243,6 @@ function Results() {
                     });
                 })
                 current_results[distance].sort((a,b) => {
-                    if (a.segment !== b.segment) {
-                        if (a.segment.startsWith("Mile") && b.segment.startsWith("Mile")) {
-                            const aMile: number = +a.segment.substring(5);
-                            const bMile: number = +b.segment.substring(5);
-                            return bMile - aMile;
-                        }
-                        if (a.segment.startsWith("Kilometer") && b.segment.startsWith("Kilometer")) {
-                            const aKilo: number = +a.segment.substring(10);
-                            const bKilo: number = +b.segment.substring(10);
-                            return bKilo - aKilo;
-                        }
-                    }
                     if (a.occurence === b.occurence) {
                         if (a.chip_seconds === b.chip_seconds) {
                             return a.chip_milliseconds - b.chip_milliseconds;

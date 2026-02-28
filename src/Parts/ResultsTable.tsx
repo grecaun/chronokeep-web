@@ -88,6 +88,19 @@ class ResultsTable extends Component<ResultsTableProps> {
                     return bSegDist - aSegDist;
                 }
             }
+            // If segments are not defined, try to find distance values by parsing the segment name provided.
+            if (aSeg !== bSeg) {
+                if (aSeg.startsWith("Mile") && bSeg.startsWith("Mile")) {
+                    const aMile: number = +aSeg.substring(5);
+                    const bMile: number = +bSeg.substring(5);
+                    return bMile - aMile;
+                }
+                if (aSeg.startsWith("Kilometer") && bSeg.startsWith("Kilometer")) {
+                    const aKilo: number = +aSeg.substring(10);
+                    const bKilo: number = +bSeg.substring(10);
+                    return bKilo - aKilo;
+                }
+            }
             // Workaround for the API not giving segments when giving results.
             if (a.ranking == b.ranking && aSeg !== "Start" && bSeg !== "Start") {
                 // Rank later results at the same ranking as higher values.
