@@ -44,6 +44,28 @@ export interface TimeResult {
     division_ranking: number
 }
 
+export interface DoubleResult {
+    first: string
+    last: string
+    seconds_one: number
+    milliseconds_one: number
+    chip_seconds_one: number
+    chip_milliseconds_one: number
+    seconds_two: number
+    milliseconds_two: number
+    chip_seconds_two: number
+    chip_milliseconds_two: number
+    gender: string
+    age_group: string
+    age: number
+    ranking: number
+    age_ranking: number
+    gender_ranking: number
+    anonymous: boolean
+    distance_one: string
+    distance_two: string
+}
+
 export interface YTPTimeResult extends TimeResult {
     cougar_score: number
     combined_score: number

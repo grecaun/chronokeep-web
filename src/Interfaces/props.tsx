@@ -26,8 +26,6 @@ export interface SearchParamProps extends ParamProps {
     search_params: [URLSearchParams, SetURLSearchParams]
 }
 
-export interface EmptyProps {}
-
 export interface ModalProps {
     handleClose: () => void
     show: boolean
@@ -83,6 +81,16 @@ export interface ResultsTableProps {
     age_group_map: Map<number, string>
     certification: string | undefined
     segment_map: Map<string, Segment>
+}
+
+export interface DoubleResultsTableProps {
+    results: TimeResult[]
+    key: number
+    search: string
+    sort_by: number
+    distances: string[]
+    rank_by_selected: boolean
+    age_group_map: Map<number, string>
 }
 
 export interface SeriesResultsTableProps {
