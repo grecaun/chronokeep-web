@@ -380,36 +380,6 @@ function Results() {
             distances.map(distance => {
                 current_results[distance] = [];
                 state.results[distance].map(result => {
-                    if (result.division.toLowerCase() === "the-double" || result.division.toLowerCase() === "the double") {
-                        if (current_results[the_double] === null) {
-                            current_results[the_double] = []
-                        }
-                        current_results[the_double].push({
-                            bib: result.bib,
-                            first: result.first,
-                            last: result.last,
-                            seconds: result.seconds,
-                            milliseconds: result.milliseconds,
-                            chip_seconds: result.chip_seconds,
-                            chip_milliseconds: result.chip_milliseconds,
-                            gender: result.gender,
-                            occurence: result.occurence,
-                            age_group: result.age_group,
-                            age: result.age,
-                            ranking: result.ranking,
-                            age_ranking: result.age_ranking,
-                            gender_ranking: result.gender_ranking,
-                            finish: result.finish,
-                            segment: result.segment,
-                            type: result.type,
-                            anonymous: result.anonymous,
-                            distance: result.distance,
-                            location: result.location,
-                            local_time: result.local_time,
-                            division: result.division,
-                            division_ranking: result.division_ranking
-                        });
-                    }
                     current_results[distance].push({
                         bib: result.bib,
                         first: result.first,
@@ -480,36 +450,6 @@ function Results() {
             distances.map(distance => {
                 current_results[distance] = [];
                 state.results[distance].map(result => {
-                    if (result.division.toLowerCase() === "the-double" || result.division.toLowerCase() === "the double") {
-                        if (current_results[the_double] === null) {
-                            current_results[the_double] = []
-                        }
-                        current_results[the_double].push({
-                            bib: result.bib,
-                            first: result.first,
-                            last: result.last,
-                            seconds: result.seconds,
-                            milliseconds: result.milliseconds,
-                            chip_seconds: result.chip_seconds,
-                            chip_milliseconds: result.chip_milliseconds,
-                            gender: result.gender,
-                            occurence: result.occurence,
-                            age_group: result.age_group,
-                            age: result.age,
-                            ranking: result.ranking,
-                            age_ranking: result.age_ranking,
-                            gender_ranking: result.gender_ranking,
-                            finish: result.finish,
-                            segment: result.segment,
-                            type: result.type,
-                            anonymous: result.anonymous,
-                            distance: result.distance,
-                            location: result.location,
-                            local_time: result.local_time,
-                            division: result.division,
-                            division_ranking: result.division_ranking
-                        });
-                    }
                     current_results[distance].push({
                         bib: result.bib,
                         first: result.first,
@@ -577,6 +517,50 @@ function Results() {
             })
         }
     }
+    // Process results for The Double results.
+    const double_distances: string[] = [];
+    const double_results: TimeResult[] = [];
+    distances.map(dist => {
+        state.results[dist].map(result => {
+            // only store finish results in The Double
+            if (result.division.toLowerCase() === "the-double"
+                || result.division.toLowerCase() === "the double"
+            ) {
+                if (double_distances.length < 1) {
+                    double_distances.push(dist);
+                } else if (double_distances.length < 2 && double_distances[0] !== dist) {
+                    double_distances.push(dist);
+                }
+                if (result.finish === true) {
+                    double_results.push({
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: result.age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: result.distance,
+                        location: result.location,
+                        local_time: result.local_time,
+                        division: result.division,
+                        division_ranking: result.division_ranking
+                    });
+                }
+            }
+        })
+    })
     const certifications = new Map<string, string>()
     if (state.distances != null) {
         state.distances.map(dist => {
@@ -753,14 +737,19 @@ function Results() {
                             </div>
                         </div>
                         <ul className="nav nav-tabs nav-fill">
-                            { distances.length > 1 &&
+                            { (distances.length > 1 || double_distances.length > 1) &&
                                 distances.map((distance, index) => {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
                                             <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
                                         </li>
-                                    );
+                                    )
                                 })
+                            }
+                            { double_distances.length > 1 &&
+                                <li className="nav-item" key={`distance${3}`}>
+                                    <a className="nav-link text-important h5 text-secondary" href={`#${the_double}`} role="button">{the_double}</a>
+                                </li>
                             }
                         </ul>
                         <div id="results-parent">
@@ -800,19 +789,6 @@ function Results() {
                                                 segment_map={segment_map}
                                                 />
                                         )
-                                    } else if (distance === the_double) {
-                                        return (
-                                            <DoubleResultsTable
-                                                results={current_results[distance]}
-                                                key={index}
-                                                search={state.search}
-                                                sort_by={state.sort_by}
-                                                rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
-                                                                || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
-                                                age_group_map={age_group_map}
-                                                distances={distances}
-                                                />
-                                        )
                                     } else {
                                         return (
                                             <ResultsTable
@@ -832,6 +808,18 @@ function Results() {
                                         )
                                     }
                                 })
+                            }
+                            { double_distances.length > 1 &&
+                                <DoubleResultsTable
+                                    results={double_results}
+                                    key={3}
+                                    search={state.search}
+                                    sort_by={state.sort_by}
+                                    rank_by_selected={(state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) 
+                                                    || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip) }
+                                    age_group_map={age_group_map}
+                                    distances={double_distances}
+                                    />
                             }
                         </div>
                     </div>

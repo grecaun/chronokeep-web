@@ -12,9 +12,6 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
         const resMap: Map<string, DoubleResult> = new Map();
         const rank_by_chip = this.props.rank_by_selected;
         const distances = this.props.distances;
-        if (distances.length != 2) {
-            return;
-        }
         let only_age_group = ""
         if (sort_by > 2) {
             sort_by = 1;
@@ -23,10 +20,14 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                 only_age_group = tmp
             }
         }
+        if (distances.length < 2) {
+            return;
+        }
         // Create new DoubleResult variables for participants.
         results.forEach(res => {
             // The Double only cares about finish results.
-            if (res.finish) {
+            if (res.finish === true) {
+                const name_key = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`;
                 let double_res: DoubleResult = {
                     first: res.first,
                     last: res.last,
@@ -40,7 +41,7 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                     chip_milliseconds_two: 0,
                     gender: res.gender,
                     age_group: res.age_group,
-                    age: 0,
+                    age: res.age,
                     ranking: 0,
                     age_ranking: 0,
                     gender_ranking: 0,
@@ -49,8 +50,8 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                     distance_two: distances[1]
                 };
                 // Pull known information.
-                if (resMap.has(`${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`)) {
-                    double_res = resMap.get(`${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`)!;
+                if (resMap.has(name_key)) {
+                    double_res = resMap.get(name_key)!;
                 }
                 // Update distance seconds.
                 if (res.distance === distances[0]) {
@@ -64,12 +65,13 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                     double_res.chip_seconds_two = res.chip_seconds;
                     double_res.chip_milliseconds_two = res.chip_milliseconds;
                 }
+                resMap.set(name_key, double_res);
             }
         })
         const doub_results = Array.from(resMap.values())
         const dispResults = new Array<DoubleResult>()
         // sort results
-        const doub_sort = doub_results.sort((a, b) => {
+        doub_results.sort((a, b) => {
             if (rank_by_chip) {
                 let a_seconds = a.chip_seconds_one + a.chip_seconds_two;
                 let a_milliseconds = a.chip_milliseconds_one + a.chip_milliseconds_two;
@@ -110,11 +112,11 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
         let place = 0;
         const genderPlace: { [gend: string]: number } = {}
         const ageGroupPlace: { [age_group: string]: { [gend: string]: number } } = {}
-        doub_sort.forEach(res => {
+        doub_results.forEach(res => {
             if (res.seconds_one > 0 && res.seconds_two > 0) {
                 place += 1;
                 res.ranking = place;
-                if (!genderPlace[res.gender] === undefined) {
+                if (genderPlace[res.gender] === undefined) {
                     genderPlace[res.gender] = 0;
                 }
                 genderPlace[res.gender] += 1;
@@ -129,11 +131,10 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                 res.age_ranking = ageGroupPlace[res.age_group][res.gender];
             }
         })
-        doub_sort.forEach(res => {
+        doub_results.forEach(res => {
             const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
             if ((name.indexOf(search) >= 0 || search === "")
                 && (only_age_group.length < 1 || res.age_group === only_age_group)
-                && (res.seconds_one > 0 && res.seconds_two > 0)
             ) {
                 dispResults.push(res);
             }
@@ -156,9 +157,23 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                     }
                     break;
             }
+            // always sort those who haven't finished one event after those who have finished both
+            if ((a.seconds_one < 1 || a.seconds_two < 1)
+                && (b.seconds_one > 0 && b.seconds_two > 0))
+            {
+                return 1;
+            }
+            if ((b.seconds_one < 1 || b.seconds_two < 1)
+                && (a.seconds_one > 0 && a.seconds_two > 0))
+            {
+                return -1;
+            }
             // finally sort by ranking
             return a.ranking - b.ranking
         })
+        if (dispResults.length < 1) {
+            return('');
+        }
         const chip_time = rank_by_chip ? "Clock Time*" : "Chip Time*";
         const clock_time = rank_by_chip ? "Chip Time" : "Clock Time";
         return (
@@ -175,8 +190,8 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                             <th className="overflow-hidden-lg col-sm text-center">Pl</th>
                             <th className="overflow-hidden-sm col-sm text-center">Gender</th>
                             <th className="overflow-hidden-sm col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-sm col-sm text-center">{distances[0]}</th>
-                            <th className="overflow-hidden-sm col-sm text-center">{distances[1]}</th>
+                            <th className="overflow-hidden-lg col-lg text-center">{distances[0]}</th>
+                            <th className="overflow-hidden-lg col-lg text-center">{distances[1]}</th>
                             <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
                             <th className="col-lg text-center">{clock_time}</th>
                         </tr>
@@ -222,17 +237,23 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                                 if (result.gender === "M" || result.gender === "MA") {
                                     result.gender = "M"
                                 }
-                                let seconds = result.seconds_one + result.seconds_two;
-                                let milliseconds = result.milliseconds_one + result.milliseconds_two;
-                                if (milliseconds > 1000) {
-                                    seconds += 1;
-                                    milliseconds -= 1000;
-                                }
-                                let chip_seconds = result.chip_seconds_one + result.chip_seconds_two;
-                                let chip_milliseconds = result.chip_milliseconds_one + result.chip_milliseconds_two;
-                                if (chip_milliseconds > 1000) {
-                                    chip_seconds += 1;
-                                    chip_milliseconds -= 1000;
+                                let seconds = 0;
+                                let milliseconds = 0;
+                                let chip_seconds = 0;
+                                let chip_milliseconds = 0;
+                                if (result.seconds_one > 0 && result.seconds_two > 0) {
+                                    seconds = result.seconds_one + result.seconds_two;
+                                    milliseconds = result.milliseconds_one + result.milliseconds_two;
+                                    if (milliseconds > 1000) {
+                                        seconds += 1;
+                                        milliseconds -= 1000;
+                                    }
+                                    chip_seconds = result.chip_seconds_one + result.chip_seconds_two;
+                                    chip_milliseconds = result.chip_milliseconds_one + result.chip_milliseconds_two;
+                                    if (chip_milliseconds > 1000) {
+                                        chip_seconds += 1;
+                                        chip_milliseconds -= 1000;
+                                    }
                                 }
                                 return (
                                     <tr key={`${result.first}${result.last}doub`}>
@@ -242,10 +263,10 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                                         <td className="overflow-hidden-lg text-center">{arankStr}</td>
                                         <td className="overflow-hidden-sm text-center">{result.gender}</td>
                                         <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                        <td className="overflow-hidden-sm text-center">{
+                                        <td className="overflow-hidden-lg text-center">{
                                             rank_by_chip ? SimpleFormatTime(result.chip_seconds_one, result.chip_milliseconds_one) : SimpleFormatTime(result.seconds_one, result.milliseconds_one)
                                         }</td>
-                                        <td className="overflow-hidden-sm text-center">{
+                                        <td className="overflow-hidden-lg text-center">{
                                             rank_by_chip ? SimpleFormatTime(result.chip_seconds_two, result.chip_milliseconds_two) : SimpleFormatTime(result.seconds_two, result.milliseconds_two)
                                         }</td>
                                         <td className="overflow-hidden-lg text-center">{

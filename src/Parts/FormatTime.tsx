@@ -54,6 +54,10 @@ export const SimpleFormatTime = (seconds: number, milliseconds: number) => {
     sec = Number(sec) < 10 ? `0${sec}`.toString() : sec
     // Only care about tenths of a second
     const mill = Math.floor(milliseconds / 100)
+    // show nothing if 0 seconds is present
+    if (seconds <= 0) {
+        return '';
+    }
     // Only show hour if it exists.
     if (hour > 0) {
         return (`${hour}:${minutes}:${sec}.${mill}`)
