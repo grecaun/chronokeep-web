@@ -3,7 +3,7 @@ import { TimeResult } from "../Interfaces/types";
 import { PersonLoader } from "../loaders/person";
 import FormatTime from "../Parts/FormatTime";
 import DateString from "../Parts/DateString";
-import { toPng } from "html-to-image";
+import { toPng } from "@jpinsonneau/html-to-image";
 
 function Certificate() {
     const params = useParams();
