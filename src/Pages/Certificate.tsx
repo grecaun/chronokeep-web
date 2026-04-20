@@ -50,13 +50,9 @@ export function CertificateGenerator(
         if (certificate !== null) {
             certificate.style.display = "block";
             toPng(certificate).then((dataUrl) =>{
-                console.log("0")
                 const link = document.createElement('a');
-                console.log("1")
                 link.href = dataUrl;
-                console.log("2")
                 link.download = 'finisher-certificate.png';
-                console.log("3")
                 link.click();
             }).catch((err) => {
                 console.error(`unable to download image ${err}`);
