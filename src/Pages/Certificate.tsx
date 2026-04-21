@@ -3,7 +3,7 @@ import { TimeResult } from "../Interfaces/types";
 import { PersonLoader } from "../loaders/person";
 import FormatTime from "../Parts/FormatTime";
 import DateString from "../Parts/DateString";
-import { toPng } from "@jpinsonneau/html-to-image";
+import { snapdom } from "@zumer/snapdom";
 
 function Certificate() {
     const params = useParams();
@@ -49,9 +49,9 @@ export function CertificateGenerator(
         const certificate = document.getElementById("certificate");
         if (certificate !== null) {
             certificate.style.display = "block";
-            toPng(certificate).then((dataUrl) =>{
+            snapdom.toPng(certificate).then((img) =>{
                 const link = document.createElement('a');
-                link.href = dataUrl;
+                link.href = img.src;
                 link.download = 'finisher-certificate.png';
                 link.click();
             }).catch((err) => {
@@ -68,7 +68,7 @@ export function CertificateGenerator(
         <div>
             { displayCert === false &&
                 <div className="mx-auto fit-width mt-3">
-                    <button className="btn btn-danger btn-chronokeep" onClick={downloadImage}>Download Finisher Certificate</button>
+                    <button className="btn btn-danger btn-chronokeep" onClick={downloadImage}>Generate Finisher Certificate</button>
                 </div>
             }
             <div className="mx-auto fit-width">
