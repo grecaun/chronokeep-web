@@ -291,11 +291,15 @@ button.close {
   }
 }
 .certificate-container {
-  background-image: url("/certificate-template2.png");
   background-size: cover;
   width: 800px;
   height: 565px;
   position: relative;
+}
+.certificate-image {
+  width: 800px;
+  height: 565px;
+  position: absolute;
 }
 .certificate-wrapper {
   width: 100%;

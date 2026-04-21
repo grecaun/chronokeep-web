@@ -73,6 +73,7 @@ export function CertificateGenerator(
             }
             <div className="mx-auto fit-width">
                 <div id="certificate" className={`certificate-container ${displ}`}>
+                    <img className="certificate-image" src="/certificate-template2.png"/>
                     <div className="certificate-wrapper">
                         <div className="certificate-name">{name}</div>
                         <div className="certificate-event-distance">finished the {event} with a time of</div>
