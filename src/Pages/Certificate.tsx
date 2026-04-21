@@ -49,11 +49,8 @@ export function CertificateGenerator(
         const certificate = document.getElementById("certificate");
         if (certificate !== null) {
             certificate.style.display = "block";
-            snapdom.toPng(certificate).then((img) =>{
-                const link = document.createElement('a');
-                link.href = img.src;
-                link.download = 'finisher-certificate.png';
-                link.click();
+            snapdom(certificate).then((result) =>{
+                result.download({ filename: 'finisher-certificate.png' }).catch(() => {});
             }).catch((err) => {
                 console.error(`unable to download image ${err}`);
             }).finally(() =>{
