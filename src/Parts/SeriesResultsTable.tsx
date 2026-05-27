@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { FormatPace } from './FormatTime';
+import FormatTime, { FormatPace } from './FormatTime';
 import { SeriesResultsTableProps } from '../Interfaces/props';
 import { SeriesResult } from '../Interfaces/types';
 
@@ -110,7 +110,7 @@ class SeriesResultsTable extends Component<SeriesResultsTableProps> {
                                             let visibleStr = ''
                                             if (result.results.has(distance)) {
                                                 const res = result.results.get(distance)!
-                                                visibleStr = `${res.ranking} - ${FormatPace(res.division_ranking)}/${res.division}`
+                                                visibleStr = `${res.ranking} - ${FormatTime(res.seconds, res.milliseconds, res, false, true)}`
                                             }
                                             return (
                                                 <td className="overflow-hidden-lg text-center" key={`${result.first}-${result.last}-${distance}`}>{visibleStr}</td>
