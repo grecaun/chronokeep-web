@@ -583,20 +583,20 @@ function Results() {
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
-                <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-2 mt-1 h1">{`${state.event!.name} Results`}</p>
+                <div className="col-md-9 flex-fill text-center mx-auto m-1">
+                    <p className="text-important mb-2 mt-3 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
                     { distances.length === 1 && certifications.has(distances[0]) &&
                         <div className='chronokeep-certification'>Course Certification: {certifications.get(distances[0])}</div>
                     }
                 </div>
-                { years.length > 1 && 
-                    <div className="col-md-2 nav flex-md-column justify-content-center p-0">
+                { years.length > 1 &&
+                    <div className={`col-md-2 nav justify-content-center p-0 m-md-3${years.length > 1 ? ` row-cols-md-${Math.ceil(years.length / 3)}` : ''}`}>
                         {
                             years.map((year, index) => {
-                                let className = "nav-link text-center text-important text-secondary"
+                                let className = "nav-link text-center text-important text-secondary col"
                                 if (year.year === state.year!.year) {
-                                    className = "nav-link disabled text-center text-important text-dark"
+                                    className = "nav-link disabled text-center text-important text-dark col"
                                 }
                                 return <a href={`/results/${params.slug}/${year.year}`} key={`year${index}`} className={className}>{year.year}</a>
                             })
