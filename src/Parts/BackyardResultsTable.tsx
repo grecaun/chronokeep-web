@@ -46,6 +46,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         resMap.forEach(res => {
             if (res.occurence === 0 && (res.location === "Start" || res.location === "Start/Finish") && maxStart > 0) {
                 resMap.set(res.bib, {
+                    person_id: res.person_id,
                     bib: res.bib,
                     first: res.first,
                     last: res.last,

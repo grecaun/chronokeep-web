@@ -64,6 +64,7 @@ function YTP(props: PageProps) {
                     age_group = `${gender} 17-18`
                 }
                 results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,

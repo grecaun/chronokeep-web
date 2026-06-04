@@ -220,6 +220,7 @@ function Results() {
                 current_results[distance] = []
                 state.results[distance].map(result => {
                     current_results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
@@ -305,6 +306,7 @@ function Results() {
                 current_results[distance] = []
                 state.results[distance].map(result => {
                     current_results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
@@ -381,6 +383,7 @@ function Results() {
                 current_results[distance] = [];
                 state.results[distance].map(result => {
                     current_results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
@@ -451,6 +454,7 @@ function Results() {
                 current_results[distance] = [];
                 state.results[distance].map(result => {
                     current_results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
@@ -533,6 +537,7 @@ function Results() {
                 }
                 if (result.finish === true) {
                     double_results.push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,

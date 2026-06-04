@@ -53,6 +53,7 @@ function TeamResults() {
                     results[distance] = []
                 }
                 results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
@@ -132,6 +133,7 @@ function TeamResults() {
                     teamResults[distance][result.division] = []
                 }
                 teamResults[distance][result.division].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,

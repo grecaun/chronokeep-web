@@ -72,6 +72,7 @@ function YTPScoreTable(props: YTPTableProps) {
         if (prev_participants[name] === undefined) {
             const nameSplit = name.split(' ')
             results.push({
+                person_id: '',
                 bib: '',
                 first: nameSplit[0],
                 last: nameSplit[1],

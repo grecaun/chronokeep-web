@@ -89,6 +89,7 @@ function PNTF(props: PageProps) {
                     age_group = `${gender} 95-99`
                 }
                 results[distance].push({
+                        person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
                         last: result.last,
