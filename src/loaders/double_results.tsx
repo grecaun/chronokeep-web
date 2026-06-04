@@ -51,7 +51,6 @@ export function DoubleResultsLoader(params: Params<string>, page: string): { sta
                 for (let i=0; i<2; i++) {
                     const slug = state.selected_year.double[i].slug;
                     const year = state.selected_year.double[i].year;
-                    console.log(`slug ${slug} year ${year}`);
                     const distance = state.selected_year.double[i].distance;
                     const requestOptions = {
                         method: 'POST',
@@ -72,7 +71,7 @@ export function DoubleResultsLoader(params: Params<string>, page: string): { sta
                         .then(data => {
                             if (Object.prototype.hasOwnProperty.call(data, 'event')) {
                                 const dta = data as GetResultsResponse
-                                if (dta.results[distance] !== null && dta.results[distance] !== undefined) {
+                                if (dta.results[distance]) {
                                     state.results[distance] = dta.results[distance];
                                 }
                             } else {

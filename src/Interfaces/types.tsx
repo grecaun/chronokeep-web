@@ -19,6 +19,7 @@ export interface EventYear {
 }
 
 export interface TimeResult {
+    person_id: string
     bib: string
     first: string
     last: string

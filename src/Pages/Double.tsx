@@ -28,7 +28,7 @@ function DoublePage() {
         // Go through the list and record their result in a SeriesResult
         results[distance].map(result => {
             if (result.finish && result.type !== 3 && result.type < 30) {
-                const name = `${result.first.toLocaleLowerCase()} ${result.last.toLocaleLowerCase()} ${result.age}`
+                const name = `${result.first} ${result.last} ${result.age}`
                 if (!participants.has(name)) {
                     participants.set(name, { })
                 }
@@ -36,18 +36,30 @@ function DoublePage() {
             }
         })
     })
-    const partRank: Map<string, number> = new Map<string, number>();
-    Object.keys(participants).map(name => {
+    const dist1 = state.selected_year?.double[0].distance ?? "";
+    const dist2 = state.selected_year?.double[1].distance ?? "";
+    const partRank: Map<string, [number, number]> = new Map<string, [number, number]>();
+    participants.forEach((_, name) => {
         const results = participants.get(name);
-        const dist1 = state.selected_year?.double[0].distance ?? "";
-        const dist2 = state.selected_year?.double[1].distance ?? "";
         if (results && results[dist1] && results[dist2]) {
-            partRank.set(name, results[dist1].ranking + results[dist2].ranking);
+            partRank.set(name, [results[dist1].ranking + results[dist2].ranking, results[dist1].seconds + results[dist2].seconds]);
         }
     });
-    const sorted: string[] = Object.keys(partRank).sort((a,b) => {
-        return partRank.get(a)! - partRank.get(b)!;
-    });
+    let unsorted: [string, [number, number]][] = [];
+    partRank.forEach(([rank, seconds], name) => {
+        unsorted.push([name, [rank, seconds]])
+    })
+    unsorted = unsorted.sort((a,b) => {
+        if (a[1][0] == b[1][0]) {
+            return a[1][1] - b[1][1];
+        }
+        return a[1][0] - b[1][0];
+    })
+    const sorted: string[] = [];
+    unsorted.forEach(([name]) => {
+        sorted.push(name);
+    })
+    console.log(`${sorted.length}`)
     const pageSubTitle = 'Results'
     document.title = `Chronokeep - ${state.selected_year!.display_name} - ${pageSubTitle}`
     return (
