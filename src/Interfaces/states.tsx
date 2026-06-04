@@ -1,5 +1,5 @@
 import { FormikErrors } from "formik"
-import { Account, CertDistance, Distance, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SeriesYear, SmsSubscription, TimeResult } from "./types"
+import { Account, CertDistance, Distance, DoubleYear, Event, EventYear, Key, Participant, Person, RankingType, ResultsParticipant, Segment, SeriesYear, SmsSubscription, TimeResult } from "./types"
 import KeyInfo from "../Parts/KeyInfo"
 
 export interface AccountInfoState {
@@ -15,7 +15,7 @@ export interface AccountInfoState {
     account: Account
     email_actions: { setValues: (values: React.SetStateAction<{
                         username: string;
-                    }>, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<{
+                    }>, shouldValidate?: boolean) => Promise<void | FormikErrors<{
                         username: string;
                     }>>,
                 setStatus: (status?: string) => void,
@@ -24,7 +24,7 @@ export interface AccountInfoState {
                         oldPassword: string;
                         password: string;
                         repeatPassword: string;
-                    }>, shouldValidate?: boolean | undefined) => Promise<void | FormikErrors<{
+                    }>, shouldValidate?: boolean) => Promise<void | FormikErrors<{
                         oldPassword: string;
                         password: string;
                         repeatPassword: string;
@@ -121,11 +121,17 @@ export interface ResultsState extends BaseState {
     distances: CertDistance[] | null
 }
 
-export interface MultiResultsState extends BaseState {
+export interface SeriesResultsState extends BaseState {
     event: Event | null
     results: { [index: string]:{ [index: string]: TimeResult[] } }
     years: SeriesYear[] | null
     selected_year: SeriesYear | null
+}
+
+export interface DoubleResultsState extends BaseState {
+    results: { [index: string]: TimeResult[] }
+    years: DoubleYear[] | null
+    selected_year: DoubleYear | null
 }
 
 export interface YTPScore {

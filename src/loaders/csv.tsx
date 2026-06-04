@@ -99,6 +99,6 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
             });
         };
         fetchResults().catch(() => {});
-    }, []);
+    }, [state, url]);
     return { state: state, setState: setState };
 }

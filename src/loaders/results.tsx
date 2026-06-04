@@ -79,6 +79,6 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
             });
         };
         fetchResults().catch(() => {});
-    }, []);
+    }, [params.slug, params.year, state]);
     return { state, setState };
 }

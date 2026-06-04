@@ -101,6 +101,13 @@ export interface SeriesResultsTableProps {
     search: string
 }
 
+export interface TwoEventResultsTableProps {
+    sorted: string[]
+    results: Map<string, { [index: string]: TimeResult }>
+    distance1: string
+    distance2: string
+}
+
 export interface CheckinRowProps {
     participant: Participant
     distances: Set<string>

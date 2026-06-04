@@ -34,8 +34,8 @@ export function EventsLoader(): EventsState {
                         state.events = dta.events
                     } else {
                         const err = data as ErrorResponse
-                        state.error = true,
-                        state.message = err.message
+                        state.error = true;
+                        state.message = err.message;
                     }
                     state.loading = false;
                 })
@@ -48,6 +48,6 @@ export function EventsLoader(): EventsState {
             });
         };
         fetchEvents().catch(() => {});
-    }, []);
+    }, [state]);
     return state;
 }

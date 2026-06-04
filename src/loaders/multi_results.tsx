@@ -1,11 +1,11 @@
 import { Params } from "react-router-dom";
-import { MultiResultsState } from "../Interfaces/states";
+import { SeriesResultsState } from "../Interfaces/states";
 import { ErrorResponse, GetMultiResultsResponse } from "../Interfaces/responses";
 import { useEffect, useState } from "react";
 import { SeriesYear } from "../Interfaces/types";
 
-export function MultiResultsLoader(params: Params<string>, page: string): { state: MultiResultsState, setState: React.Dispatch<React.SetStateAction<MultiResultsState>> } {
-    const [state, setState] = useState<MultiResultsState>({
+export function MultiResultsLoader(params: Params<string>, page: string): { state: SeriesResultsState, setState: React.Dispatch<React.SetStateAction<SeriesResultsState>> } {
+    const [state, setState] = useState<SeriesResultsState>({
         page: page,
         event: null,
         results: {},
@@ -98,6 +98,6 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
             });
         };
         fetchResults().catch(() => {});
-    }, []);
+    }, [params.slug, params.year, state]);
     return { state, setState };
 }

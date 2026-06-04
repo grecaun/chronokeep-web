@@ -202,3 +202,15 @@ export interface SeriesResult {
     gender_ranking: number
     age_ranking: number
 }
+
+export interface Double {
+    slug: string
+    year: string
+    distance: string
+}
+
+export interface DoubleYear {
+    display_name: string
+    display_year: number
+    double: Double[]
+}

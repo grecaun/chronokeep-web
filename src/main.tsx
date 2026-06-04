@@ -23,6 +23,8 @@ import PNTF from './Pages/PNTF';
 import YTP from './Pages/YTP';
 import SeriesPage from './Pages/Series';
 import TeamResults from './Pages/TeamResults';
+import DoublePage from './Pages/Double';
+import NoCheckQRCode from './Pages/NoCheckQRCode';
 
 const router = createBrowserRouter([
   {
@@ -89,6 +91,14 @@ const router = createBrowserRouter([
       {
         path: '/series/:slug/:year?/qr',
         element: <QRCode page='series' />
+      },
+      {
+        path: '/double/:slug/:year?',
+        element: <DoublePage />
+      },
+      {
+        path: '/double/:slug/:year?/qr',
+        element: <NoCheckQRCode />
       },
       {
         path: '/pntf/:slug/:year?',
