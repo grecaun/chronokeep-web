@@ -51,6 +51,6 @@ export function SubscribeLoader(params: Params<string>): SubscriptionState {
         });
     };
     fetchUnsubscribe().catch(() => {});
-}, [params.email, state]);
+}, []);
 return state;
 }

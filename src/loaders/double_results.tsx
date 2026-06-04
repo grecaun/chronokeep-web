@@ -97,6 +97,6 @@ export function DoubleResultsLoader(params: Params<string>, page: string): { sta
             });
         };
         fetchResults().catch(() => {});
-    }, [params.slug, params.year, state]);
+    }, []);
     return { state, setState };
 }

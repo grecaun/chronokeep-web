@@ -98,6 +98,6 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
             });
         };
         fetchResults().catch(() => {});
-    }, [params.slug, params.year, state]);
+    }, []);
     return { state, setState };
 }

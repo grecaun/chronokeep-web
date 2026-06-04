@@ -48,6 +48,6 @@ export function EventsLoader(): EventsState {
             });
         };
         fetchEvents().catch(() => {});
-    }, [state]);
+    }, []);
     return state;
 }

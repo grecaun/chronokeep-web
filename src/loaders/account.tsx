@@ -60,6 +60,6 @@ export function AccountLoader(page: string): { state: AccountPageState, setState
             });
         };
         fetchAccount().catch(() => {});
-    }, [page, state]);
+    }, []);
     return { state, setState };
 }

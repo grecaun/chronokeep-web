@@ -54,6 +54,6 @@ export function CheckinLoader(params: Params<string>, page: string): { state: Ch
             });
         };
         fetchCheckin().catch(() => {});
-    }, [params.slug, params.year, state]);
+    }, []);
     return { state, setState };
 }
