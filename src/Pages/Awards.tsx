@@ -76,7 +76,7 @@ function handleGrandMastersChange(
 }
 
 export default function Awards() {
-    const [searchParams] = useSearchParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const params = useParams();
     const { state } = ResultsLoader(params, 'awards');
     const [awardsState, setAwardsState] = useState<AwardsState>({
@@ -92,8 +92,6 @@ export default function Awards() {
         pushHistory(awardsState, setSearchParams);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [awardsState]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [_, setSearchParams] = useSearchParams();
     document.title = `Chronokeep - Awards`
     if (state.error === true) {
         document.title = `Chronokeep - Error`

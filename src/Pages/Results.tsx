@@ -3,7 +3,7 @@ import TimeResultsTable from '../Parts/TimeResultsTable';
 import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { EventYear, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
@@ -116,6 +116,7 @@ const filterOptions = createFilterOptions({
 })
 
 function Results() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const params = useParams();
     const { state, setState } = ResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
@@ -155,6 +156,13 @@ function Results() {
         })
     }
 
+    const handleRefreshChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchParams(params => {
+            params.set("refresh", e.target.checked ? "true" : "false")
+            return params;
+        });
+    }
+
     const options = [
         { value: 0, label: "Sort by Ranking" },
         { value: 1, label: "Sort by Gender" },
@@ -164,6 +172,7 @@ function Results() {
     const defaultSort = { value: 0, label: "Sort by Ranking" }
     const textAllowedTime = new Date(Date.parse(state.year!.date_time) + (1000 * 60 * 60 * 24 * state.year!.days_allowed))
     const nowDate = new Date(Date.now())
+    const eventDate = new Date(Date.parse(state.year!.date_time))
     const days_allowed = state.year?.days_allowed ?? 0;
     let current_results = state.results;
     const age_groups: Set<string> = new Set<string>()
@@ -199,6 +208,10 @@ function Results() {
         ranking_checkbox_text = "Rank by Clock Time"
     }
     if (state.event!.type === "backyardultra") {
+        if (searchParams.get('refresh') && searchParams.get('refresh') === 'true' && nowDate < eventDate) {
+            console.log("Auto refresh is set.");
+            setTimeout(() => location.reload(), 30000);
+        }
         ranking_checkbox_text = "Rank by Cumulative Time"
         if (state.default_ranking_type === RankingType.Chip) {
             ranking_checkbox_text = "Rank by Elapsed Time"
@@ -701,6 +714,20 @@ function Results() {
                     )}
                 </Formik>
             }
+            { state.event!.type === "backyardultra" && nowDate < eventDate &&
+                <div className="d-flex justify-content-center">
+                    <FormControlLabel
+                        label="Auto Refresh"
+                        control={
+                            <Checkbox
+                                size="small"
+                                checked={searchParams.get('refresh') !== null && searchParams.get('refresh') === 'true'}
+                                onChange={handleRefreshChange}
+                                />
+                        }
+                    />
+                </div>
+            }
             { distances.length > 0 &&
             <div>
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
@@ -734,11 +761,11 @@ function Results() {
                                     options={options}
                                     getOptionLabel={(option: SortByItem) => option.label}
                                     getOptionValue={(option: SortByItem) => option.value.toString()}
-                                    className="p-0 mb-1"
+                                    className="p-0 mb-1 me-1"
                                     />
                             </div>
                             <div className="col-md-4">
-                                <input type="text" className="form-control mb-1" id="searchBox" placeholder="Search" onChange={handleChange} />
+                                <input type="text" className="form-control mb-1 ms-1" id="searchBox" placeholder="Search" onChange={handleChange} />
                             </div>
                         </div>
                         <ul className="nav nav-tabs nav-fill">
