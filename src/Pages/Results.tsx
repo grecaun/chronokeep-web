@@ -207,8 +207,11 @@ function Results() {
     if (state.default_ranking_type === RankingType.Chip) {
         ranking_checkbox_text = "Rank by Clock Time"
     }
+    const sameDay = nowDate.getFullYear() === eventDate.getFullYear() &&
+                    nowDate.getMonth() === eventDate.getMonth() &&
+                    nowDate.getDate() === eventDate.getDate();
     if (state.event!.type === "backyardultra") {
-        if (searchParams.get('refresh') && searchParams.get('refresh') === 'true' && nowDate < eventDate) {
+        if (searchParams.get('refresh') && searchParams.get('refresh') === 'true' && sameDay === true) {
             console.log("Auto refresh is set.");
             setTimeout(() => location.reload(), 30000);
         }
@@ -714,7 +717,7 @@ function Results() {
                     )}
                 </Formik>
             }
-            { state.event!.type === "backyardultra" && nowDate < eventDate &&
+            { state.event!.type === "backyardultra" && sameDay === true &&
                 <div className="d-flex justify-content-center">
                     <FormControlLabel
                         label="Auto Refresh"
