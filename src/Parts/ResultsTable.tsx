@@ -30,7 +30,7 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (res.seconds != res.chip_seconds || res.milliseconds != res.chip_milliseconds) {
                 one_time = false;
             }
-            if (res.gender.length > 1) {
+            if (res.gender.trim().length > 1 && res.gender !== "Not Specified") {
                 disp_gend = true;
             }
             if (res.age > 0 && res.age < 100) {
@@ -148,7 +148,7 @@ class ResultsTable extends Component<ResultsTableProps> {
         })
         const chip_time = rank_by_chip ? "Clock Time*" : "Chip Time*";
         const clock_time = one_time ? "Time" : rank_by_chip ? "Chip Time" : "Clock Time";
-        const chip_column = one_time ? "overflow-hidden-lg col-lg text-center" : "hidden";
+        const chip_column = one_time ? "hidden" : "overflow-hidden-lg col-lg text-center";
         const age_column = disp_age ? "overflow-hidden-lg col-sm text-center" : "hidden";
         const age_pl_column = disp_age ? "overflow-hidden-lg col-sm text-center" : "hidden";
         const gend_column = disp_gend ? "overflow-hidden-sm col-sm text-center" : "hidden";

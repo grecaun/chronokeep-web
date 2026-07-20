@@ -201,7 +201,7 @@ function Person() {
             { finish !== null &&
             <div className="row container-lg lg-max-width shadow mx-auto gx-6 gy-3 pb-3 justify-content-center align-items-center">
                 <div className="col-lg-8 p-4">
-                    <div className="row d-flex justify-content-left align-items-center gx-4 gy-3 mb-4">
+                    <div className="row d-flex justify-content-center align-items-center gx-4 gy-3 mb-4">
                         { state.event.type !== 'backyardultra' &&
                         <div className="col-sm-8 text-center">
                             <div className="h2 border-bottom">Time</div>
@@ -245,6 +245,7 @@ function Person() {
                     }
                 </div>
                 { state.event.type !== 'backyardultra' &&
+                    (finish === null || finish.seconds !== finish.chip_milliseconds && finish.milliseconds !== finish.chip_milliseconds) &&
                     <div className="col-lg-4 p-4">
                         <div className="row flex-lg-column align-items-center justify-content-stretch p-0 gx-4 gy-3">
                             { start !== null &&
