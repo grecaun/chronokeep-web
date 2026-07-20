@@ -23,7 +23,19 @@ class ResultsTable extends Component<ResultsTableProps> {
                 only_age_group = tmp
             }
         }
+        let one_time = true;
+        let disp_age = false;
+        let disp_gend = false;
         results.forEach(res => {
+            if (res.seconds != res.chip_seconds || res.milliseconds != res.chip_milliseconds) {
+                one_time = false;
+            }
+            if (res.gender.length > 1) {
+                disp_gend = true;
+            }
+            if (res.age > 0 && res.age < 100) {
+                disp_age = true;
+            }
             if (resMap.has(res.bib)) {
                 // if res comes later than current value, replace current value
                 if (resMap.get(res.bib)!.seconds < res.seconds) {
@@ -135,7 +147,12 @@ class ResultsTable extends Component<ResultsTableProps> {
             return a.ranking - b.ranking
         })
         const chip_time = rank_by_chip ? "Clock Time*" : "Chip Time*";
-        const clock_time = rank_by_chip ? "Chip Time" : "Clock Time";
+        const clock_time = one_time ? "Time" : rank_by_chip ? "Chip Time" : "Clock Time";
+        const chip_column = one_time ? "overflow-hidden-lg col-lg text-center" : "hidden";
+        const age_column = disp_age ? "overflow-hidden-lg col-sm text-center" : "hidden";
+        const age_pl_column = disp_age ? "overflow-hidden-lg col-sm text-center" : "hidden";
+        const gend_column = disp_gend ? "overflow-hidden-sm col-sm text-center" : "hidden";
+        const gend_pl_column = disp_gend ? "overflow-hidden-sm col-sm text-center" : "hidden";
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
@@ -153,11 +170,11 @@ class ResultsTable extends Component<ResultsTableProps> {
                             <th className="overflow-hidden-sm col-md text-center">Bib</th>
                             <th className="col-sm text-center">Place</th>
                             <th className="col-xl">Name</th>
-                            <th className="overflow-hidden-lg col-sm text-center">Age</th>
-                            <th className="overflow-hidden-lg col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-sm col-sm text-center">Gender</th>
-                            <th className="overflow-hidden-sm col-sm text-center">Pl</th>
-                            <th className="overflow-hidden-lg col-lg text-center"><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
+                            <th className={age_column}>Age</th>
+                            <th className={age_pl_column}>Pl</th>
+                            <th className={gend_column}>Gender</th>
+                            <th className={gend_pl_column}>Pl</th>
+                            <th className={chip_column}><a href="#disclaimer" className="nav-link m-0 p-0">{chip_time}</a></th>
                             <th className="col-lg text-center">{clock_time}</th>
                         </tr>
                     </thead>
@@ -231,11 +248,11 @@ class ResultsTable extends Component<ResultsTableProps> {
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                         <td className="text-center">{rankStr}</td>
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
-                                        <td className="overflow-hidden-lg text-center">{result.age > 0 && result.age < 130 ? result.age : ""}</td>
-                                        <td className="overflow-hidden-lg text-center">{arankStr}</td>
-                                        <td className="overflow-hidden-sm text-center">{result.gender}</td>
-                                        <td className="overflow-hidden-sm text-center">{grankStr}</td>
-                                        <td className="overflow-hidden-lg text-center">{
+                                        <td className={age_column}>{result.age > 0 && result.age < 130 ? result.age : ""}</td>
+                                        <td className={age_pl_column}>{arankStr}</td>
+                                        <td className={gend_column}>{result.gender}</td>
+                                        <td className={gend_pl_column}>{grankStr}</td>
+                                        <td className={chip_column}>{
                                             rank_by_chip ? FormatTime(result.seconds, result.milliseconds, result, true) : FormatTime(result.chip_seconds, result.chip_milliseconds, result)
                                         }</td>
                                         <td className="text-center">{
