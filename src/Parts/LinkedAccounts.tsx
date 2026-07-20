@@ -103,7 +103,7 @@ class LinkedAccounts extends Component<LinkedAccountsProps, LinkedAccountsState>
                                                 void userService.removeLinkedAccount(account.email);
                                                 const newAccounts: Account[] = []
                                                 accounts.map(a => {
-                                                    if (a.email != account.email) {
+                                                    if (a.email !== account.email) {
                                                         newAccounts.push(a)
                                                     }
                                                 })

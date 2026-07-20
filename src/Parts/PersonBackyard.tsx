@@ -31,7 +31,7 @@ class PersonBackyard extends Component<PersonResultsProps> {
                             }
                             let seconds = res.chip_seconds;
                             let milliseconds = res.chip_milliseconds;
-                            if (last != null) {
+                            if (last !== null) {
                                 milliseconds = res.chip_milliseconds - last.chip_milliseconds
                                 seconds = res.chip_seconds - last.chip_seconds
                                 if (milliseconds < 0) {

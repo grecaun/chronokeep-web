@@ -106,11 +106,11 @@ function YTPScoreTable(props: YTPTableProps) {
     })
     const sorted = results.sort((a: YTPTimeResult, b: YTPTimeResult) => {
         // Combined scores at the top
-        if (a.combined_score != 0 || b.combined_score != 0) {
+        if (a.combined_score !== 0 || b.combined_score !== 0) {
             return b.combined_score - a.combined_score
         }
         // Runners who ran cougar are next
-        if (a.cougar_score != 0 || b.cougar_score != 0) {
+        if (a.cougar_score !== 0 || b.cougar_score !== 0) {
             return b.cougar_score - a.cougar_score
         }
         // Finally those who participated in a previous race

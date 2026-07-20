@@ -19,7 +19,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         if (sort_by > 2) {
             sort_by = 1;
             const tmp = this.props.age_group_map.get(this.props.sort_by)
-            if (tmp != undefined) {
+            if (tmp !== undefined) {
                 only_age_group = tmp
             }
         }
@@ -85,15 +85,15 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         const sorted = dispResults.sort((a: TimeResult, b: TimeResult) => {
             switch (sort_by) {
                 case 1:
-                    if (a.gender != b.gender) {
+                    if (a.gender !== b.gender) {
                         return a.gender.localeCompare(b.gender)
                     }
                     break;
                 case 2:
-                    if (a.gender != b.gender) {
+                    if (a.gender !== b.gender) {
                         return a.gender.localeCompare(b.gender)
                     }
-                    if (a.age_group != b.age_group) {
+                    if (a.age_group !== b.age_group) {
                         const a_start = Number(a.age_group.split('-')[0]) || 0
                         const b_start = Number(b.age_group.split('-')[0]) || 1
                         return a_start - b_start;
@@ -108,7 +108,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
             // sort by gun time given
             if (a.ranking === b.ranking) {
                 // the other case here is that one runner passed another
-                if (a.occurence != b.occurence) {
+                if (a.occurence !== b.occurence) {
                     // sort high to low (instead of low to high for times and ranks)
                     return b.occurence - a.occurence;
                 }

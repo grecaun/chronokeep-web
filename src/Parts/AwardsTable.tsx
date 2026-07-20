@@ -34,7 +34,7 @@ class AwardsTable extends Component<AwardsProps> {
             // sort by gun time given
             if (a.ranking === b.ranking) {
                 // the other case here is that one runner passed another
-                if (a.occurence != b.occurence) {
+                if (a.occurence !== b.occurence) {
                     // sort hight to low (instead of low to high for times and ranks)
                     return b.occurence - a.occurence;
                 }

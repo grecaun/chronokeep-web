@@ -540,8 +540,12 @@ function Results() {
     // Process results for The Double results.
     const double_distances: string[] = [];
     const double_results: TimeResult[] = [];
+    let one_time = true;
     distances.map(dist => {
         state.results[dist].map(result => {
+            if (result.seconds !== result.chip_seconds || result.milliseconds !== result.chip_milliseconds) {
+                one_time = false;
+            }
             // only store finish results in The Double
             if (result.division.toLowerCase() === "the-double"
                 || result.division.toLowerCase() === "the double"
@@ -583,7 +587,7 @@ function Results() {
         })
     })
     const certifications = new Map<string, string>()
-    if (state.distances != null) {
+    if (state.distances !== null) {
         state.distances.map(dist => {
             if (dist.certification.length > 0) {
                 certifications.set(dist.name, dist.certification)
@@ -735,8 +739,8 @@ function Results() {
             <div>
                 <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 mb-3 border border-light">
                     <div className="p-0">
-                        <div className="row container-lg md-max-width mx-auto p-0 my-2">
-                            { state.event!.type !== "time" &&
+                        <div className="row container-lg md-max-width mx-auto p-0 my-2 justify-content-center">
+                            { state.event!.type !== "time" && !one_time &&
                                 <div className="col-md-4 d-flex justify-content-center">
                                     <FormControlLabel
                                         label={ranking_checkbox_text}
@@ -859,7 +863,9 @@ function Results() {
                         </div>
                     </div>
                 </div>
-                <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>{disclaimer}</div>
+                { !one_time &&
+                    <div id='disclaimer' className='container-lg lg-max-width shadow-sm text-center p-3 mb-3 border border-light overflow-hidden-lg'>{disclaimer}</div>
+                }
             </div>
             }
             { distances.length === 0 &&
