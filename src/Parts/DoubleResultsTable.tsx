@@ -231,8 +231,11 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
                                     arankStr = grankStr = ""
                                     result.gender = ""
                                 }
-                                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
+                                if (result.gender === "WO" || result.gender === "W") {
                                     result.gender = "W"
+                                }
+                                if (result.gender === "FE" || result.gender === "F") {
+                                    result.gender = "F"
                                 }
                                 if (result.gender === "M" || result.gender === "MA") {
                                     result.gender = "M"

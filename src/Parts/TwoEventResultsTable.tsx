@@ -45,8 +45,11 @@ class TwoEventResultsTable extends Component<TwoEventResultsTableProps> {
                                 if (gender === "U" || gender === "O" || gender === "UN" || gender === "OT" || gender === "NS") {
                                     gender = ""
                                 }
-                                if (gender === "F" || gender === "WO" || gender === "W") {
+                                if (gender === "WO" || gender === "W") {
                                     gender = "W"
+                                }
+                                if (gender === "FE" || gender === "F") {
+                                    gender = "F"
                                 }
                                 if (gender === "M" || gender === "MA") {
                                     gender = "M"
