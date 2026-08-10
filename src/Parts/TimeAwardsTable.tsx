@@ -99,11 +99,17 @@ class TimeResultsTable extends Component<AwardsProps> {
                             <div key={group}>
                                 { genders.map(gender => {
                                     let displGender = gender.toUpperCase();
-                                    if (displGender === "F" || displGender === "W" || displGender === "WOMAN") {
+                                    if (displGender === "W" || displGender === "WOMAN") {
                                         displGender = "Women";
                                     }
-                                    if (displGender === "M" || displGender === "MAN") {
+                                    if (displGender === "F" || displGender === "FEMALE") {
+                                        displGender = "Female";
+                                    }
+                                    if (displGender === "MAN") {
                                         displGender = "Men";
+                                    }
+                                    if (displGender === "M" || displGender === "MALE") {
+                                        displGender = "Male";
                                     }
                                     if (displGender === gender.toUpperCase()) {
                                         displGender = gender;
