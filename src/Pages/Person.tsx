@@ -146,20 +146,29 @@ function Person() {
         }
         state.person.gender = "";
     }
-    if (state.person.gender === "F" || state.person.gender === "f" || state.person.gender === "W" || state.person.gender === "w") {
+    if (gend === "W") {
         state.person.gender = "Woman"
     }
-    if (state.person.gender === "M" || state.person.gender === "m") {
-        state.person.gender = "Man"
+    if (gend === "F") {
+        state.person.gender = "Female"
+    }
+    if (gend === "M") {
+        state.person.gender = "Male"
     }
     const pretty_year = state.year.year.replace(/\D/g, "");
     document.title = `Chronokeep - ${pretty_year} ${state.event.name} Results - ${state.person.first} ${state.person.last}`
     let ranking_gender = state.person.gender.toUpperCase();
-    if (ranking_gender === "W" || ranking_gender === "F" || ranking_gender === "WOMAN") {
+    if (ranking_gender === "W"|| ranking_gender === "WOMAN") {
         ranking_gender = "Women"
     }
-    if (ranking_gender === "M" || ranking_gender === "MAN") {
+    if (ranking_gender === "F" ) {
+        ranking_gender = "Female"
+    }
+    if (ranking_gender === "MAN") {
         ranking_gender = "Men"
+    }
+    if (ranking_gender === "M") {
+        ranking_gender = "Male"
     }
     if (ranking_gender === state.person.gender.toUpperCase()) {
         ranking_gender = state.person.gender;
