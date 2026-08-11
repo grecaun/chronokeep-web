@@ -61,6 +61,8 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
                         state.default_ranking_type = RankingType.Gun
                         if (dta.event_year.ranking_type === "chip") {
                             state.default_ranking_type = RankingType.Chip
+                        } else if (dta.event_year.ranking_type === "mixed") {
+                            state.default_ranking_type = RankingType.Mixed
                         }
                         state.distances = dta.distances
                     } else {

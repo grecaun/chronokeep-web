@@ -219,7 +219,7 @@ function Results() {
         if (state.default_ranking_type === RankingType.Chip) {
             ranking_checkbox_text = "Rank by Elapsed Time"
         }
-        if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
+        if (state.rank_by_selected === true && state.default_ranking_type !== RankingType.Chip) { // change ranking to rank by chip
             current_results = {};
             distances.map(distance => {
                 const resMap = new Map<string, TimeResult>()
@@ -305,7 +305,7 @@ function Results() {
                     }
                 })
             })
-        } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // rank by gun
+        } else if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Chip) { // change ranking to rank by clock
             current_results = {};
             distances.map(distance => {
                 const resMap = new Map<string, TimeResult>()
@@ -393,7 +393,7 @@ function Results() {
             })
         }
     } else {
-        if (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun) { // rank by chip
+        if (state.rank_by_selected === true && state.default_ranking_type !== RankingType.Chip) { // rank by chip
             current_results = {};
             distances.map(distance => {
                 current_results[distance] = [];
@@ -598,6 +598,9 @@ function Results() {
         || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip)
         ? "*Results are ranked based upon the Chip Time and not the Clock Time."
         : "*Results are ranked based upon the Clock Time and not the Chip Time.";
+    if (state.default_ranking_type === RankingType.Mixed && state.rank_by_selected === false) {
+        disclaimer = "*Top 3 results are ranked by Clock Time, all other results ranked by Chip Time.";
+    }
     if (state.event!.type === "backyardultra") {
         disclaimer = (state.rank_by_selected === true && state.default_ranking_type === RankingType.Gun)
         || (state.rank_by_selected === false && state.default_ranking_type === RankingType.Chip)

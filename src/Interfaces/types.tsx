@@ -168,7 +168,8 @@ export interface Segment {
 
 export enum RankingType {
     Gun = 1,
-    Chip
+    Chip,
+    Mixed
 }
 
 export interface SeriesDistance {
