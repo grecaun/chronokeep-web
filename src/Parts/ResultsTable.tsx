@@ -30,7 +30,7 @@ class ResultsTable extends Component<ResultsTableProps> {
             if (res.seconds !== res.chip_seconds || res.milliseconds !== res.chip_milliseconds) {
                 one_time = false;
             }
-            if (res.gender.trim().length > 1 && res.gender !== "Not Specified") {
+            if (res.gender.trim().length > 0 && res.gender !== "Not Specified") {
                 disp_gend = true;
             }
             if (res.age > 0 && res.age < 100) {
