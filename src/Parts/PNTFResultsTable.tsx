@@ -14,10 +14,8 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
         results.map(result => {
             result.gender = result.gender.toLocaleUpperCase();
             result.gender = result.gender.substring(0,2)
-            if (result.gender === "WO" || result.gender === "W") {
+            if (result.gender === "WO" || result.gender === "W" || result.gender === "FE" || result.gender === "F") {
                 result.gender = "W"
-            } else if (result.gender === "FE" || result.gender === "F") {
-                result.gender = "F"
             } else if (result.gender === "M" || result.gender === "MA") {
                 result.gender = "M"
             } else {

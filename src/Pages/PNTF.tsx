@@ -39,11 +39,11 @@ function PNTF(props: PageProps) {
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
                 if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
-                    result.gender = "F"
-                    gender = "Female"
+                    result.gender = "W"
+                    gender = "Woman"
                 } else if (result.gender === "M" || result.gender === "MA") {
                     result.gender = "M"
-                    gender = "Male"
+                    gender = "Man"
                 } else {
                     result.gender = "X"
                     gender = "Non-Binary"
