@@ -44,10 +44,18 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
         ]
         for (let i=0; i<=5; i+=2) {
             if (divisionResults[divisions[i]] !== undefined && divisionResults[divisions[i+1]] !== undefined) {
-                while (divisionResults[divisions[i]].length < 5 && divisionResults[divisions[i+1]].length > 5) {
-                    const missing_ix = divisionResults[divisions[i]].length
-                    const change_result = divisionResults[divisions[i+1]].splice(missing_ix, 1)
-                    divisionResults[divisions[i]].push(change_result[i])
+                let divOneSize = divisionResults[divisions[i]].length
+                let divTwoSize = divisionResults[divisions[i+1]].length
+                while (divOneSize < 5 && divTwoSize > 5) {
+                    const change_result = divisionResults[divisions[i+1]].splice(divTwoSize-1, 1)
+                    divisionResults[divisions[i]].push(change_result[0])
+                    divOneSize = divisionResults[divisions[i]].length
+                }
+                divOneSize = divisionResults[divisions[i]].length
+                divTwoSize = divisionResults[divisions[i+1]].length
+                if (divOneSize > divTwoSize && divisionResults[divisions[i]][divOneSize-1].age >= 40) {
+                    const change_result = divisionResults[divisions[i]].splice(divOneSize-1, 1)
+                    divisionResults[divisions[i+1]].push(change_result[0])
                 }
             }
         }
@@ -79,7 +87,7 @@ class PNTFAwardsTable extends Component<PNTFTableProps> {
                                             <th className="col-sm text-center">Place</th>
                                             <th className="col-xl">Name</th>
                                             <th className="overflow-hidden-sm col-sm text-center">Age</th>
-                                            <th className="overflow-hidden-lg col-lg text-center">Chip Time</th>
+                                            <th className="overflow-hidden-lg col-lg text-center">Chip Time*</th>
                                             <th className="col-lg text-center">Clock Time</th>
                                         </tr>
                                     </thead>
