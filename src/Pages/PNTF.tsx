@@ -32,8 +32,9 @@ function PNTF(props: PageProps) {
     distances.map(distance => {
         state.results[distance].map(result => {
             if (result.division.trim() === "pntf" && result.finish === true) {
-                if (results[distance] === undefined) {
-                    results[distance] = []
+                const dist = "Open & Masters Championship"
+                if (results[dist] === undefined) {
+                    results[dist] = []
                 }
                 let gender: string
                 result.gender = result.gender.toLocaleUpperCase();
@@ -88,7 +89,7 @@ function PNTF(props: PageProps) {
                 } else if (result.age / 5 < 20) {
                     age_group = `${gender} 95-99`
                 }
-                results[distance].push({
+                results[dist].push({
                         person_id: result.person_id,
                         bib: result.bib,
                         first: result.first,
@@ -108,10 +109,69 @@ function PNTF(props: PageProps) {
                         segment: result.segment,
                         type: result.type,
                         anonymous: result.anonymous,
-                        distance: result.distance,
+                        distance: dist,
                         location: result.location,
                         local_time: result.local_time,
                         division: division,
+                        division_ranking: result.division_ranking
+                    })
+            }
+            if (result.division.trim() === "ytp" && result.finish === true) {
+                const dist = "Youth Championship"
+                if (results[dist] === undefined) {
+                    results[dist] = []
+                }
+                let age_group = ""
+                let gender: string
+                result.gender = result.gender.toLocaleUpperCase();
+                result.gender = result.gender.substring(0,2)
+                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
+                    result.gender = "F"
+                    gender = "Female"
+                } else if (result.gender === "M" || result.gender === "MA") {
+                    result.gender = "M"
+                    gender = "Male"
+                } else {
+                    result.gender = "X"
+                    gender = "Non-Binary"
+                }
+                if (result.age < 9) {
+                    age_group = `${gender} 8/under`
+                } else if (result.age < 11) {
+                    age_group = `${gender} 9-10`
+                } else if (result.age < 13) {
+                    age_group = `${gender} 11-12`
+                } else if (result.age < 15) {
+                    age_group = `${gender} 13-14`
+                } else if (result.age < 17) {
+                    age_group = `${gender} 15-16`
+                } else if (result.age < 19) {
+                    age_group = `${gender} 17-18`
+                }
+                results[dist].push({
+                        person_id: result.person_id,
+                        bib: result.bib,
+                        first: result.first,
+                        last: result.last,
+                        seconds: result.seconds,
+                        milliseconds: result.milliseconds,
+                        chip_seconds: result.chip_seconds,
+                        chip_milliseconds: result.chip_milliseconds,
+                        gender: result.gender,
+                        occurence: result.occurence,
+                        age_group: age_group,
+                        age: result.age,
+                        ranking: result.ranking,
+                        age_ranking: result.age_ranking,
+                        gender_ranking: result.gender_ranking,
+                        finish: result.finish,
+                        segment: result.segment,
+                        type: result.type,
+                        anonymous: result.anonymous,
+                        distance: dist,
+                        location: result.location,
+                        local_time: result.local_time,
+                        division: result.division,
                         division_ranking: result.division_ranking
                     })
             }

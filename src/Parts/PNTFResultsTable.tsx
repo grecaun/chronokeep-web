@@ -26,6 +26,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
             }
             genderResults[result.gender].push(result)
         })
+        const open = this.props.distance !== "Youth Championship"
         return (
             <div className="table-responsive-sm m-3" key={distance} id={distance}>
                 <table className="table table-sm">
@@ -37,7 +38,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                         }
                         <tr>
                             <th className="col-sm text-center">Place</th>
-                            <th className="col-sm text-center">Masters</th>
+                            { open && <th className="col-sm text-center">Masters</th> }
                             <th className="col-lg">Name</th>
                             <th className="overflow-hidden-lg col-sm text-center">Overall</th>
                             <th className="overflow-hidden-lg col-md text-center">Age Group</th>
@@ -91,7 +92,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{dRankStr}</td>
+                                        { open && <td className="text-center">{dRankStr}</td> }
                                         <td><Link to={`/pntf/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
@@ -150,7 +151,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{dRankStr}</td>
+                                        { open && <td className="text-center">{dRankStr}</td> }
                                         <td><Link to={`/pntf/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
@@ -209,7 +210,7 @@ class PNTFResultsTable extends Component<PNTFTableProps> {
                                 return (
                                     <tr key={result.bib}>
                                         <td className="text-center">{rankStr}</td>
-                                        <td className="text-center">{dRankStr}</td>
+                                        { open && <td className="text-center">{dRankStr}</td> }
                                         <td><Link to={`/pntf/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>
                                         <td className="overflow-hidden-lg text-center">{result.ranking}</td>
                                         <td className="overflow-hidden-lg text-center">{ageGroupRanking}</td>
