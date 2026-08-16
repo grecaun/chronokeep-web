@@ -150,10 +150,12 @@ function SeriesPage() {
             seriesResults[name].map(res => {
                 const rankings: number[] = []
                 const paces: number[] = []
-                res.results.forEach(tRes => {
-                    rankings.push(tRes.ranking)
-                    paces.push(tRes.division_ranking)
-                    res.pace_type = tRes.division
+                res.results.forEach((tRes, yearDistKey) => {
+                    if (seriesMap.get(yearDistKey)!.name === name) {
+                        rankings.push(tRes.ranking)
+                        paces.push(tRes.division_ranking)
+                        res.pace_type = tRes.division
+                    }
                 })
                 rankings.sort((a,b) => { return a - b })
                 paces.sort((a,b) => { return a - b })
