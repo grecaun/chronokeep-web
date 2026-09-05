@@ -116,7 +116,7 @@ function PNTF(props: PageProps) {
                         division_ranking: result.division_ranking
                     })
             }
-            if (result.division.trim() === "ytp" && result.finish === true) {
+            if (result.division.trim() === "ytp" && result.finish === true && props.page !== 'pntf-awards') {
                 const dist = "Youth Championship"
                 if (results[dist] === undefined) {
                     results[dist] = []
