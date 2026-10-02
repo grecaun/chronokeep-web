@@ -1,5 +1,5 @@
 import KeyInfo from "../Parts/KeyInfo";
-import { Account, Event, EventYear, Key, Participant, SeriesResult, Segment, TimeResult, YTPTimeResult, TeamResult } from "./types";
+import { Account, Event, EventYear, Key, Participant, SeriesResult, Segment, TimeResult, YTPTimeResult, TeamResult, NorthBendDoubleResult } from "./types";
 import { SetURLSearchParams } from "react-router-dom";
 
 export interface PersonResultsProps {
@@ -98,6 +98,11 @@ export interface SeriesResultsTableProps {
     results: SeriesResult[]
     distances: string[]
     show_title: boolean
+    search: string
+}
+
+export interface NorthBendDoubleResultsTableProps {
+    results: NorthBendDoubleResult[]
     search: string
 }
 

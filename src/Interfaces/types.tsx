@@ -205,6 +205,20 @@ export interface SeriesResult {
     age_ranking: number
 }
 
+export interface NorthBendDoubleResult {
+    first: string
+    last: string
+    gender: string
+    age: number
+    age_group: string
+    seconds: number
+    milliseconds: number
+    results: TimeResult[]
+    ranking: number
+    gender_ranking: number
+    age_ranking: number
+}
+
 export interface Double {
     slug: string
     year: string
