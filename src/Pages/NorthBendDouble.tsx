@@ -1,13 +1,13 @@
 import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import { useParams } from 'react-router-dom';
-import { MultiResultsLoader } from '../loaders/multi_results';
 import { NorthBendDoubleResult } from '../Interfaces/types';
 import NorthBendDoubleResultsTable from '../Parts/NorthBendDoubleResultsTable';
+import { DoubleResultsLoader } from '../loaders/double_results';
 
 function NorthBendDoublePage() {
     const params = useParams();
-    const { state } = MultiResultsLoader(params, 'results');
+    const { state } = DoubleResultsLoader(params, 'results');
     document.title = `Chronokeep - Results`
     if (state.error === true) {
         document.title = `Chronokeep - Error`
@@ -24,38 +24,35 @@ function NorthBendDoublePage() {
     // Map used for keeping track of all participants and their results in the series
     const participants: Map<string, NorthBendDoubleResult> = new Map<string, NorthBendDoubleResult>()
     // Go through the results for each year
-    Object.keys(results).map(year => {
-        // and each distance
-        Object.keys(results[year]).map(distance => {
-            // Go through the list and record their result in a SeriesResult
-            results[year][distance].map(result => {
-                if (result.finish && result.type !== 3 && result.type < 30) {
-                    if (!participants.has(result.bib)) {
-                        participants.set(result.bib, {
-                            first: result.first,
-                            last: result.last,
-                            gender: result.gender,
-                            age: result.age,
-                            age_group: result.age_group,
-                            seconds: 0,
-                            milliseconds: 0,
-                            results: [],
-                            ranking: 0,
-                            gender_ranking: 0,
-                            age_ranking: 0
-                        })
-                    }
-                    const part = participants.get(result.bib)!
-                    part.seconds += result.seconds;
-                    part.milliseconds += result.milliseconds;
-                    if (part.milliseconds >= 1000) {
-                        part.seconds += 1
-                        part.milliseconds -= 1000
-                    }
-                    part.results.push(result)
-                    participants.set(result.bib, part)
+    Object.keys(results).map(distance => {
+        // Go through the list and record their result in a SeriesResult
+        results[distance].map(result => {
+            if (result.finish && result.type !== 3 && result.type < 30) {
+                if (!participants.has(result.bib)) {
+                    participants.set(result.bib, {
+                        first: result.first,
+                        last: result.last,
+                        gender: result.gender,
+                        age: result.age,
+                        age_group: result.age_group,
+                        seconds: 0,
+                        milliseconds: 0,
+                        results: [],
+                        ranking: 0,
+                        gender_ranking: 0,
+                        age_ranking: 0
+                    })
                 }
-            })
+                const part = participants.get(result.bib)!
+                part.seconds += result.seconds;
+                part.milliseconds += result.milliseconds;
+                if (part.milliseconds >= 1000) {
+                    part.seconds += 1
+                    part.milliseconds -= 1000
+                }
+                part.results.push(result)
+                participants.set(result.bib, part)
+            }
         })
     })
     const doubleResults: NorthBendDoubleResult[] = []
@@ -88,13 +85,13 @@ function NorthBendDoublePage() {
         part.gender_ranking = genderRank.get(part.gender)!
         genderRank.set(part.gender, part.gender_ranking + 1)
     })
-    const pageSubTitle = 'North Bend Double Results'
-    document.title = `Chronokeep - ${state.event!.name} - ${pageSubTitle}`
+    const pageSubTitle = 'Results'
+    document.title = `Chronokeep - ${state.selected_year!.display_name} - ${pageSubTitle}`
     return (
         <div>
             <div className="row container-lg lg-max-width mx-auto d-flex mt-4 mb-3 align-items-stretch">
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
-                    <p className="text-important mb-0 mt-1 h1">{`${state.event!.name}`}</p>
+                    <p className="text-important mb-0 mt-1 h1">{`${state.selected_year!.display_name}`}</p>
                     <p className="text-important mb-2 mt-0 h2">{pageSubTitle}</p>
                     <p className="text-important h5">{state.selected_year?.display_year === undefined? '' : state.selected_year?.display_year}</p>
                 </div>
