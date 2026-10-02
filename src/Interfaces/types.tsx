@@ -206,6 +206,7 @@ export interface SeriesResult {
 }
 
 export interface NorthBendDoubleResult {
+    bib: string
     first: string
     last: string
     gender: string

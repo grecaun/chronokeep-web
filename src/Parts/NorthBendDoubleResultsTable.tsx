@@ -11,10 +11,11 @@ class NorthBendDoubleResultsTable extends Component<NorthBendDoubleResultsTableP
                 <table className="table table-sm">
                     <thead>
                         <tr>
+                            <th className="overflow-hidden-sm col-sm text-center">Bib</th>
                             <th className="col-sm text-center">Pl</th>
                             <th className="col-lg">Name</th>
                             <th className="col-sm text-center">Gender</th>
-                            <th className="col-md text-center">Age Grp</th>
+                            <th className="overflow-hidden-sm col-md text-center">Age Grp</th>
                             <th className="col-lg text-center">Time</th>
                         </tr>
                     </thead>
@@ -64,10 +65,11 @@ class NorthBendDoubleResultsTable extends Component<NorthBendDoubleResultsTableP
                                 }
                                 return (
                                     <tr key={`${result.first}-${result.last}`}>
+                                        <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                         <td className="text-center">{rankStr}</td>
                                         <td>{`${result.first} ${result.last}`}</td>
                                         <td className="text-center">{grankStr.length > 0 ? `${grankStr} ${result.gender}` : grankStr}</td>
-                                        <td className="text-center">{arankStr.length > 0 ? `${arankStr} ${result.gender} ${result.age_group}` : arankStr}</td>
+                                        <td className="overflow-hidden-sm text-center">{arankStr.length > 0 ? `${arankStr} ${result.gender} ${result.age_group}` : arankStr}</td>
                                         <td className="text-center">{SimpleFormatTime(result.seconds, result.milliseconds)}</td>
                                     </tr>
                                 );

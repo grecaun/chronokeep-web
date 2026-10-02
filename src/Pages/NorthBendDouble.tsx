@@ -30,6 +30,7 @@ function NorthBendDoublePage() {
             if (result.finish && result.type !== 3 && result.type < 30) {
                 if (!participants.has(result.bib)) {
                     participants.set(result.bib, {
+                        bib: result.bib,
                         first: result.first,
                         last: result.last,
                         gender: result.gender,

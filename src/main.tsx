@@ -25,6 +25,7 @@ import SeriesPage from './Pages/Series';
 import TeamResults from './Pages/TeamResults';
 import DoublePage from './Pages/Double';
 import NoCheckQRCode from './Pages/NoCheckQRCode';
+import NorthBendDoublePage from './Pages/NorthBendDouble';
 
 const router = createBrowserRouter([
   {
@@ -95,6 +96,10 @@ const router = createBrowserRouter([
       {
         path: '/double/:slug/:year?',
         element: <DoublePage />
+      },
+      {
+        path: '/nbd/:slug/:year?',
+        element: <NorthBendDoublePage />
       },
       {
         path: '/double/:slug/:year?/qr',
