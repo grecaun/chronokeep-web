@@ -71,8 +71,14 @@ export function DoubleResultsLoader(params: Params<string>, page: string): { sta
                         .then(data => {
                             if (Object.prototype.hasOwnProperty.call(data, 'event')) {
                                 const dta = data as GetResultsResponse
-                                if (dta.results[distance]) {
-                                    state.results[distance] = dta.results[distance];
+                                if (distance.length > 0) {
+                                    if (dta.results[distance]) {
+                                        state.results[distance] = dta.results[distance];
+                                    }
+                                } else {
+                                    Object.keys(dta.results).forEach((key) => {
+                                        state.results[key] = dta.results[key];
+                                    });
                                 }
                             } else {
                                 const err = data as ErrorResponse
