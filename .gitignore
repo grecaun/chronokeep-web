@@ -46,3 +46,5 @@ lerna-debug.log*
 *.sh
 
 /series
+/double
+/public/certificate-template2x2.png

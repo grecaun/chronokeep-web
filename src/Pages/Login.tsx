@@ -55,12 +55,12 @@ function Login(props: PageProps) {
                     <Form>
                         <div className="form-group">
                             <label className="chronokeep-form-label" htmlFor="username">Email</label>
-                            <Field name="username" type="text" autoComplete="username" className={'chronokeep-input form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                            <Field id="username" name="username" type="text" autoComplete="username" className={'chronokeep-input form-control' + (errors.username && touched.username ? ' is-invalid' : '')} />
                             <ErrorMessage name="username" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">
                             <label className="chronokeep-form-label" htmlFor="password">Password</label>
-                            <Field name="password" type="password" autoComplete="current-password" className={'chronokeep-input form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                            <Field id="password" name="password" type="password" autoComplete="current-password" className={'chronokeep-input form-control' + (errors.password && touched.password ? ' is-invalid' : '')} />
                             <ErrorMessage name="password" component="div" className="invalid-feedback" />
                         </div>
                         <div className="form-group">

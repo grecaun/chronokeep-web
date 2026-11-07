@@ -254,7 +254,7 @@ function Person() {
                     }
                 </div>
                 { state.event.type !== 'backyardultra' &&
-                    (finish === null || finish.seconds !== finish.chip_milliseconds && finish.milliseconds !== finish.chip_milliseconds) &&
+                    (finish === null || finish.seconds !== finish.chip_seconds || finish.milliseconds !== finish.chip_milliseconds) &&
                     <div className="col-lg-4 p-4">
                         <div className="row flex-lg-column align-items-center justify-content-stretch p-0 gx-4 gy-3">
                             { start !== null &&

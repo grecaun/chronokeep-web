@@ -39,7 +39,7 @@ function PNTF(props: PageProps) {
                 let gender: string
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
-                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
+                if (result.gender === "F" || result.gender === "FE" || result.gender === "WO" || result.gender === "W") {
                     result.gender = "W"
                     gender = "Woman"
                 } else if (result.gender === "M" || result.gender === "MA") {
@@ -125,7 +125,7 @@ function PNTF(props: PageProps) {
                 let gender: string
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
-                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
+                if (result.gender === "F" || result.gender === "FE" || result.gender === "WO" || result.gender === "W") {
                     result.gender = "F"
                     gender = "Female"
                 } else if (result.gender === "M" || result.gender === "MA") {

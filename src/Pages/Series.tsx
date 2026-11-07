@@ -77,7 +77,7 @@ function SeriesPage() {
     })
     // Check which series they're in and put them in an array with their peers
     const seriesResults: { [index:string]: SeriesResult[] } = {}
-    participants.forEach((res, name) => {
+    participants.forEach(res => {
         // Count the number of events in each series the participant has completed
         const whichSeries: Map<string, number> = new Map<string, number>()
         res.results.forEach((_, yearDistKey) => {
@@ -96,7 +96,11 @@ function SeriesPage() {
                 if (seriesResults[seriesName] === undefined) {
                     seriesResults[seriesName] = []
                 }
-                seriesResults[seriesName].push(participants.get(name)!)
+                // each series gets its own copy so points, pace, and rankings don't add up across series
+                seriesResults[seriesName].push({
+                    ...res,
+                    results: new Map<string, TimeResult>(res.results)
+                })
             }
         })
     })
@@ -105,7 +109,7 @@ function SeriesPage() {
         if (seriesResults[name] !== undefined) {
             // Go through all of the series results and make sure every event for a person is part of that series
             seriesResults[name].map(oneRes => {
-                Object.keys(oneRes.results).map(yearDistKey => {
+                Array.from(oneRes.results.keys()).map(yearDistKey => {
                     if (seriesMap.get(yearDistKey)!.name !== name) {
                         oneRes.results.delete(yearDistKey)
                     }
@@ -127,7 +131,7 @@ function SeriesPage() {
                     if (b.results.has(yearDistKey) && !a.results.has(yearDistKey)) {
                         return 1
                     }
-                    if (a.results.get(yearDistKey)!.ranking == a.results.get(yearDistKey)!.ranking) {
+                    if (a.results.get(yearDistKey)!.ranking == b.results.get(yearDistKey)!.ranking) {
                         if (a.results.get(yearDistKey)!.seconds === b.results.get(yearDistKey)!.seconds) {
                             return a.results.get(yearDistKey)!.milliseconds - b.results.get(yearDistKey)!.milliseconds
                         }

@@ -69,7 +69,11 @@ function Status() {
                                         map[num] = 1
                                     }
                                 }
-                                const loops = Math.ceil((max - min)/10)
+                                // each row holds 10 bibs starting at min, so max needs to land in the last row
+                                let loops = 0
+                                if (-1 !== min) {
+                                    loops = Math.floor((max - min)/10) + 1
+                                }
                                 if (nonIntegerBib === true) {
                                     return(
                                         <div key={`distance${index}`}>

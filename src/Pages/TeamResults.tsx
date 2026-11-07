@@ -41,7 +41,7 @@ function TeamResults() {
                 teamCount[result.distance][result.division].members += 1
                 result.gender = result.gender.toLocaleUpperCase();
                 result.gender = result.gender.substring(0,2)
-                if (result.gender === "F" || result.gender === "WO" || result.gender === "W") {
+                if (result.gender === "F" || result.gender === "FE" || result.gender === "WO" || result.gender === "W") {
                     result.gender = "W"
                     teamCount[result.distance][result.division].women += 1
                 } else if (result.gender === "M" || result.gender === "MA") {
@@ -161,6 +161,8 @@ function TeamResults() {
             }
         })
     })
+    // a distance can have team members without any team meeting the 4 finisher / 2 women rule
+    distances = distances.filter(distance => undefined !== teamResults[distance])
     const teamPoints: { [index: string]: { [index:string]: TeamResult } } = {}
     const teamPlacements: { [index: string]: TeamResult[]} = {}
     distances.map(distance => {

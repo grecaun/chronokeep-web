@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     // Components import public assets like '/logo.png', which only the dev server understands.
-    alias: [{ find: /^\/(.+\.(png|svg))$/, replacement: `${publicDir}/$1` }],
+    alias: [{ find: /^\/(logo\.png|img\/[^/]+\.svg)$/, replacement: `${publicDir}/$1` }],
   },
   test: {
     environment: 'jsdom',
