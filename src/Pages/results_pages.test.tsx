@@ -1,8 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useNavigate } from 'react-router-dom'
 import { makeTimeResult } from '../test/helpers'
-import { makeEvent, makeResultsResponse, makeYear, renderAt, routeFetch, tableRows, TestErrorBoundary } from '../test/pages'
+import { makeEvent, makeResultsResponse, makeYear, pickYear, renderAt, routeFetch, tableRows, TestErrorBoundary, yearOptions } from '../test/pages'
 import Results from './Results'
 import Status from './Status'
 import Awards from './Awards'
@@ -125,7 +126,7 @@ describe('Results page', () => {
         expect(await screen.findByRole('button', { name: 'The Double' })).toHaveAttribute('href', '#The Double')
     })
 
-    it('links to other years and disables the current one', async () => {
+    it('lists every year newest first with the current one selected', async () => {
         renderResults(makeResultsResponse({ '5K': clockVsChip() }, {
             years: [
                 makeYear({ year: '2020', date_time: '2020-06-01T08:00:00' }),
@@ -135,10 +136,68 @@ describe('Results page', () => {
         }))
 
         await screen.findByText('Test Race Results')
-        const years = ['2018', '2019', '2020'].map(y => screen.getByRole('link', { name: y }))
-        expect(years.map(y => y.getAttribute('href'))).toEqual(['/results/test-race/2018', '/results/test-race/2019', '/results/test-race/2020'])
-        expect(years[2]).toHaveClass('disabled')
-        expect(years[0]).not.toHaveClass('disabled')
+        expect(await yearOptions()).toEqual(['2020*', '2019', '2018'])
+    })
+
+    describe('switching years', () => {
+        const allYears = ['2020', '2019', '2018'].map(year => makeYear({ year, date_time: `${year}-06-01T08:00:00` }))
+
+        // Answers each /results request for its year, holding back any year listed in `held`
+        // until the test releases it.
+        function yearFetch(held: string[] = []) {
+            const release: Record<string, () => void> = {}
+            routeFetch({
+                '/results': (_url: string, init?: RequestInit) => {
+                    const { year } = JSON.parse(init!.body as string) as { year?: string }
+                    const y = year ?? '2020'
+                    const body = makeResultsResponse({ '5K': clockVsChip() }, {
+                        event: makeEvent({ name: `Race ${y}` }),
+                        years: allYears,
+                        event_year: makeYear({ year: y, date_time: `${y}-06-01T08:00:00` }),
+                    })
+                    const respond = () => new Response(JSON.stringify(body), { status: 200 })
+                    if (!held.includes(y)) {
+                        return respond()
+                    }
+                    return new Promise<Response>(resolve => { release[y] = () => resolve(respond()) })
+                },
+            })
+            return release
+        }
+
+        it('shows loading and then the new year without a page reload', async () => {
+            const release = yearFetch(['2018'])
+            renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
+
+            await pickYear('2018')
+
+            expect(screen.getByTestId('location')).toHaveTextContent('/results/test-race/2018')
+            expect(screen.getByText('Loading...')).toBeInTheDocument()
+            expect(screen.queryByText('Race 2020 Results')).not.toBeInTheDocument()
+
+            release['2018']()
+            expect(await screen.findByText('Race 2018 Results')).toBeInTheDocument()
+        })
+
+        it('ignores a slow response for a year the user already left', async () => {
+            // Stands in for back/forward: the year dropdown is hidden while a year is loading.
+            function GoTo2019() {
+                const navigate = useNavigate()
+                return <button onClick={() => { void navigate('/results/test-race/2019') }}>go 2019</button>
+            }
+            const release = yearFetch(['2018'])
+            renderAt('/results/test-race', '/results/:slug/:year?', <><Results /><GoTo2019 /></>)
+
+            await pickYear('2018')
+            expect(screen.getByText('Loading...')).toBeInTheDocument()
+            await userEvent.click(screen.getByRole('button', { name: 'go 2019' }))
+            expect(await screen.findByText('Race 2019 Results')).toBeInTheDocument()
+
+            release['2018']()
+            await new Promise(resolve => setTimeout(resolve, 50))
+            expect(screen.getByText('Race 2019 Results')).toBeInTheDocument()
+            expect(screen.queryByText('Race 2018 Results')).not.toBeInTheDocument()
+        })
     })
 
     it('shows the course certification for a single distance', async () => {
@@ -307,6 +366,18 @@ describe('Awards page', () => {
         expect(screen.getByLabelText('Include overall in age groups?')).toBeChecked()
         expect(screen.getByLabelText('Display Masters Group?')).not.toBeChecked()
         expect(screen.getByTestId('location')).toHaveTextContent('/awards/test-race?ov=3&ag=3&inc=true&gmas=false&mas=false')
+    })
+
+    it('keeps the award options when picking another year', async () => {
+        routeFetch({
+            '/results': makeResultsResponse({}, { years: [makeYear({ year: '2020' }), makeYear({ year: '2019', date_time: '2019-06-01T08:00:00' })] }),
+        })
+        renderAt('/awards/test-race?ov=5&ag=1&inc=false&gmas=true&mas=true', '/awards/:slug/:year?', <Awards />)
+
+        await screen.findByText('2020 Test Race Awards')
+        await pickYear('2019')
+
+        expect(screen.getByTestId('location')).toHaveTextContent('/awards/test-race/2019?ov=5&ag=1&inc=false&gmas=true&mas=true')
     })
 
     it('reads options from the url', async () => {

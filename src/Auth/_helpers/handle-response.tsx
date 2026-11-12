@@ -1,4 +1,4 @@
-import { AddCheckinParticipantResponse, ErrorResponse, GetAccountResponse, GetAllAccountsResponse, GetCheckinParticipantsResponse, GetKeysResponse, ModifyAccountResponse, ModifyKeyResponse } from '../../Interfaces/responses';
+import { AddCheckinParticipantResponse, ErrorResponse, StatusError, GetAccountResponse, GetAllAccountsResponse, GetCheckinParticipantsResponse, GetKeysResponse, ModifyAccountResponse, ModifyKeyResponse } from '../../Interfaces/responses';
 import { AuthTokens } from '../../Interfaces/types';
 import { authenticationService } from '../_services/authentication.service';
 
@@ -6,7 +6,7 @@ export function handleResponse(response: Response, auth = "API") {
     return response.text().then(text => {
         let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | null = null;
         if (text.length > 0) {
-            dataVal = JSON.parse(text);
+            dataVal = JSON.parse(text) as typeof dataVal;
         }
         const data: { 
                     data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | AuthTokens | null,
@@ -19,8 +19,7 @@ export function handleResponse(response: Response, auth = "API") {
             }
             const dta = data.data as ErrorResponse
             const message = (dta && dta.message) || response.statusText;
-            const error = { message: message, status: response.status }
-            return Promise.reject(error);
+            return Promise.reject(new StatusError(message, response.status));
         }
         return data;
     });
@@ -30,7 +29,7 @@ export function handleResponseNoLogout(response: Response) {
     return response.text().then(text => {
         let dataVal: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | null = null;
         if (text.length > 0) {
-            dataVal = JSON.parse(text);
+            dataVal = JSON.parse(text) as typeof dataVal;
         }
         const data: { 
                     data: ModifyKeyResponse | GetKeysResponse | GetAccountResponse | GetAllAccountsResponse | ModifyAccountResponse | GetCheckinParticipantsResponse | AddCheckinParticipantResponse | ErrorResponse | AuthTokens | null,
@@ -39,8 +38,7 @@ export function handleResponseNoLogout(response: Response) {
         if (!response.ok) {
             const dta = data.data as ErrorResponse
             const message = (dta && dta.message) || response.statusText;
-            const error = { message: message, status: response.status }
-            return Promise.reject(error);
+            return Promise.reject(new StatusError(message, response.status));
         }
         return data;
     });

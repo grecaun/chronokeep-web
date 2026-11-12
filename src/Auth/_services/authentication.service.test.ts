@@ -76,7 +76,7 @@ describe('login', () => {
         mockFetch(jsonResponse(401, { message: 'Invalid Credentials' }))
         const svc = await loadService()
 
-        await expect(svc.login('me@example.com', 'bad')).rejects.toEqual({ message: 'Invalid Credentials', status: 401 })
+        await expect(svc.login('me@example.com', 'bad')).rejects.toMatchObject({ message: 'Invalid Credentials', status: 401 })
         expect(svc.currentUserValue).toBeNull()
     })
 })
@@ -112,7 +112,7 @@ describe('logout', () => {
         const fetch = mockFetch()
         const svc = await loadService()
 
-        await expect(svc.logout('API')).rejects.toEqual({ message: 'unknown user', status: 401 })
+        await expect(svc.logout('API')).rejects.toMatchObject({ message: 'unknown user', status: 401 })
         expect(fetch).not.toHaveBeenCalled()
     })
 

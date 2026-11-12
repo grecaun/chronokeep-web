@@ -31,7 +31,10 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
         distances: null,
     });
     useEffect(() => {
+        let cancelled = false;
+        setState(prev => ({ ...prev, loading: true, error: false, message: null }));
         const fetchResults = async () => {
+            const update: Partial<ResultsState> = {};
             const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
             const requestOptions = {
                 method: 'POST',
@@ -43,44 +46,47 @@ export function ResultsLoader(params: Params<string>, page: string): { state: Re
             }
             await fetch(BASE_URL + 'results', requestOptions)
                 .then(response => {
-                    state.status = response.status;
+                    update.status = response.status;
                     if (response.status !== 200) {
-                        state.error = true;
+                        update.error = true;
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (Object.prototype.hasOwnProperty.call(data, 'count')) {
                         const dta = data as GetResultsResponse
-                        state.count = dta.count
-                        state.event = dta.event
-                        state.years = dta.years
-                        state.results = dta.results
-                        state.year = dta.event_year
-                        state.participants = dta.participants.filter(i => i.first.length + i.last.length > 0)
-                        state.default_ranking_type = RankingType.Gun
+                        update.count = dta.count
+                        update.event = dta.event
+                        update.years = dta.years
+                        update.results = dta.results
+                        update.year = dta.event_year
+                        update.participants = dta.participants.filter(i => i.first.length + i.last.length > 0)
+                        update.default_ranking_type = RankingType.Gun
                         if (dta.event_year.ranking_type === "chip") {
-                            state.default_ranking_type = RankingType.Chip
+                            update.default_ranking_type = RankingType.Chip
                         } else if (dta.event_year.ranking_type === "mixed") {
-                            state.default_ranking_type = RankingType.Mixed
+                            update.default_ranking_type = RankingType.Mixed
                         }
-                        state.distances = dta.distances
+                        update.distances = dta.distances
                     } else {
                         const err = data as ErrorResponse
-                        state.error = true
-                        state.message = err.message
+                        update.error = true
+                        update.message = err.message
                     }
-                    state.loading = false
+                    update.loading = false
                 })
                 .catch(error => {
-                    state.error = true
+                    update.error = true
                     console.error("There was an error!", error)
                 });
-            setState({
-                ...state
-            });
+            if (!cancelled) {
+                setState(prev => ({ ...prev, ...update }));
+            }
         };
         fetchResults().catch(() => {});
-    }, []);
+        return () => {
+            cancelled = true;
+        };
+    }, [params.slug, params.year]);
     return { state, setState };
 }

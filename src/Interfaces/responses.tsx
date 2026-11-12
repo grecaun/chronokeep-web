@@ -32,6 +32,16 @@ export interface ErrorWithStatus {
     status: number
 }
 
+export class StatusError extends Error implements ErrorWithStatus {
+    status: number
+
+    constructor(message: string, status: number) {
+        super(message)
+        this.name = 'StatusError'
+        this.status = status
+    }
+}
+
 export interface EventYearResponse {
     event: Event
     event_year: EventYear

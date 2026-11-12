@@ -44,7 +44,10 @@ export function PersonLoader(params: Params<string>): PersonState {
         cert_distance: null,
     });
     useEffect(() => {
-        const fetchPerson = async () => {const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
+        let cancelled = false;
+        setState(prev => ({ ...prev, loading: true, error: false, message: null }));
+        const fetchPerson = async () => {
+            const update: Partial<PersonState> = {};const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
             const requestOptions = {
                 method: 'POST',
                 body: JSON.stringify({ slug: params.slug, year: params.year, bib: params.bib }),
@@ -55,38 +58,41 @@ export function PersonLoader(params: Params<string>): PersonState {
             }
             await fetch(BASE_URL + 'results/bib', requestOptions)
                 .then(response => {
-                    state.status = response.status;
+                    update.status = response.status;
                     if (response.status !== 200) {
-                        state.error = true;
+                        update.error = true;
                     }
                     return response.json();
                 })
                 .then(data => {
                     if (Object.prototype.hasOwnProperty.call(data, 'results')) {
                         const dta = data as GetBibResultsResponse
-                        state.event = dta.event;
-                        state.year = dta.year;
-                        state.results = dta.results;
-                        state.person = dta.person;
-                        state.single_distance = dta.single_distance;
-                        state.segments = dta.segments;
-                        state.cert_distance = dta.distance;
+                        update.event = dta.event;
+                        update.year = dta.year;
+                        update.results = dta.results;
+                        update.person = dta.person;
+                        update.single_distance = dta.single_distance;
+                        update.segments = dta.segments;
+                        update.cert_distance = dta.distance;
                     } else {
                         const err = data as ErrorResponse
-                        state.error = true;
-                        state.message = err.message;
+                        update.error = true;
+                        update.message = err.message;
                     }
-                    state.loading = false;
+                    update.loading = false;
                 })
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 .catch(_ => {
-                    state.error = true;
+                    update.error = true;
                 });
-            setState({
-                ...state
-            });
+            if (!cancelled) {
+                setState(prev => ({ ...prev, ...update }));
+            }
         };
         fetchPerson().catch(() => {});
-    }, []);
+        return () => {
+            cancelled = true;
+        };
+    }, [params.slug, params.year, params.bib]);
     return state;
 }

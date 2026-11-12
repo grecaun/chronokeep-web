@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { SetURLSearchParams, useParams, useSearchParams } from 'react-router-dom';
+import YearSelect from '../Parts/YearSelect';
 import AwardsTable from '../Parts/AwardsTable';
 import TimeAwardsTable from '../Parts/TimeAwardsTable';
 import Loading from '../Parts/Loading';
@@ -119,20 +120,8 @@ export default function Awards() {
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-1 h1">{`${state.year?.year} ${state.event?.name} Awards`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
+                    { years.length > 1 && <YearSelect years={years.map(year => year.year)} selected={state.year?.year} linkTo={year => `/awards/${params.slug}/${year}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`} /> }
                 </div>
-                { years.length > 1 && 
-                    <div className="col-md-2 nav flex-md-column justify-content-center p-0">
-                        {
-                            years.map((year, index) => {
-                                let className = "nav-link text-center text-important text-secondary"
-                                if (year.year === state.year?.year) {
-                                    className = "nav-link disabled text-center text-important text-dark"
-                                }
-                                return <a href={`/results/${params.slug}/${year.year}`} key={`year${index}`} className={className}>{year.year}</a>
-                            })
-                        }
-                    </div>
-                }
             </div>
             { distances.length > 0 &&
             <div className="row container-lg lg-max-width mx-auto d-flex align-items-stretch shadow-sm p-0 border border-light">

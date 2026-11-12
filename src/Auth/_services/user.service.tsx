@@ -68,13 +68,13 @@ function fetchWithRefresh(url: string, requestOptions: RequestInit, auth: string
                                                 authenticationService.logout(auth).catch(()=>{});
                                             }
                                         }
-                                        return Promise.reject(error);
+                                        throw error;
                                     }
                                 )
                         }
                     }
                 }
-                return Promise.reject(error);
+                throw error;
             }
         );
 }

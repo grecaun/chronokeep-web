@@ -143,7 +143,7 @@ describe('token refresh', () => {
         )
         const { userService, authenticationService } = await loadServices()
 
-        await expect(userService.getAccountInfo('API')).rejects.toEqual({ message: 'refresh expired', status: 401 })
+        await expect(userService.getAccountInfo('API')).rejects.toMatchObject({ message: 'refresh expired', status: 401 })
 
         expect(requestOf(fetch, 2).url).toBe('https://api.test/account/logout')
         await vi.waitFor(() => expect(authenticationService.currentUserValue).toBeNull())
@@ -153,7 +153,7 @@ describe('token refresh', () => {
         const fetch = mockFetch(jsonResponse(500, { message: 'Server Error' }))
         const { userService } = await loadServices()
 
-        await expect(userService.getAccountInfo('API')).rejects.toEqual({ message: 'Server Error', status: 500 })
+        await expect(userService.getAccountInfo('API')).rejects.toMatchObject({ message: 'Server Error', status: 500 })
         expect(fetch).toHaveBeenCalledTimes(1)
     })
 
@@ -162,7 +162,7 @@ describe('token refresh', () => {
         const fetch = mockFetch(jsonResponse(401, { message: 'expired' }))
         const { userService } = await loadServices()
 
-        await expect(userService.getAccountInfo('API')).rejects.toEqual({ message: 'expired', status: 401 })
+        await expect(userService.getAccountInfo('API')).rejects.toMatchObject({ message: 'expired', status: 401 })
         expect(fetch).toHaveBeenCalledTimes(1)
     })
 })

@@ -17,12 +17,16 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
         selected_year: null,
     });
     useEffect(() => {
+        let cancelled = false;
+        setState(prev => ({ ...prev, loading: true, error: false, message: null }));
         const fetchResults = async () => {
+            const update: Partial<SeriesResultsState> = {};
+            let selected_year = null as SeriesYear | null;
             await fetch(`https://downloads.chronokeep.com/series/${params.slug}.js`)
                 .then(response => {
                     if (response.status !== 200) {
-                        state.error = true
-                        state.message = 'No information file found.'
+                        update.error = true
+                        update.message = 'No information file found.'
                         return null;
                     }
                     return response.json();
@@ -30,27 +34,27 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
                 .then(data => {
                     if (data !== null) {
                         const years = data as SeriesYear[]
-                        state.years = years
-                        for (const year of state.years) {
+                        update.years = years
+                        for (const year of years) {
                             if ((params.year !== undefined && params.year === year.display_year.toString())
-                                || (params.year === undefined && (state.selected_year === null || state.selected_year.display_year < year.display_year))) {
-                                state.selected_year = year;
+                                || (params.year === undefined && (selected_year === null || selected_year.display_year < year.display_year))) {
+                                selected_year = year;
                             }
                         }
                     } else {
-                        state.status = 404
-                        state.error = true
-                        state.message = "Not Found"
+                        update.status = 404
+                        update.error = true
+                        update.message = "Not Found"
                     }
                 })
                 .catch(error => {
-                    state.error = true
+                    update.error = true
                     console.error("There was an error!", error)
                 });
-            if (state.selected_year !== null) {
+            if (selected_year !== null) {
                 const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
                 const years: { [index: string]: boolean } = {}
-                for (const series of state.selected_year.series) {
+                for (const series of selected_year.series) {
                     for (const dist of series.distances) {
                         years[dist.year] = true;
                     }
@@ -66,38 +70,42 @@ export function MultiResultsLoader(params: Params<string>, page: string): { stat
                 }
                 await fetch(BASE_URL + 'results/multi', requestOptions)
                     .then(response => {
-                        state.status = response.status;
+                        update.status = response.status;
                         if (response.status !== 200) {
-                            state.error = true;
+                            update.error = true;
                         }
                         return response.json();
                     })
                     .then(data => {
                         if (Object.prototype.hasOwnProperty.call(data, 'event')) {
                             const dta = data as GetMultiResultsResponse
-                            state.event = dta.event
-                            state.results = dta.results
+                            update.event = dta.event
+                            update.results = dta.results
                         } else {
                             const err = data as ErrorResponse
-                            state.error = true
-                            state.message = err.message
+                            update.error = true
+                            update.message = err.message
                         }
-                        state.loading = false
+                        update.loading = false
                     })
                     .catch(error => {
-                        state.error = true
+                        update.error = true
                         console.error("There was an error!", error)
                     });
             } else {
-                state.status = 404
-                state.error = true
-                state.message = "Not Found"
+                update.status = 404
+                update.error = true
+                update.message = "Not Found"
             }
-            setState({
-                ...state
-            });
+            update.selected_year = selected_year;
+            if (!cancelled) {
+                setState(prev => ({ ...prev, ...update }));
+            }
         };
         fetchResults().catch(() => {});
-    }, []);
+        return () => {
+            cancelled = true;
+        };
+    }, [params.slug, params.year]);
     return { state, setState };
 }

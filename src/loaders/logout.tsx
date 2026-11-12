@@ -13,44 +13,43 @@ export function LogoutLoader(page: string): BaseState {
     });
     useEffect(() => {
         const doLogout = async () => {
+            const update: Partial<BaseState> = {};
             await authenticationService.logout(page === 'account' ? "API" : "REMOTE")
                 .then(response => {
-                    state.loading = false;
-                    state.status = response.status;
+                    update.loading = false;
+                    update.status = response.status;
                     if (response.status !== 200) {
                         return response.json();
                     }
                     return null;
                 })
                 .then(data => {
-                    state.loading = false;
+                    update.loading = false;
                     if (data !== null && Object.prototype.hasOwnProperty.call(data, 'status')) {
                         const err = data as ErrorWithStatus
                         // 401 Unauthorized means the token is not valid, 403 might mean the same
                         // don't log an issue if either is returned, but do so if something else is
                         if (err.status !== 401 && err.status !== 403) {
-                            state.message = err.message;
+                            update.message = err.message;
                             console.error("Unknown error logging out: ", err.message)
                         }
                     }
                 })
                 .catch(error => {
-                    state.loading = false;
+                    update.loading = false;
                     if (error !== null && Object.prototype.hasOwnProperty.call(error, 'status')) {
                         const err = error as ErrorWithStatus
                         // 401 Unauthorized means the token is not valid, 403 might mean the same
                         // don't log an issue if either is returned, but do so if something else is
                         if (err.status !== 401 && err.status !== 403) {
-                            state.message = err.message;
+                            update.message = err.message;
                             console.error("Caught error logging out: ", err.message)
                         }
                     }
                 });
-            setState({
-                ...state
-            });
+            setState(prev => ({ ...prev, ...update }));
         };
         doLogout().catch(() => {});
-    }, [])
+    }, [page])
     return state;
 }

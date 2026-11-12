@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
 import { makeTimeResult } from '../test/helpers'
-import { makeEvent, renderAt, routeFetch, tableRows } from '../test/pages'
+import { makeEvent, pickYear, renderAt, routeFetch, tableRows, yearOptions } from '../test/pages'
 import SeriesPage from './Series'
 import DoublePage from './Double'
 import NorthBendDoublePage from './NorthBendDouble'
@@ -116,13 +116,15 @@ describe('Series page', () => {
         expect(tableRows(screen.getByRole('table')).map(r => r[3])).toEqual(['Ann Runner'])
     })
 
-    it('links to each series year', async () => {
+    it('offers each series year and goes to the one picked', async () => {
         renderSeries({})
 
         await screen.findByText('Series Results')
-        expect(screen.getByRole('link', { name: '2023' })).toHaveAttribute('href', '/series/trail/2023')
-        expect(screen.getByRole('link', { name: '2024' })).toHaveClass('disabled')
         expect(screen.getByText('No results to display.')).toBeInTheDocument()
+        expect(await yearOptions()).toEqual(['2024*', '2023'])
+
+        await pickYear('2023')
+        expect(screen.getByTestId('location')).toHaveTextContent('/series/trail/2023')
     })
 
     it('shows the error page when the series file is missing', async () => {

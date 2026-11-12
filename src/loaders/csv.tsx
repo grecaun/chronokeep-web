@@ -10,6 +10,7 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
     });
     useEffect(() => {
         const fetchResults = async () => {
+            const prev_standings: YTPState['prev_standings'] = {};
             await fetch(url)
                 .then(response => {
                     if (response.status !== 200) {
@@ -78,7 +79,7 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                                     age = 18
                                 }
                             }
-                            state.prev_standings[`${columns[first_ix]} ${columns[last_ix]}`] = {
+                            prev_standings[`${columns[first_ix]} ${columns[last_ix]}`] = {
                                 highest_score: old,
                                 tiger_score: tiger,
                                 seward_score: seward,
@@ -88,17 +89,17 @@ export function CSVLoader(url: string): { state: YTPState, setState: React.Dispa
                             }
                         }
                     }
-                    state.csv_loaded = true
                 })
                 .catch(error => {
                     console.error("There was an error!", error)
                 });
-            setState({
-                ...state,
+            setState(prev => ({
+                ...prev,
+                prev_standings,
                 csv_loaded: true
-            });
+            }));
         };
         fetchResults().catch(() => {});
-    }, []);
+    }, [url]);
     return { state: state, setState: setState };
 }

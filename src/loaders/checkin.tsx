@@ -18,7 +18,10 @@ export function CheckinLoader(params: Params<string>, page: string): { state: Ch
         search: "",
     });
     useEffect(() => {
+        let cancelled = false;
+        setState(prev => ({ ...prev, loading: true, error: false, message: null }));
         const fetchCheckin = async () => {
+            const update: Partial<CheckinPageState> = {};
             await userService.getParticipants(params.slug!, params.year!).then(
                 data => {
                     if (Object.prototype.hasOwnProperty.call(data.data, 'participants')) {
@@ -29,31 +32,34 @@ export function CheckinLoader(params: Params<string>, page: string): { state: Ch
                             }
                             return ('' + a.first).localeCompare(b.first)
                         })
-                        state.participants = sortedParts;
-                        state.event = dta.event
-                        state.year = dta.year
+                        update.participants = sortedParts;
+                        update.event = dta.event
+                        update.year = dta.year
                     } else {
                         const err = data.data as ErrorResponse
-                        state.error = true;
-                        state.message = err.message;
+                        update.error = true;
+                        update.message = err.message;
                     }
-                    state.status = data.status;
-                    state.loading = false;
+                    update.status = data.status;
+                    update.loading = false;
                 },
                 error => {
                     if (Object.prototype.hasOwnProperty.call(error, 'message')) {
                         const err = error as ErrorWithStatus
-                        state.message = err.message;
-                        state.status = err.status;
+                        update.message = err.message;
+                        update.status = err.status;
                     }
-                    state.error = true;
+                    update.error = true;
                 }
             );
-            setState({
-                ...state
-            });
+            if (!cancelled) {
+                setState(prev => ({ ...prev, ...update }));
+            }
         };
         fetchCheckin().catch(() => {});
-    }, []);
+        return () => {
+            cancelled = true;
+        };
+    }, [params.slug, params.year]);
     return { state, setState };
 }

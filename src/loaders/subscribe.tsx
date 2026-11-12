@@ -14,7 +14,10 @@ export function SubscribeLoader(params: Params<string>): SubscriptionState {
         success: false
     })
     useEffect(() => {
+        let cancelled = false;
+        setState(prev => ({ ...prev, loading: true, error: false, message: null }));
         const fetchUnsubscribe = async () => {
+            const update: Partial<SubscriptionState> = {};
             const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
             const requestOptions = {
                 method: 'POST',
@@ -25,32 +28,35 @@ export function SubscribeLoader(params: Params<string>): SubscriptionState {
             }
             await fetch(BASE_URL + 'blocked/emails/unblock', requestOptions)
             .then(response => {
-                state.status = response.status;
+                update.status = response.status;
                 if (response.status !== 200) {
-                    state.error = true;
+                    update.error = true;
                     return response.json();
                 } else {
-                    state.success = true;
+                    update.success = true;
                     return "";
                 }
             })
             .then(data => {
-                if (state.status !== 200) {
+                if (update.status !== 200) {
                     const err = data as ErrorResponse
-                    state.error = true;
-                    state.message = err.message;
+                    update.error = true;
+                    update.message = err.message;
                 }
-                state.loading = false;
+                update.loading = false;
             })
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .catch(_ => {
-                state.error = true;
+                update.error = true;
             });
-        setState({
-            ...state
-        });
+        if (!cancelled) {
+                setState(prev => ({ ...prev, ...update }));
+            }
     };
     fetchUnsubscribe().catch(() => {});
-}, []);
+    return () => {
+        cancelled = true;
+    };
+}, [params.email]);
 return state;
 }

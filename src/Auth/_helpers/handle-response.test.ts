@@ -25,18 +25,18 @@ describe('handleResponse', () => {
 
     it('rejects with the server message on errors', async () => {
         await expect(handleResponse(jsonResponse(500, { message: 'Boom' }, 'Server Error')))
-            .rejects.toEqual({ message: 'Boom', status: 500 })
+            .rejects.toMatchObject({ message: 'Boom', status: 500 })
         expect(logout).not.toHaveBeenCalled()
     })
 
     it('falls back to the status text when there is no message', async () => {
         await expect(handleResponse(jsonResponse(400, undefined, 'Bad Request')))
-            .rejects.toEqual({ message: 'Bad Request', status: 400 })
+            .rejects.toMatchObject({ message: 'Bad Request', status: 400 })
     })
 
     it.each([401, 403])('logs the user out on %i', async (status) => {
         await expect(handleResponse(jsonResponse(status, { message: 'nope' }), 'REMOTE'))
-            .rejects.toEqual({ message: 'nope', status })
+            .rejects.toMatchObject({ message: 'nope', status })
         expect(logout).toHaveBeenCalledWith('REMOTE')
     })
 
@@ -54,7 +54,7 @@ describe('handleResponseNoLogout', () => {
 
     it('rejects without logging out on 401', async () => {
         await expect(handleResponseNoLogout(jsonResponse(401, { message: 'expired' })))
-            .rejects.toEqual({ message: 'expired', status: 401 })
+            .rejects.toMatchObject({ message: 'expired', status: 401 })
         expect(logout).not.toHaveBeenCalled()
     })
 })

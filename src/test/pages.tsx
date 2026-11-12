@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components -- test helpers, never hot reloaded */
 import { Component, ReactElement, ReactNode } from 'react'
 import { vi } from 'vitest'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { Event, EventYear, TimeResult } from '../Interfaces/types'
 
@@ -114,4 +115,17 @@ export class TestErrorBoundary extends Component<{ children: ReactNode }, { erro
         }
         return this.props.children
     }
+}
+
+/** Opens the year dropdown and returns its options in order, marking the selected one with a *. */
+export async function yearOptions(): Promise<string[]> {
+    await userEvent.click(await screen.findByLabelText('Year'))
+    return screen.getAllByRole('option').map(option =>
+        `${option.textContent ?? ''}${option.getAttribute('aria-selected') === 'true' ? '*' : ''}`)
+}
+
+/** Picks a year from the year dropdown. */
+export async function pickYear(year: string) {
+    await userEvent.click(await screen.findByLabelText('Year'))
+    await userEvent.click(screen.getByRole('option', { name: year }))
 }

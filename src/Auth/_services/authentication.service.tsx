@@ -2,6 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { authHeader } from '../_helpers/auth-header';
 import { handleResponseNoLogout } from '../_helpers/handle-response';
 import { AuthTokens } from '../../Interfaces/types';
+import { StatusError } from '../../Interfaces/responses';
 
 const currentUserSubject: BehaviorSubject<AuthTokens | null> = new BehaviorSubject<AuthTokens | null>(localStorage.getItem('currentUser') ? JSON.parse(localStorage.getItem('currentUser')!) as AuthTokens : null);
 const currentRemoteUserSubject: BehaviorSubject<AuthTokens | null> = new BehaviorSubject<AuthTokens | null>(localStorage.getItem('currentRemoteUser') ? JSON.parse(localStorage.getItem('currentRemoteUser')!) as AuthTokens : null);
@@ -76,7 +77,7 @@ function logout(auth: string) {
         storageUser = 'currentRemoteUser';
     }
     if (!currentUser) {
-        return Promise.reject({ message: "unknown user", status: 401 })
+        return Promise.reject(new StatusError("unknown user", 401))
     }
     // let the API know the user wants to log out
     const requestOptions = {

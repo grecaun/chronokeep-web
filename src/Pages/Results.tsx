@@ -4,6 +4,7 @@ import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
 import { useParams, useSearchParams } from 'react-router-dom';
+import YearSelect from '../Parts/YearSelect';
 import { EventYear, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
 import Select from 'react-select';
@@ -614,23 +615,11 @@ function Results() {
                 <div className="col-md-9 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-3 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
+                    { years.length > 1 && <YearSelect years={years.map(year => year.year)} selected={state.year!.year} linkTo={year => `/results/${params.slug}/${year}`} /> }
                     { distances.length === 1 && certifications.has(distances[0]) &&
                         <div className='chronokeep-certification'>Course Certification: {certifications.get(distances[0])}</div>
                     }
                 </div>
-                { years.length > 1 &&
-                    <div className={`col-md-2 nav justify-content-center p-0 m-md-3${years.length > 1 ? ` row-cols-md-${Math.ceil(years.length / 3)}` : ''}`}>
-                        {
-                            years.map((year, index) => {
-                                let className = "nav-link text-center text-important text-secondary col"
-                                if (year.year === state.year!.year) {
-                                    className = "nav-link disabled text-center text-important text-dark col"
-                                }
-                                return <a href={`/results/${params.slug}/${year.year}`} key={`year${index}`} className={className}>{year.year}</a>
-                            })
-                        }
-                    </div>
-                }
             </div>
             { textAllowedTime > nowDate && state.participants.length > 0 && days_allowed > 0 &&
                 <Formik
