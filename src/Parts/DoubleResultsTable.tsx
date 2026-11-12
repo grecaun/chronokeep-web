@@ -3,6 +3,7 @@ import { DoubleResultsTableProps } from '../Interfaces/props';
 import { DoubleResult } from '../Interfaces/types';
 import { the_double } from '../Pages/Results';
 import { SimpleFormatTime } from './FormatTime';
+import { matchesSearch } from './SearchMatch';
 
 class DoubleResultsTable extends Component<DoubleResultsTableProps> {
     render() {
@@ -132,8 +133,7 @@ class DoubleResultsTable extends Component<DoubleResultsTableProps> {
             }
         })
         doub_results.forEach(res => {
-            const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
-            if ((name.indexOf(search) >= 0 || search === "")
+            if (matchesSearch(res, search)
                 && (only_age_group.length < 1 || res.age_group === only_age_group)
             ) {
                 dispResults.push(res);

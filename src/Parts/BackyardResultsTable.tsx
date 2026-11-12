@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
 import { TimeResult } from '../Interfaces/types';
 import { ResultsTableProps } from '../Interfaces/props';
+import { matchesSearch } from './SearchMatch';
 
 class BackyardResultsTable extends Component<ResultsTableProps> {
 
@@ -76,9 +77,7 @@ class BackyardResultsTable extends Component<ResultsTableProps> {
         results = Array.from(resMap.values())
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
-            const name = `${res.first.toLocaleLowerCase()} ${res.last.toLocaleLowerCase()}`
-            const bib = `${res.bib}`
-            if ((name.indexOf(search) >= 0 || bib === search || search === "") && (only_age_group.length < 1 || res.age_group === only_age_group)) {
+            if (matchesSearch(res, search) && (only_age_group.length < 1 || res.age_group === only_age_group)) {
                 dispResults.push(res);
             }
         })

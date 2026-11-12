@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
 import { TimeResult } from '../Interfaces/types';
 import { ResultsTableProps } from '../Interfaces/props';
+import { matchesSearch } from './SearchMatch';
 
 class TimeResultsTable extends Component<ResultsTableProps> {
 
@@ -26,7 +27,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
         results = Array.from(resMap.values())
         const dispResults = new Array<TimeResult>()
         results.forEach(res => {
-            if (res.first.toLocaleLowerCase().indexOf(search) >= 0 || res.last.toLocaleLowerCase().indexOf(search) >= 0 || search === "") {
+            if (matchesSearch(res, search)) {
                 dispResults.push(res);
             }
         })

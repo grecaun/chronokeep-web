@@ -17,6 +17,7 @@ import * as Yup from 'yup';
 import { SendAddSmsSubscription, SendRemoveSmsSubscription } from '../loaders/sms_subscription';
 import BackyardResultsTable from '../Parts/BackyardResultsTable';
 import DoubleResultsTable from '../Parts/DoubleResultsTable';
+import { matchesSearch } from '../Parts/SearchMatch';
 
 export const the_double: string = "The Double";
 
@@ -587,6 +588,9 @@ function Results() {
             }
         })
     })
+    // While searching, only show the distances (and The Double) where someone matches.
+    const shown_distances = distances.filter(distance => (current_results[distance] ?? []).some(result => matchesSearch(result, state.search)))
+    const show_double = double_distances.length > 1 && double_results.some(result => matchesSearch({ first: result.first, last: result.last }, state.search))
     const certifications = new Map<string, string>()
     if (state.distances !== null) {
         state.distances.map(dist => {
@@ -769,7 +773,7 @@ function Results() {
                         </div>
                         <ul className="nav nav-tabs nav-fill">
                             { (distances.length > 1 || double_distances.length > 1) &&
-                                distances.map((distance, index) => {
+                                shown_distances.map((distance, index) => {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
                                             <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
@@ -777,15 +781,20 @@ function Results() {
                                     )
                                 })
                             }
-                            { double_distances.length > 1 &&
+                            { show_double &&
                                 <li className="nav-item" key={`distance${3}`}>
                                     <a className="nav-link text-important h5 text-secondary" href={`#${the_double}`} role="button">{the_double}</a>
                                 </li>
                             }
                         </ul>
                         <div id="results-parent">
+                            { shown_distances.length === 0 && !show_double &&
+                                <div className="text-center p-4">
+                                    <h2>No one matches your search.</h2>
+                                </div>
+                            }
                             {
-                                distances.map((distance, index) => {
+                                shown_distances.map((distance, index) => {
                                     if (state.event!.type === "time") {
                                         return (
                                             <TimeResultsTable
@@ -840,7 +849,7 @@ function Results() {
                                     }
                                 })
                             }
-                            { double_distances.length > 1 &&
+                            { show_double &&
                                 <DoubleResultsTable
                                     results={double_results}
                                     key={3}

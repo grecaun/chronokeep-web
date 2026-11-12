@@ -117,6 +117,66 @@ describe('Results page', () => {
         expect(screen.getAllByRole('table')).toHaveLength(2)
     })
 
+    describe('searching across distances', () => {
+        function renderTwoDistances() {
+            renderResults(makeResultsResponse({
+                '5K': [makeTimeResult({ bib: '1', first: 'Ann', last: 'Short', distance: '5K' })],
+                '10K': [makeTimeResult({ bib: '2', first: 'Bea', last: 'Long', distance: '10K' })],
+            }))
+        }
+
+        it('hides the tabs and tables for distances where no one matches', async () => {
+            renderTwoDistances()
+            const search = await screen.findByPlaceholderText('Search')
+
+            await userEvent.type(search, 'bea')
+            expect(screen.queryByRole('button', { name: '5K' })).not.toBeInTheDocument()
+            expect(screen.getByRole('button', { name: '10K' })).toBeInTheDocument()
+            expect(screen.getAllByRole('table')).toHaveLength(1)
+            expect(placesByName()).toEqual(['1 Bea Long'])
+
+            await userEvent.clear(search)
+            expect(screen.getByRole('button', { name: '5K' })).toBeInTheDocument()
+            expect(screen.getAllByRole('table')).toHaveLength(2)
+        })
+
+        it('matches a bib in any distance', async () => {
+            renderTwoDistances()
+
+            await userEvent.type(await screen.findByPlaceholderText('Search'), '1')
+            expect(screen.getByRole('button', { name: '5K' })).toBeInTheDocument()
+            expect(screen.queryByRole('button', { name: '10K' })).not.toBeInTheDocument()
+        })
+
+        it('says so when no one matches anywhere', async () => {
+            renderTwoDistances()
+
+            await userEvent.type(await screen.findByPlaceholderText('Search'), 'zed')
+            expect(screen.queryByRole('table')).not.toBeInTheDocument()
+            expect(screen.getByText('No one matches your search.')).toBeInTheDocument()
+        })
+
+        it('hides The Double when no double entrant matches', async () => {
+            renderResults(makeResultsResponse({
+                'Half': [
+                    makeTimeResult({ bib: '1', first: 'Dot', last: 'Double', division: 'The Double', finish: true }),
+                    makeTimeResult({ bib: '2', first: 'Sam', last: 'Single', finish: true }),
+                ],
+                'Full': [makeTimeResult({ bib: '1', first: 'Dot', last: 'Double', division: 'the-double', finish: true })],
+            }))
+            const search = await screen.findByPlaceholderText('Search')
+            expect(screen.getByRole('button', { name: 'The Double' })).toBeInTheDocument()
+
+            await userEvent.type(search, 'sam')
+            expect(screen.queryByRole('button', { name: 'The Double' })).not.toBeInTheDocument()
+            expect(screen.getByRole('button', { name: 'Half' })).toBeInTheDocument()
+
+            await userEvent.clear(search)
+            await userEvent.type(search, 'dot')
+            expect(screen.getByRole('button', { name: 'The Double' })).toBeInTheDocument()
+        })
+    })
+
     it('adds a tab for The Double when two distances have double entrants', async () => {
         renderResults(makeResultsResponse({
             'Half': [makeTimeResult({ bib: '1', division: 'The Double' })],
