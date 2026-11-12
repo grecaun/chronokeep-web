@@ -69,15 +69,15 @@ class LinkedAccounts extends Component<LinkedAccountsProps, LinkedAccountsState>
                                     <Form className="link-accounts-form">
                                         <div className="row justify-content-center pt-0 p-3">
                                             <div className="col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="email">Email</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="link-account-email">Email</label>
                                                 <div className="row justify-content-center align-items-top gx-1">
                                                     <div className="col chronokeep-middle">
-                                                        <Field name="email" type="text" id="email-field" className={'chronokeep-input form-control form-control-sm' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                                                        <Field name="email" type="text" id="link-account-email" className={'chronokeep-input form-control form-control-sm' + (errors.email && touched.email ? ' is-invalid' : '')} />
                                                         <ErrorMessage name="email" component="div" className="invalid-feedback" />
                                                     </div>
                                                     <div className="col-auto align-items-center text-center">
                                                         {!isSubmitting &&
-                                                            <button type="submit" key="submit-add-account" className="btn btn-danger btn-chronokeep" id="add-account-button">
+                                                            <button type="submit" key="submit-add-account" className="btn btn-danger btn-chronokeep" id="link-account-button">
                                                                 Add
                                                             </button>
                                                         }

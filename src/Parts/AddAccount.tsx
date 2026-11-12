@@ -60,17 +60,17 @@ class AddAccount extends Component<PageProps> {
                                     <div className="row justify-content-center">
                                         <div className="col">
                                             <div className="col chronokeep-middle">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
-                                                <Field name="name" type="text" id="name-field" className={'chronokeep-input form-control form-control-sm' + (errors.name && touched.name ? ' is-invalid' : '')} />
+                                                <label className="chronokeep-label form-label-sm" htmlFor="add-account-name">Name</label>
+                                                <Field name="name" type="text" id="add-account-name" className={'chronokeep-input form-control form-control-sm' + (errors.name && touched.name ? ' is-invalid' : '')} />
                                                 <ErrorMessage name="name" component="div" className="invalid-feedback" />
-                                                <label className="chronokeep-label form-label-sm" htmlFor="email">Username/Email</label>
-                                                <Field name="email" type="text" id="email-field" className={'chronokeep-input form-control form-control-sm' + (errors.email && touched.email ? ' is-invalid' : '')} />
+                                                <label className="chronokeep-label form-label-sm" htmlFor="add-account-email">Username/Email</label>
+                                                <Field name="email" type="text" id="add-account-email" className={'chronokeep-input form-control form-control-sm' + (errors.email && touched.email ? ' is-invalid' : '')} />
                                                 <ErrorMessage name="email" component="div" className="invalid-feedback" />
-                                                <label className="chronokeep-label form-label-sm" htmlFor="password">Password</label>
-                                                <Field name="password" type="password" id="password-field" className={'chronokeep-input form-control form-control-sm' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                                                <label className="chronokeep-label form-label-sm" htmlFor="add-account-password">Password</label>
+                                                <Field name="password" type="password" id="add-account-password" className={'chronokeep-input form-control form-control-sm' + (errors.password && touched.password ? ' is-invalid' : '')} />
                                                 <ErrorMessage name="password" component="div" className="invalid-feedback" />
-                                                <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
-                                                <Field name="type" as="select" id="type-field" className={'chronokeep-input form-control form-control-sm' + (errors.type && touched.type ? ' is-invalid' : '')}>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="add-account-type">Type</label>
+                                                <Field name="type" as="select" id="add-account-type" className={'chronokeep-input form-control form-control-sm' + (errors.type && touched.type ? ' is-invalid' : '')}>
                                                     { path === "API" && <option value="registration">Registration</option> }
                                                     <option value="free">Free</option>
                                                     <option value="paid">Paid</option>

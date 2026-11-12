@@ -42,7 +42,7 @@ function Person() {
         } else if (res.finish && (state.event.type.length < 1 || state.event.type === "distance")) {
             finish = res
         } else {
-            if (state.event.type.length > 0 && state.event.type.length > 0 && state.event.type !== "distance" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
+            if (state.event.type.length > 0 && state.event.type !== "distance" && res.finish && ((finish !== null && finish.occurence < res.occurence) || finish === null)) {
                 finish = res
             }
             results.push(res)

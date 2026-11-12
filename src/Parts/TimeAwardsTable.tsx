@@ -5,7 +5,7 @@ import { TimeResult } from '../Interfaces/types';
 import { AwardsProps } from '../Interfaces/props';
 import { Link } from 'react-router-dom';
 
-class TimeResultsTable extends Component<AwardsProps> {
+class TimeAwardsTable extends Component<AwardsProps> {
     render() {
         const results = this.props.results;
         const distance = this.props.distance;
@@ -21,7 +21,11 @@ class TimeResultsTable extends Component<AwardsProps> {
                 lastDict[result.bib] = result
             }
         })
-        const finishResults = Object.values(lastDict);
+        // Only ranked finishes can win awards: leave out start-only reads (ranked -1 or 0)
+        // and DNF/DNS results, the same as AwardsTable does.
+        const finishResults = Object.values(lastDict).filter(result =>
+            result.ranking > 0 && result.occurence > 0 && result.finish === true
+            && result.type !== 3 && result.type !== 30 && result.type !== 31);
         finishResults.sort((a, b) => {
             return a.ranking - b.ranking
         })
@@ -173,4 +177,4 @@ class TimeResultsTable extends Component<AwardsProps> {
     }
 }
 
-export default TimeResultsTable
+export default TimeAwardsTable

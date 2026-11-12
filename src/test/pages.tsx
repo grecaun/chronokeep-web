@@ -129,3 +129,25 @@ export async function pickYear(year: string) {
     await userEvent.click(await screen.findByLabelText('Year'))
     await userEvent.click(screen.getByRole('option', { name: year }))
 }
+
+/**
+ * Problems with the page's form labels and ids: a label whose `for` matches no
+ * element, or an id used more than once. Returns an empty list when there are none.
+ */
+export function labelProblems(): string[] {
+    const problems: string[] = []
+    document.querySelectorAll('label[for]').forEach(label => {
+        const target = label.getAttribute('for')!
+        if (document.getElementById(target) === null) {
+            problems.push(`label "${label.textContent}" points at missing id "${target}"`)
+        }
+    })
+    const seen = new Set<string>()
+    document.querySelectorAll('[id]').forEach(el => {
+        if (seen.has(el.id)) {
+            problems.push(`id "${el.id}" is used more than once`)
+        }
+        seen.add(el.id)
+    })
+    return problems
+}

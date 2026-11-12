@@ -60,7 +60,6 @@ function DoublePage() {
     unsorted.forEach(([name]) => {
         sorted.push(name);
     })
-    console.log(`${sorted.length}`)
     const pageSubTitle = 'Results'
     document.title = `Chronokeep - ${state.selected_year!.display_name} - ${pageSubTitle}`
     return (

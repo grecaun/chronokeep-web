@@ -183,6 +183,7 @@ describe.each([
 
         expect(await screen.findByText(successText)).toBeInTheDocument()
         expect(screen.getByRole('link', { name: 'click here' })).toHaveAttribute('href', otherLink)
+        expect(document.title).toBe(`Chronokeep - ${name}`)
     })
 
     it('shows the error from the API', async () => {
@@ -206,6 +207,7 @@ describe('QRCode page', () => {
         ['ytp-series', 'YTP Series'],
         ['pntf-youth', 'PNTF Youth Championship Results'],
         ['team-results', 'Team Results'],
+        ['series', 'Series Results'],
     ])('labels the %s page as %s', async (page, label) => {
         routeFetch({ '/results': makeResultsResponse({}) })
         renderAt('/results/test-race/qr', '/results/:slug/:year?/qr', <QRCode page={page} />)

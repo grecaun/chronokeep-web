@@ -80,11 +80,11 @@ class NewKey extends Component<NewKeyProps> {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="name-new">Name</label>
                                                 <Field name="name" type="text" id={`name-new`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="type-new">Type</label>
                                                 <Field as="select" name="type" id={`type-new`} className="form-select form-select-sm">
                                                     <option value={types.read.value}>{types.read.text}</option>
                                                     <option value={types.write.value}>{types.write.text}</option>
@@ -93,12 +93,12 @@ class NewKey extends Component<NewKeyProps> {
                                             </div>
                                         { isAccountPage &&
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="allowedHosts">Allowed Hosts</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="hosts-new">Allowed Hosts</label>
                                                 <Field name="allowedHosts" type="text" id={`hosts-new`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                         }
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="validUntil">Valid Until</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="valid-new">Valid Until</label>
                                                 <Field name="validUntil" type="text" id={`valid-new`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-auto">

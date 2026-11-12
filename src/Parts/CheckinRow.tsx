@@ -109,7 +109,7 @@ function CheckinRow(props: CheckinRowProps) {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="distance">Distance</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`distance${part.id}`}>Distance</label>
                                                 <Field as="select" name="distance" id={`distance${part.id}`} className="form-select form-select-sm">
                                                     { distances.map((dist) => {
                                                         return (
@@ -119,39 +119,39 @@ function CheckinRow(props: CheckinRowProps) {
                                                 </Field>
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="bib">Bib</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`bib${part.id}`}>Bib</label>
                                                 <Field name="bib" type="text" id={`bib${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="first">First Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`first${part.id}`}>First Name</label>
                                                 <Field name="first" type="text" id={`first${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="last">Last Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`last${part.id}`}>Last Name</label>
                                                 <Field name="last" type="text" id={`last${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="gender">Gender</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`gender${part.id}`}>Gender</label>
                                                 <Field name="gender" type="text" id={`gender${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="birthdate">Birthdate</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`birthdate${part.id}`}>Birthdate</label>
                                                 <Field name="birthdate" type="text" id={`birthdate${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="anonymous">Anonymous</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`anonymous${part.id}`}>Anonymous</label>
                                                 <Field name="anonymous" type="checkbox" id={`anonymous${part.id}`} className="chronkokeep-checkbox" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="sms_enabled">Send finish text message?</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`sms_enabled${part.id}`}>Send finish text message?</label>
                                                 <Field name="sms_enabled" type="checkbox" id={`sms_enabled${part.id}`} className="chronkokeep-checkbox" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="mobile">Mobile Number</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`mobile${part.id}`}>Mobile Number</label>
                                                 <Field name="mobile" type="text" id={`mobile${part.id}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="apparel">T-shirt</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`apparel${part.id}`}>T-shirt</label>
                                                 <Field name="apparel" type="text" id={`apparel${part.id}`} className="chronokeep-input form-control form-control-sm" disabled="true" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col">

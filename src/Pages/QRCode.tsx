@@ -41,13 +41,15 @@ function QRCode(props: PageProps) {
         pageType = "PNTF Youth Championship Results"
     } else if (state.page === "team-results") {
         pageType = "Team Results"
+    } else if (state.page === "series") {
+        pageType = "Series Results"
     }
     document.title = `Chronokeep - ${codeName} QRCode`;
     return (
         <div className="qr-holder">
             <div className="qr-buffer" />
             <h1 className="qr-label display-4">{codeName}</h1>
-            <h1 className="qr-label display-4">{pageType} By</h1>
+            <h1 className="qr-label display-4">{pageType}</h1>
             <QR value={href} ecLevel='H' size={350} quietZone={10} bgColor='#FFFFFF' fgColor='#5c6c7d' qrStyle='dots' eyeRadius={20} />
             <h1 className="qr-label display-4">Chronokeep</h1>
         </div>

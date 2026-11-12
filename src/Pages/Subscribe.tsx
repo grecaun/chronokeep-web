@@ -6,7 +6,7 @@ import { SubscribeLoader } from '../loaders/subscribe';
 function Subscribe() {
     const params = useParams();
     const state = SubscribeLoader(params);
-    document.title = `Chronokeep - Unsubscribe`
+    document.title = `Chronokeep - Subscribe`
     if (state.error === true) {
         document.title = `Chronokeep - Error`
         return (

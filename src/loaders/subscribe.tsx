@@ -16,7 +16,7 @@ export function SubscribeLoader(params: Params<string>): SubscriptionState {
     useEffect(() => {
         let cancelled = false;
         setState(prev => ({ ...prev, loading: true, error: false, message: null }));
-        const fetchUnsubscribe = async () => {
+        const fetchSubscribe = async () => {
             const update: Partial<SubscriptionState> = {};
             const BASE_URL = import.meta.env.VITE_CHRONOKEEP_API_URL;
             const requestOptions = {
@@ -53,7 +53,7 @@ export function SubscribeLoader(params: Params<string>): SubscriptionState {
                 setState(prev => ({ ...prev, ...update }));
             }
     };
-    fetchUnsubscribe().catch(() => {});
+    fetchSubscribe().catch(() => {});
     return () => {
         cancelled = true;
     };

@@ -9,7 +9,7 @@ class PersonDistance extends Component<PersonResultsProps> {
         let disp_age = false;
         let disp_gend = false;
         results.forEach(res => {
-            if (res.gender.trim().length > 1 && res.gender !== "Not Specified") {
+            if (res.gender.trim().length > 0 && res.gender !== "Not Specified") {
                 disp_gend = true;
             }
             if (res.age > 0 && res.age < 100) {

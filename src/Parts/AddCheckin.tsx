@@ -114,7 +114,7 @@ function AddCheckin(props: AddCheckinProps) {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="distance">Distance</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="distance-add">Distance</label>
                                                 <Field as="select" name="distance" id={`distance-add`} className="form-select form-select-sm">
                                                     <option value=''></option>
                                                     { distances.map((dist) => {
@@ -125,39 +125,39 @@ function AddCheckin(props: AddCheckinProps) {
                                                 </Field>
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="bib">Bib</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="bib-add">Bib</label>
                                                 <Field name="bib" type="text" id={`bib-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="first">First Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="first-add">First Name</label>
                                                 <Field name="first" type="text" id={`first-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="last">Last Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="last-add">Last Name</label>
                                                 <Field name="last" type="text" id={`last-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="gender">Gender</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="gender-add">Gender</label>
                                                 <Field name="gender" type="text" id={`gender-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="birthdate">Birthdate</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="birthdate-add">Birthdate</label>
                                                 <Field name="birthdate" type="text" id={`birthdate-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="anonymous">Anonymous</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="anonymous-add">Anonymous</label>
                                                 <Field name="anonymous" type="checkbox" id={`anonymous-add`} className="chronkokeep-checkbox" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="sms_enabled">Send finish text message?</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="sms_enabled-add">Send finish text message?</label>
                                                 <Field name="sms_enabled" type="checkbox" id={`sms_enabled-add`} className="chronkokeep-checkbox" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="mobile">Mobile Number</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="mobile-add">Mobile Number</label>
                                                 <Field name="mobile" type="text" id={`mobile-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="apparel">T-shirt</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor="apparel-add">T-shirt</label>
                                                 <Field name="apparel" type="text" id={`apparel-add`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg chronokeep-part-col-sm">

@@ -165,10 +165,10 @@ class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
                                 <Form className="name-form">
                                     <div className="row justify-content-center">
                                         <div className="col">
-                                            <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
+                                            <label className="chronokeep-label form-label-sm" htmlFor="account-name">Name</label>
                                             <div className="row justify-content-center align-items-top gx-1">
                                                 <div className="col chronokeep-middle">
-                                                    <Field name="name" type="text" disabled={nameDisabled} id="name-field" className={'chronokeep-input form-control form-control-sm' + (errors.name && touched.name ? ' is-invalid' : '')} />
+                                                    <Field name="name" type="text" disabled={nameDisabled} id="account-name" className={'chronokeep-input form-control form-control-sm' + (errors.name && touched.name ? ' is-invalid' : '')} />
                                                     <ErrorMessage name="name" component="div" className="invalid-feedback" />
                                                 </div>
                                                 <div className="col-auto align-items-center">
@@ -221,10 +221,10 @@ class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
                                 <Form className="email-form">
                                     <div className="row justify-content-center">
                                         <div className="col">
-                                            <label className="chronokeep-label form-label-sm" htmlFor="username">Email</label>
+                                            <label className="chronokeep-label form-label-sm" htmlFor="account-email">Email</label>
                                             <div className="row justify-content-center align-items-top gx-1">
                                                 <div className="col chronokeep-middle">
-                                                    <Field name="username" type="text" disabled={emailDisabled} id="email-field" className={'chronokeep-input form-control form-control-sm' + (errors.username && touched.username ? ' is-invalid' : '')} />
+                                                    <Field name="username" type="text" disabled={emailDisabled} id="account-email" className={'chronokeep-input form-control form-control-sm' + (errors.username && touched.username ? ' is-invalid' : '')} />
                                                     <ErrorMessage name="username" component="div" className="invalid-feedback" />
                                                 </div>
                                                 <div className="col-auto align-items-center">
@@ -283,13 +283,13 @@ class AccountInfo extends Component<AccountInfoProps, AccountInfoState> {
                             <Form className="password-form">
                                 <div className={changePasswordClass}>
                                     <label className="chronokeep-label form-label-sm" htmlFor="oldPassword">Old Password</label>
-                                    <Field name="oldPassword" type="password" className={'chronokeep-input form-control form-control-sm' + (errors.oldPassword && touched.oldPassword ? ' is-invalid' : '')} />
+                                    <Field name="oldPassword" type="password" id="oldPassword" className={'chronokeep-input form-control form-control-sm' + (errors.oldPassword && touched.oldPassword ? ' is-invalid' : '')} />
                                     <ErrorMessage name="oldPassword" component="div" className="invalid-feedback" />
                                     <label className="chronokeep-label form-label-sm chronokeep-margin-top" htmlFor="password">New Password</label>
-                                    <Field name="password" type="password" className={'chronokeep-input form-control form-control-sm' + (errors.password && touched.password ? ' is-invalid' : '')} />
+                                    <Field name="password" type="password" id="password" className={'chronokeep-input form-control form-control-sm' + (errors.password && touched.password ? ' is-invalid' : '')} />
                                     <ErrorMessage name="password" component="div" className="invalid-feedback" />
                                     <label className="chronokeep-label form-label-sm chronokeep-margin-top" htmlFor="repeatPassword">Repeat New Password</label>
-                                    <Field name="repeatPassword" type="password" className={'chronokeep-input form-control form-control-sm' + (errors.repeatPassword && touched.repeatPassword ? ' is-invalid' : '')} />
+                                    <Field name="repeatPassword" type="password" id="repeatPassword" className={'chronokeep-input form-control form-control-sm' + (errors.repeatPassword && touched.repeatPassword ? ' is-invalid' : '')} />
                                     <ErrorMessage name="repeatPassword" component="div" className="invalid-feedback" />
                                     <div className="text-center chronokeep-margin-top chronokeep-margin-bottom">
                                         {!isSubmitting &&

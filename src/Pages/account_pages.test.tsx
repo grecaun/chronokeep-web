@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { makeEvent, makeYear, renderAt, routeFetch } from '../test/pages'
+import { makeEvent, makeYear, renderAt, routeFetch, labelProblems } from '../test/pages'
 import { Participant } from '../Interfaces/types'
 
 const tokens = { access_token: 'access', refresh_token: 'refresh' }
@@ -71,6 +71,18 @@ describe('Account page', () => {
 
         expect(await screen.findByText('Add Account')).toBeInTheDocument()
         expect(screen.getByText('Linked Accounts')).toBeInTheDocument()
+    })
+
+    it('connects every form label to its input, with no repeated ids', async () => {
+        routeFetch({ '/account': accountResponse('admin', { linked: [{ name: 'Pal', email: 'pal@example.com', type: 'free' }] }) })
+        await renderAccount('account')
+
+        await screen.findByText('Add Account')
+        expect(labelProblems()).toEqual([])
+        // a few spot checks that the labels reach the right fields
+        expect(screen.getByLabelText('Old Password')).toHaveAttribute('name', 'oldPassword')
+        expect(screen.getByLabelText('Repeat New Password')).toHaveAttribute('name', 'repeatPassword')
+        expect(screen.getAllByLabelText('Allowed Hosts')).toHaveLength(3)
     })
 
     it('hides keys from registration accounts', async () => {
@@ -177,6 +189,25 @@ describe('Checkin page', () => {
 
         await userEvent.type(screen.getByPlaceholderText('Search'), 'SMITH ')
         expect(names()).toEqual(['Amy Smith', 'Zed Smith'])
+    })
+
+    it('connects every check-in label to its own row', async () => {
+        await renderCheckin({
+            event: makeEvent(),
+            year: makeYear(),
+            participants: [
+                makeParticipant({ id: '1', first: 'Zed', last: 'Smith' }),
+                makeParticipant({ id: '2', first: 'Amy', last: 'Smith' }),
+            ],
+        })
+
+        // open both rows' forms
+        await userEvent.click(await screen.findByText('Amy Smith'))
+        await userEvent.click(screen.getByText('Zed Smith'))
+
+        expect(labelProblems()).toEqual([])
+        // each row's First Name label reaches that row's input
+        expect(screen.getAllByLabelText('First Name').map(input => (input as HTMLInputElement).value)).toEqual(expect.arrayContaining(['Amy', 'Zed']))
     })
 
     it('says when there is nobody to check in', async () => {

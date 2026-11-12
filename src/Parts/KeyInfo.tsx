@@ -123,11 +123,11 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                                     <div>
                                         <div className="row justify-content-center align-items-end g-2">
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="name">Name</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`name${key.value}`}>Name</label>
                                                 <Field name="name" type="text" disabled={isDisabled} id={`name${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="type">Type</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`type${key.value}`}>Type</label>
                                                 <Field as="select" name="type" id={`type${key.value}`} disabled={isDisabled} className="form-select form-select-sm">
                                                     <option value={types.read.value}>{types.read.text}</option>
                                                     <option value={types.write.value}>{types.write.text}</option>
@@ -136,12 +136,12 @@ class KeyInfo extends Component<KeyInfoProps, KeyState> {
                                             </div>
                                         { isAccountPage &&
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="allowedHosts">Allowed Hosts</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`hosts${key.value}`}>Allowed Hosts</label>
                                                 <Field name="allowedHosts" type="text" disabled={isDisabled} id={`hosts${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                         }
                                             <div className="col-md-auto">
-                                                <label className="chronokeep-label form-label-sm" htmlFor="validUntil">Valid Until</label>
+                                                <label className="chronokeep-label form-label-sm" htmlFor={`valid${key.value}`}>Valid Until</label>
                                                 <Field name="validUntil" type="text" disabled={isDisabled} id={`valid${key.value}`} className="chronokeep-input form-control form-control-sm" />
                                             </div>
                                             <div className="col-lg-auto">
