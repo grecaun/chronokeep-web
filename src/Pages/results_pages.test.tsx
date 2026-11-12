@@ -11,6 +11,7 @@ import TeamResults from './TeamResults'
 import PNTF from './PNTF'
 import YTP from './YTP'
 import { TimeResult } from '../Interfaces/types'
+import { installMockEventSource, MockEventSource } from '../test/eventSource'
 
 afterEach(() => {
     vi.useRealTimers()
@@ -33,6 +34,84 @@ function clockVsChip(): TimeResult[] {
 function placesByName() {
     return tableRows(screen.getByRole('table')).map(row => `${row[1]} ${row[2]}`)
 }
+
+describe('live updates', () => {
+    // The results API sends one set of results, then a newer set once a runner finishes.
+    function liveResults(yearOverrides: Record<string, unknown>, failRefresh = false) {
+        let calls = 0
+        const fetch = routeFetch({
+            '/results': () => {
+                calls++
+                if (failRefresh && calls > 1) {
+                    return new Response(JSON.stringify({ message: 'Server Error' }), { status: 500 })
+                }
+                const runners = [makeTimeResult({ bib: '1', first: 'Ann', last: 'Early', ranking: 1, seconds: 100, chip_seconds: 100 })]
+                if (calls > 1) {
+                    runners.push(makeTimeResult({ bib: '2', first: 'Bea', last: 'Late', ranking: 2, seconds: 200, chip_seconds: 200 }))
+                }
+                return new Response(JSON.stringify(makeResultsResponse({ '5K': runners }, { event_year: makeYear(yearOverrides) })), { status: 200 })
+            },
+        })
+        return fetch
+    }
+
+    function names() {
+        return tableRows(screen.getByRole('table')).map(row => row[2])
+    }
+
+    it('fetches the results again when the API says they changed, keeping the page as it was', async () => {
+        installMockEventSource()
+        const fetch = liveResults({ live: true })
+        renderAt('/results/test-race/2020', '/results/:slug/:year?', <Results />)
+
+        await screen.findByText('Test Race Results')
+        expect(names()).toEqual(['Ann Early'])
+        expect(MockEventSource.open()).toHaveLength(1)
+        expect(new URL(MockEventSource.open()[0].url).searchParams.get('year')).toBe('2020')
+
+        // a search the viewer typed should survive the refresh
+        await userEvent.type(screen.getByPlaceholderText('Search'), 'a')
+        MockEventSource.open()[0].emit('results')
+
+        await waitFor(() => { expect(names()).toEqual(['Ann Early', 'Bea Late']) })
+        expect(fetch).toHaveBeenCalledTimes(2)
+        expect(screen.getByPlaceholderText('Search')).toHaveValue('a')
+        expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
+    })
+
+    it("watches on the event's day even before results arrive", async () => {
+        installMockEventSource()
+        const now = new Date()
+        const today = `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(2, '0')}-${`${now.getDate()}`.padStart(2, '0')}`
+        liveResults({ live: false, date_time: `${today}T08:00:00` })
+        renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
+
+        await screen.findByText('Test Race Results')
+        expect(MockEventSource.open()).toHaveLength(1)
+    })
+
+    it("doesn't watch past events", async () => {
+        installMockEventSource()
+        liveResults({ live: false, date_time: '2020-06-01T08:00:00' })
+        renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
+
+        await screen.findByText('Test Race Results')
+        expect(MockEventSource.instances).toHaveLength(0)
+    })
+
+    it('keeps the results on screen when a refresh fails', async () => {
+        installMockEventSource()
+        const fetch = liveResults({ live: true }, true)
+        renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
+
+        await screen.findByText('Test Race Results')
+        MockEventSource.open()[0].emit('results')
+
+        await waitFor(() => { expect(fetch).toHaveBeenCalledTimes(2) })
+        expect(names()).toEqual(['Ann Early'])
+        expect(screen.queryByText('Server Error')).not.toBeInTheDocument()
+    })
+})
 
 describe('Results page', () => {
     it('shows the event header and results ranked by clock time', async () => {

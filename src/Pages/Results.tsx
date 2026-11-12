@@ -4,7 +4,7 @@ import TimeResultsTable from '../Parts/TimeResultsTable';
 import Loading from '../Parts/Loading';
 import ErrorMsg from '../Parts/ErrorMsg';
 import DateString from '../Parts/DateString';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import YearSelect from '../Parts/YearSelect';
 import { EventYear, RankingType, ResultsParticipant, Segment, SmsSubscription, TimeResult } from '../Interfaces/types';
 import { ResultsLoader } from '../loaders/results';
@@ -119,7 +119,6 @@ const filterOptions = createFilterOptions({
 })
 
 function Results() {
-    const [searchParams, setSearchParams] = useSearchParams();
     const params = useParams();
     const { state, setState } = ResultsLoader(params, 'results');
     // The distance tab the viewer has picked. None picked shows every distance.
@@ -161,13 +160,6 @@ function Results() {
         })
     }
 
-    const handleRefreshChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchParams(params => {
-            params.set("refresh", e.target.checked ? "true" : "false")
-            return params;
-        });
-    }
-
     const options = [
         { value: 0, label: "Sort by Ranking" },
         { value: 1, label: "Sort by Gender" },
@@ -177,7 +169,6 @@ function Results() {
     const defaultSort = { value: 0, label: "Sort by Ranking" }
     const textAllowedTime = new Date(Date.parse(state.year!.date_time) + (1000 * 60 * 60 * 24 * state.year!.days_allowed))
     const nowDate = new Date(Date.now())
-    const eventDate = new Date(Date.parse(state.year!.date_time))
     const days_allowed = state.year?.days_allowed ?? 0;
     let current_results = state.results;
     const age_groups: Set<string> = new Set<string>()
@@ -212,14 +203,7 @@ function Results() {
     if (state.default_ranking_type === RankingType.Chip) {
         ranking_checkbox_text = "Rank by Clock Time"
     }
-    const sameDay = nowDate.getFullYear() === eventDate.getFullYear() &&
-                    nowDate.getMonth() === eventDate.getMonth() &&
-                    nowDate.getDate() === eventDate.getDate();
     if (state.event!.type === "backyardultra") {
-        if (searchParams.get('refresh') && searchParams.get('refresh') === 'true' && sameDay === true) {
-            console.log("Auto refresh is set.");
-            setTimeout(() => location.reload(), 30000);
-        }
         ranking_checkbox_text = "Rank by Cumulative Time"
         if (state.default_ranking_type === RankingType.Chip) {
             ranking_checkbox_text = "Rank by Elapsed Time"
@@ -732,20 +716,6 @@ function Results() {
                         </Form>
                     )}
                 </Formik>
-            }
-            { state.event!.type === "backyardultra" && sameDay === true &&
-                <div className="d-flex justify-content-center">
-                    <FormControlLabel
-                        label="Auto Refresh"
-                        control={
-                            <Checkbox
-                                size="small"
-                                checked={searchParams.get('refresh') !== null && searchParams.get('refresh') === 'true'}
-                                onChange={handleRefreshChange}
-                                />
-                        }
-                    />
-                </div>
             }
             { distances.length > 0 &&
             <div>

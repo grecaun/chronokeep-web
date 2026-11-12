@@ -3,6 +3,7 @@ import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, data, RouterProvider } from 'react-router-dom'
 import { jsonResponse, mockFetch } from '../test/helpers'
+import { installMockEventSource, MockEventSource } from '../test/eventSource'
 import { makeEvent, makeResultsResponse, makeYear, renderAt, routeFetch } from '../test/pages'
 import Events from './Events'
 import Subscribe from './Subscribe'
@@ -212,7 +213,7 @@ describe('QRCode page', () => {
         routeFetch({ '/results': makeResultsResponse({}) })
         renderAt('/results/test-race/qr', '/results/:slug/:year?/qr', <QRCode page={page} />)
 
-        expect(await screen.findByText(`${label} By`)).toBeInTheDocument()
+        expect(await screen.findByText(label)).toBeInTheDocument()
         expect(screen.getByText('Test Race')).toBeInTheDocument()
     })
 
@@ -236,6 +237,17 @@ describe('QRCode page', () => {
         routeFetch({})
         renderAt('/results/nope/qr', '/results/:slug/:year?/qr', <QRCode page="results" />)
         expect(await screen.findByText('You appear to be off course.')).toBeInTheDocument()
+    })
+})
+
+describe('QRCode page live updates', () => {
+    it("doesn't watch for result changes", async () => {
+        installMockEventSource()
+        routeFetch({ '/results': makeResultsResponse({}, { event_year: makeYear({ live: true }) }) })
+        renderAt('/results/test-race/qr', '/results/:slug/:year?/qr', <QRCode page="results" />)
+
+        expect(await screen.findByText('Test Race')).toBeInTheDocument()
+        expect(MockEventSource.instances).toHaveLength(0)
     })
 })
 
