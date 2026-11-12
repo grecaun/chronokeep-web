@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
+import { LiveContext } from "../Parts/liveContext";
 
 /** How often to check for new results when the live stream isn't available. */
 export const LIVE_POLL_INTERVAL = 30000;
@@ -23,6 +24,15 @@ export function useLiveUpdates(slug: string | undefined, year: string | undefine
     // keep the latest callback without reconnecting every time the page renders
     const update = useRef(onUpdate);
     update.current = onUpdate;
+    const liveStatus = useContext(LiveContext);
+
+    // let the page show it's live, and guard against refreshes, while watching
+    useEffect(() => {
+        if (!enabled || !slug || liveStatus === null) {
+            return;
+        }
+        return liveStatus.watch();
+    }, [enabled, slug, liveStatus]);
 
     useEffect(() => {
         if (!enabled || !slug) {

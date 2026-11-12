@@ -12,6 +12,7 @@ import PNTF from './PNTF'
 import YTP from './YTP'
 import { TimeResult } from '../Interfaces/types'
 import { installMockEventSource, MockEventSource } from '../test/eventSource'
+import { LiveProvider } from '../Parts/LiveStatus'
 
 afterEach(() => {
     vi.useRealTimers()
@@ -88,6 +89,24 @@ describe('live updates', () => {
 
         await screen.findByText('Test Race Results')
         expect(MockEventSource.open()).toHaveLength(1)
+    })
+
+    it('shows the live badge while watching', async () => {
+        installMockEventSource()
+        liveResults({ live: true })
+        renderAt('/results/test-race', '/results/:slug/:year?', <LiveProvider><Results /></LiveProvider>)
+
+        await screen.findByText('Test Race Results')
+        expect(screen.getByText('Results update automatically')).toBeInTheDocument()
+    })
+
+    it("doesn't show the live badge for past events", async () => {
+        installMockEventSource()
+        liveResults({ live: false, date_time: '2020-06-01T08:00:00' })
+        renderAt('/results/test-race', '/results/:slug/:year?', <LiveProvider><Results /></LiveProvider>)
+
+        await screen.findByText('Test Race Results')
+        expect(screen.queryByText('Results update automatically')).not.toBeInTheDocument()
     })
 
     it("doesn't watch past events", async () => {

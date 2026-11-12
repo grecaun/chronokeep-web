@@ -406,4 +406,59 @@ a.chronokeep-pagination-active:hover {
   color: rgba(var(--bs-secondary-rgb),var(--bs-text-opacity)) !important;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: normal;
+}/* Live results badge and refresh notice (Parts/LiveStatus), pinned to the bottom right. */
+.live-status {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: calc(100vw - 32px);
+}
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 999px;
+  background-color: #fff;
+  color: #5c6c7d;
+  font-size: 13px;
+}
+.live-label {
+  font-weight: 600;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgb(225, 36, 22);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+}
+.live-notice {
+  max-width: 320px;
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #3e4955;
+  font-size: 14px;
+}
+@media (max-width: 575px) {
+  .live-detail {
+    display: none;
+  }
 }
