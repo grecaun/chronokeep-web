@@ -112,9 +112,80 @@ describe('Results page', () => {
         }))
 
         await screen.findByText('Test Race Results')
-        expect(screen.getByRole('button', { name: '5K' })).toHaveAttribute('href', '#5K')
-        expect(screen.getByRole('button', { name: '10K' })).toHaveAttribute('href', '#10K')
+        expect(screen.getByRole('button', { name: '5K' })).toHaveAttribute('aria-pressed', 'false')
+        expect(screen.getByRole('button', { name: '10K' })).toHaveAttribute('aria-pressed', 'false')
         expect(screen.getAllByRole('table')).toHaveLength(2)
+    })
+
+    describe('picking distance tabs', () => {
+        function renderThreeDistances() {
+            renderResults(makeResultsResponse({
+                '5K': [makeTimeResult({ bib: '1', first: 'Ann', last: 'Five', distance: '5K' })],
+                '10K': [makeTimeResult({ bib: '2', first: 'Bea', last: 'Ten', distance: '10K' })],
+                'Half': [makeTimeResult({ bib: '3', first: 'Cat', last: 'Half', distance: 'Half' })],
+            }))
+        }
+
+        function shownDistances() {
+            return screen.getAllByRole('table').map(table => table.closest('[id]')!.id)
+        }
+
+        it('shows only the picked distance', async () => {
+            renderThreeDistances()
+
+            await userEvent.click(await screen.findByRole('button', { name: '10K' }))
+
+            expect(shownDistances()).toEqual(['10K'])
+            expect(screen.getByRole('button', { name: '10K' })).toHaveAttribute('aria-pressed', 'true')
+            expect(screen.getByRole('button', { name: '10K' })).toHaveClass('active')
+            // the other tabs stay so more can be picked
+            expect(screen.getByRole('button', { name: '5K' })).toHaveAttribute('aria-pressed', 'false')
+        })
+
+        it('switches to another distance instead of adding it', async () => {
+            renderThreeDistances()
+
+            await userEvent.click(await screen.findByRole('button', { name: '5K' }))
+            await userEvent.click(screen.getByRole('button', { name: 'Half' }))
+
+            expect(shownDistances()).toEqual(['Half'])
+            expect(screen.getByRole('button', { name: 'Half' })).toHaveAttribute('aria-pressed', 'true')
+            expect(screen.getByRole('button', { name: '5K' })).toHaveAttribute('aria-pressed', 'false')
+        })
+
+        it('shows every distance again when the pick is cleared', async () => {
+            renderThreeDistances()
+
+            await userEvent.click(await screen.findByRole('button', { name: '5K' }))
+            await userEvent.click(screen.getByRole('button', { name: '5K' }))
+
+            expect(shownDistances()).toEqual(['5K', '10K', 'Half'])
+            expect(screen.getByRole('button', { name: '5K' })).toHaveAttribute('aria-pressed', 'false')
+        })
+
+        it('shows every match when a search hides the picked distance', async () => {
+            renderThreeDistances()
+            await userEvent.click(await screen.findByRole('button', { name: '5K' }))
+            const search = screen.getByPlaceholderText('Search')
+
+            await userEvent.type(search, 'bea')
+            expect(shownDistances()).toEqual(['10K'])
+
+            // clearing the search brings the pick back
+            await userEvent.clear(search)
+            expect(shownDistances()).toEqual(['5K'])
+        })
+
+        it('can pick The Double', async () => {
+            renderResults(makeResultsResponse({
+                'Half': [makeTimeResult({ bib: '1', first: 'Dot', last: 'Double', division: 'The Double', finish: true })],
+                'Full': [makeTimeResult({ bib: '1', first: 'Dot', last: 'Double', division: 'the-double', finish: true })],
+            }))
+
+            await userEvent.click(await screen.findByRole('button', { name: 'The Double' }))
+
+            expect(shownDistances()).toEqual(['The Double'])
+        })
     })
 
     describe('searching across distances', () => {
@@ -183,7 +254,7 @@ describe('Results page', () => {
             'Full': [makeTimeResult({ bib: '1', division: 'the-double' })],
         }))
 
-        expect(await screen.findByRole('button', { name: 'The Double' })).toHaveAttribute('href', '#The Double')
+        expect(await screen.findByRole('button', { name: 'The Double' })).toBeInTheDocument()
     })
 
     it('lists every year newest first with the current one selected', async () => {
@@ -197,6 +268,21 @@ describe('Results page', () => {
 
         await screen.findByText('Test Race Results')
         expect(await yearOptions()).toEqual(['2020*', '2019', '2018'])
+    })
+
+    it('orders named years by date', async () => {
+        renderResults(makeResultsResponse({ '5K': clockVsChip() }, {
+            years: [
+                makeYear({ year: '2025-May', date_time: '2025-05-01T08:00:00' }),
+                makeYear({ year: '2025-October', date_time: '2025-10-01T08:00:00' }),
+                makeYear({ year: '2024-October', date_time: '2024-10-01T08:00:00' }),
+                makeYear({ year: '2025-June', date_time: '2025-06-01T08:00:00' }),
+            ],
+            event_year: makeYear({ year: '2025-October', date_time: '2025-10-01T08:00:00' }),
+        }))
+
+        await screen.findByText('Test Race Results')
+        expect(await yearOptions()).toEqual(['2025-October*', '2025-June', '2025-May', '2024-October'])
     })
 
     describe('switching years', () => {

@@ -120,7 +120,7 @@ export default function Awards() {
                 <div className="col-md-10 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-1 h1">{`${state.year?.year} ${state.event?.name} Awards`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
-                    { years.length > 1 && <YearSelect years={years.map(year => year.year)} selected={state.year?.year} linkTo={year => `/awards/${params.slug}/${year}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`} /> }
+                    { years.length > 1 && <YearSelect years={[...years].reverse().map(year => year.year)} selected={state.year?.year} linkTo={year => `/awards/${params.slug}/${year}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`} /> }
                 </div>
             </div>
             { distances.length > 0 &&

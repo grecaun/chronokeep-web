@@ -70,7 +70,7 @@ function DoublePage() {
                     <p className="text-important mb-0 mt-1 h1">{`${state.selected_year!.display_name}`}</p>
                     <p className="text-important mb-2 mt-0 h2">{pageSubTitle}</p>
                     { state.years !== null && state.years.length > 1
-                        ? <YearSelect years={state.years.map(year => year.display_year.toString())} selected={state.selected_year?.display_year.toString()} linkTo={year => `/double/${params.slug}/${year}`} />
+                        ? <YearSelect years={[...state.years].sort((a, b) => b.display_year - a.display_year).map(year => year.display_year.toString())} selected={state.selected_year?.display_year.toString()} linkTo={year => `/double/${params.slug}/${year}`} />
                         : <p className="text-important h5">{state.selected_year?.display_year === undefined? '' : state.selected_year?.display_year}</p>
                     }
                 </div>

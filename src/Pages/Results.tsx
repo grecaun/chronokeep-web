@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import ResultsTable from '../Parts/ResultsTable';
 import TimeResultsTable from '../Parts/TimeResultsTable';
 import Loading from '../Parts/Loading';
@@ -121,6 +122,8 @@ function Results() {
     const [searchParams, setSearchParams] = useSearchParams();
     const params = useParams();
     const { state, setState } = ResultsLoader(params, 'results');
+    // The distance tab the viewer has picked. None picked shows every distance.
+    const [selectedDistance, setSelectedDistance] = useState<string | null>(null);
     document.title = `Chronokeep - Results`
     if (state.error === true) {
         document.title = `Chronokeep - Error`
@@ -591,6 +594,19 @@ function Results() {
     // While searching, only show the distances (and The Double) where someone matches.
     const shown_distances = distances.filter(distance => (current_results[distance] ?? []).some(result => matchesSearch(result, state.search)))
     const show_double = double_distances.length > 1 && double_results.some(result => matchesSearch({ first: result.first, last: result.last }, state.search))
+    // Only count the picked tab while it's on screen, so a search that hides the
+    // picked distance falls back to showing everything that matches.
+    const tab_names = show_double ? [...shown_distances, the_double] : shown_distances
+    const active_selection = selectedDistance !== null && tab_names.includes(selectedDistance) ? selectedDistance : null
+    const isSelected = (name: string) => active_selection === name
+    const isDisplayed = (name: string) => active_selection === null || isSelected(name)
+    // Clicking the picked tab clears it; clicking any other tab picks that one instead.
+    const toggleDistance = (name: string) => {
+        setSelectedDistance(prev => prev === name ? null : name)
+    }
+    const tabClass = (name: string) => isSelected(name)
+        ? "nav-link active text-important h5 text-dark"
+        : "nav-link text-important h5 text-secondary"
     const certifications = new Map<string, string>()
     if (state.distances !== null) {
         state.distances.map(dist => {
@@ -619,7 +635,7 @@ function Results() {
                 <div className="col-md-9 flex-fill text-center mx-auto m-1">
                     <p className="text-important mb-2 mt-3 h1">{`${state.event!.name} Results`}</p>
                     <p className="text-important h4">{DateString(state.year!.date_time)}</p>
-                    { years.length > 1 && <YearSelect years={years.map(year => year.year)} selected={state.year!.year} linkTo={year => `/results/${params.slug}/${year}`} /> }
+                    { years.length > 1 && <YearSelect years={[...years].reverse().map(year => year.year)} selected={state.year!.year} linkTo={year => `/results/${params.slug}/${year}`} /> }
                     { distances.length === 1 && certifications.has(distances[0]) &&
                         <div className='chronokeep-certification'>Course Certification: {certifications.get(distances[0])}</div>
                     }
@@ -776,14 +792,14 @@ function Results() {
                                 shown_distances.map((distance, index) => {
                                     return (
                                         <li className="nav-item" key={`distance${index}`}>
-                                            <a className="nav-link text-important h5 text-secondary" href={`#${distance}`} role="button">{distance}</a>
+                                            <button type="button" className={tabClass(distance)} aria-pressed={isSelected(distance)} onClick={() => { toggleDistance(distance) }}>{distance}</button>
                                         </li>
                                     )
                                 })
                             }
                             { show_double &&
                                 <li className="nav-item" key={`distance${3}`}>
-                                    <a className="nav-link text-important h5 text-secondary" href={`#${the_double}`} role="button">{the_double}</a>
+                                    <button type="button" className={tabClass(the_double)} aria-pressed={isSelected(the_double)} onClick={() => { toggleDistance(the_double) }}>{the_double}</button>
                                 </li>
                             }
                         </ul>
@@ -794,7 +810,7 @@ function Results() {
                                 </div>
                             }
                             {
-                                shown_distances.map((distance, index) => {
+                                shown_distances.filter(isDisplayed).map((distance, index) => {
                                     if (state.event!.type === "time") {
                                         return (
                                             <TimeResultsTable
@@ -849,7 +865,7 @@ function Results() {
                                     }
                                 })
                             }
-                            { show_double &&
+                            { show_double && isDisplayed(the_double) &&
                                 <DoubleResultsTable
                                     results={double_results}
                                     key={3}
