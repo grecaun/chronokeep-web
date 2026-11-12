@@ -379,6 +379,16 @@ button.close {
   max-width: 375px;
   margin: 30px auto;
 }
+/* Bootstrap page buttons (Parts/Pagination) in the site's slate grey, matching .btn-chronokeep,
+   with the same red on hover as the site's links. */
+.pagination {
+  --bs-pagination-color: #5c6c7d;
+  --bs-pagination-hover-color: rgb(225, 36, 22);
+  --bs-pagination-focus-color: #3e4955;
+  --bs-pagination-focus-box-shadow: 0 0 0 .25rem rgba(92, 108, 125, .25);
+  --bs-pagination-active-bg: #5c6c7d;
+  --bs-pagination-active-border-color: #5c6c7d;
+}
 .chronokeep-pagination-link {
   display: inline-block;
   text-decoration: none;
