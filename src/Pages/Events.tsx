@@ -18,6 +18,9 @@ function todayString(): string {
 
 /** Whether an event is today, upcoming, or past, going by the date part of its most recent time. */
 function timingOf(ev: Event, today: string): EventTiming {
+    if (ev.recent_time === null) {
+        return 'past';
+    }
     const date = ev.recent_time.substring(0, 10);
     if (date === today) {
         return 'today';
