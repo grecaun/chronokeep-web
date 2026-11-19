@@ -3,7 +3,7 @@ import { ResultsState } from "../Interfaces/states";
 import { ErrorResponse, GetResultsResponse } from "../Interfaces/responses";
 import { useEffect, useRef, useState } from "react";
 import { RankingType } from "../Interfaces/types";
-import { isToday, useLiveUpdates } from "./live";
+import { mightBeLive, useLiveUpdates } from "./live";
 
 /** Fetches an event year's results, returning the parts of the page state they fill in. */
 async function fetchResults(slug: string | undefined, year: string | undefined): Promise<Partial<ResultsState>> {
@@ -56,9 +56,8 @@ async function fetchResults(slug: string | undefined, year: string | undefined):
 }
 
 /**
- * Loads an event year's results. While the event year is live, or it's the event's day,
- * the results are fetched again whenever the API says they changed, unless `watchLive`
- * is false.
+ * Loads an event year's results. While the race might be live (see mightBeLive), the
+ * results are fetched again whenever the API says they changed, unless `watchLive` is false.
  */
 export function ResultsLoader(params: Params<string>, page: string, watchLive = true): { state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>> } {
     const [state, setState] = useState<ResultsState>({
@@ -115,7 +114,7 @@ export function ResultsLoader(params: Params<string>, page: string, watchLive = 
         }).catch(() => {});
     };
     const live = watchLive && !state.loading && !state.error && state.year !== null
-        && (state.year.live || isToday(state.year.date_time));
+        && mightBeLive(Object.values(state.results).flat());
     useLiveUpdates(params.slug, state.year?.year, live, refresh);
     return { state, setState };
 }

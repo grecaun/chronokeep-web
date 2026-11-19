@@ -69,7 +69,6 @@ export function makeYear(overrides: Partial<EventYear> = {}): EventYear {
     return {
         year: '2020',
         date_time: '2020-06-01T08:00:00',
-        live: false,
         days_allowed: 0,
         ranking_type: 'gun',
         ...overrides,

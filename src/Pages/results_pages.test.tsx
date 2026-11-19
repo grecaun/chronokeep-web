@@ -37,20 +37,27 @@ function placesByName() {
 }
 
 describe('live updates', () => {
-    // The results API sends one set of results, then a newer set once a runner finishes.
-    function liveResults(yearOverrides: Record<string, unknown>, failRefresh = false) {
+    // The results API sends one set of results, then a newer set once a second runner is read.
+    // The first runner is on the course with a read a minute ago ('live'), has finished
+    // ('finished'), or is on the course but was last read seven hours ago ('old').
+    function liveResults(race: 'live' | 'finished' | 'old', failRefresh = false) {
         let calls = 0
+        const minutesAgo = (minutes: number) => new Date(Date.now() - minutes * 60000).toISOString()
         const fetch = routeFetch({
             '/results': () => {
                 calls++
                 if (failRefresh && calls > 1) {
                     return new Response(JSON.stringify({ message: 'Server Error' }), { status: 500 })
                 }
-                const runners = [makeTimeResult({ bib: '1', first: 'Ann', last: 'Early', ranking: 1, seconds: 100, chip_seconds: 100 })]
+                const runners = [makeTimeResult({
+                    person_id: '1', bib: '1', first: 'Ann', last: 'Early', ranking: 1, seconds: 100, chip_seconds: 100,
+                    finish: race === 'finished',
+                    local_time: minutesAgo(race === 'old' ? 7 * 60 : 1),
+                })]
                 if (calls > 1) {
-                    runners.push(makeTimeResult({ bib: '2', first: 'Bea', last: 'Late', ranking: 2, seconds: 200, chip_seconds: 200 }))
+                    runners.push(makeTimeResult({ person_id: '2', bib: '2', first: 'Bea', last: 'Late', ranking: 2, seconds: 200, chip_seconds: 200, finish: false, local_time: minutesAgo(0) }))
                 }
-                return new Response(JSON.stringify(makeResultsResponse({ '5K': runners }, { event_year: makeYear(yearOverrides) })), { status: 200 })
+                return new Response(JSON.stringify(makeResultsResponse({ '5K': runners })), { status: 200 })
             },
         })
         return fetch
@@ -62,7 +69,7 @@ describe('live updates', () => {
 
     it('fetches the results again when the API says they changed, keeping the page as it was', async () => {
         installMockEventSource()
-        const fetch = liveResults({ live: true })
+        const fetch = liveResults('live')
         renderAt('/results/test-race/2020', '/results/:slug/:year?', <Results />)
 
         await screen.findByText('Test Race Results')
@@ -80,38 +87,36 @@ describe('live updates', () => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
     })
 
-    it("watches on the event's day even before results arrive", async () => {
+    it("doesn't watch once everyone has finished", async () => {
         installMockEventSource()
-        const now = new Date()
-        const today = `${now.getFullYear()}-${`${now.getMonth() + 1}`.padStart(2, '0')}-${`${now.getDate()}`.padStart(2, '0')}`
-        liveResults({ live: false, date_time: `${today}T08:00:00` })
+        liveResults('finished')
         renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
 
         await screen.findByText('Test Race Results')
-        expect(MockEventSource.open()).toHaveLength(1)
+        expect(MockEventSource.instances).toHaveLength(0)
     })
 
     it('shows the live badge while watching', async () => {
         installMockEventSource()
-        liveResults({ live: true })
+        liveResults('live')
         renderAt('/results/test-race', '/results/:slug/:year?', <LiveProvider><Results /></LiveProvider>)
 
         await screen.findByText('Test Race Results')
         expect(screen.getByText('Results update automatically')).toBeInTheDocument()
     })
 
-    it("doesn't show the live badge for past events", async () => {
+    it("doesn't show the live badge without a recent read", async () => {
         installMockEventSource()
-        liveResults({ live: false, date_time: '2020-06-01T08:00:00' })
+        liveResults('old')
         renderAt('/results/test-race', '/results/:slug/:year?', <LiveProvider><Results /></LiveProvider>)
 
         await screen.findByText('Test Race Results')
         expect(screen.queryByText('Results update automatically')).not.toBeInTheDocument()
     })
 
-    it("doesn't watch past events", async () => {
+    it("doesn't watch when the latest read is over six hours old", async () => {
         installMockEventSource()
-        liveResults({ live: false, date_time: '2020-06-01T08:00:00' })
+        liveResults('old')
         renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
 
         await screen.findByText('Test Race Results')
@@ -120,7 +125,7 @@ describe('live updates', () => {
 
     it('keeps the results on screen when a refresh fails', async () => {
         installMockEventSource()
-        const fetch = liveResults({ live: true }, true)
+        const fetch = liveResults('live', true)
         renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
 
         await screen.findByText('Test Race Results')

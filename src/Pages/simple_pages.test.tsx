@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, data, RouterProvider } from 'react-router-dom'
-import { jsonResponse, mockFetch } from '../test/helpers'
+import { jsonResponse, makeTimeResult, mockFetch } from '../test/helpers'
 import { installMockEventSource, MockEventSource } from '../test/eventSource'
 import { makeEvent, makeResultsResponse, makeYear, renderAt, routeFetch } from '../test/pages'
 import Events from './Events'
@@ -243,7 +243,9 @@ describe('QRCode page', () => {
 describe('QRCode page live updates', () => {
     it("doesn't watch for result changes", async () => {
         installMockEventSource()
-        routeFetch({ '/results': makeResultsResponse({}, { event_year: makeYear({ live: true }) }) })
+        // a runner on the course with a recent read, which the results page would watch
+        const onCourse = makeTimeResult({ finish: false, local_time: new Date().toISOString() })
+        routeFetch({ '/results': makeResultsResponse({ '5K': [onCourse] }) })
         renderAt('/results/test-race/qr', '/results/:slug/:year?/qr', <QRCode page="results" />)
 
         expect(await screen.findByText('Test Race')).toBeInTheDocument()

@@ -199,14 +199,15 @@ describe('Person page live updates', () => {
     it("fetches the person's results again when the API says they changed", async () => {
         installMockEventSource()
         let calls = 0
-        const start = makeTimeResult({ segment: 'Start', occurence: 0, seconds: 0, chip_seconds: 0, ranking: -1 })
-        const mile = makeTimeResult({ segment: 'Mile 1', occurence: 1, seconds: 500, chip_seconds: 490, ranking: 3, finish: false })
+        // still out on the course, read at the first mile a minute ago
+        const start = makeTimeResult({ segment: 'Start', occurence: 0, seconds: 0, chip_seconds: 0, ranking: -1, finish: false })
+        const mile = makeTimeResult({ segment: 'Mile 1', occurence: 1, seconds: 500, chip_seconds: 490, ranking: 3, finish: false, local_time: new Date(Date.now() - 60000).toISOString() })
         const finish = makeTimeResult({ segment: 'Finish', occurence: 2, seconds: 1580, chip_seconds: 1550, ranking: 4 })
         const fetch = routeFetch({
             '/results/bib': () => {
                 calls++
                 const results = calls > 1 ? [start, mile, finish] : [start, mile]
-                return new Response(JSON.stringify(personResponse(results, { year: makeYear({ live: true }) })), { status: 200 })
+                return new Response(JSON.stringify(personResponse(results)), { status: 200 })
             },
         })
         renderAt('/results/test-race/2020/100', '/:page/:slug/:year/:bib', <Person />)

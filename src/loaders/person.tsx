@@ -2,7 +2,7 @@ import { Params } from "react-router-dom";
 import { ErrorResponse, GetBibResultsResponse } from "../Interfaces/responses";
 import { PersonState } from "../Interfaces/states";
 import { useEffect, useRef, useState } from "react";
-import { isToday, useLiveUpdates } from "./live";
+import { mightBeLive, useLiveUpdates } from "./live";
 
 /** Fetches one person's results, returning the parts of the page state they fill in. */
 async function fetchPerson(slug: string | undefined, year: string | undefined, bib: string | undefined): Promise<Partial<PersonState>> {
@@ -69,7 +69,6 @@ export function PersonLoader(params: Params<string>): PersonState {
         year: {
             year: '',
             date_time: '',
-            live: false,
             days_allowed: 1,
             ranking_type: "gun"
         },
@@ -104,8 +103,8 @@ export function PersonLoader(params: Params<string>): PersonState {
         };
     }, [params.slug, params.year, params.bib]);
 
-    // While the event is live, fetch this person's results again when they change,
-    // keeping what's on screen if a background fetch fails.
+    // While this person is still out on the course with a recent read, fetch their results
+    // again when they change, keeping what's on screen if a background fetch fails.
     const refresh = () => {
         const fetchId = ++latestFetch.current;
         fetchPerson(params.slug, params.year, params.bib).then(update => {
@@ -114,7 +113,7 @@ export function PersonLoader(params: Params<string>): PersonState {
             }
         }).catch(() => {});
     };
-    const live = !state.loading && !state.error && (state.year.live || isToday(state.year.date_time));
+    const live = !state.loading && !state.error && mightBeLive(state.results);
     useLiveUpdates(params.slug, state.year.year || params.year, live, refresh);
     return state;
 }
