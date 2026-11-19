@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
 import { LiveContext } from "../Parts/liveContext";
 import { TimeResult } from "../Interfaces/types";
+import type { RecentChange } from "../Parts/recentChanges";
 
 /** How often to check for new results when the live stream isn't available. */
 export const LIVE_POLL_INTERVAL = 30000;
@@ -67,8 +68,15 @@ export function mightBeLive(results: TimeResult[], now: number = Date.now()): bo
  * reconnects, `onUpdate` is called too, since a change may have been missed in between.
  * A stream that goes quiet for LIVE_STREAM_TIMEOUT is replaced with a new one.
  * If the stream can't be used at all, it checks every LIVE_POLL_INTERVAL instead.
+ * While watching, `recent` (when given) is listed under the live badge.
  */
-export function useLiveUpdates(slug: string | undefined, year: string | undefined, enabled: boolean, onUpdate: () => void) {
+export function useLiveUpdates(
+    slug: string | undefined,
+    year: string | undefined,
+    enabled: boolean,
+    onUpdate: () => void,
+    recent?: RecentChange[],
+) {
     // keep the latest callback without reconnecting every time the page renders
     const update = useRef(onUpdate);
     update.current = onUpdate;
@@ -81,6 +89,15 @@ export function useLiveUpdates(slug: string | undefined, year: string | undefine
         }
         return liveStatus.watch();
     }, [enabled, slug, liveStatus]);
+
+    // list the latest reads under the live badge while watching
+    useEffect(() => {
+        if (!enabled || !slug || liveStatus === null || recent === undefined) {
+            return;
+        }
+        liveStatus.setRecent(recent);
+        return () => { liveStatus.setRecent(null); };
+    }, [enabled, slug, liveStatus, recent]);
 
     useEffect(() => {
         if (!enabled || !slug) {

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import FormatTime from './FormatTime';
 import { TimeResult } from '../Interfaces/types';
 import { ResultsTableProps } from '../Interfaces/props';
+import { freshRowClass, freshRowKey } from './FreshRow';
 import { matchesSearch } from './SearchMatch';
 
 class TimeResultsTable extends Component<ResultsTableProps> {
@@ -152,7 +153,7 @@ class TimeResultsTable extends Component<ResultsTableProps> {
                                     result.gender = "M"
                                 }
                                 return (
-                                    <tr key={result.bib}>
+                                    <tr key={freshRowKey(result, this.props.fresh)} className={freshRowClass(result, this.props.fresh)}>
                                         <td className="overflow-hidden-sm text-center">{result.bib}</td>
                                         <td className="text-center">{rankStr}</td>
                                         <td><Link to={`/results/${info.slug}/${info.year}/${result.bib}`} className="nav-link m-0 p-0">{result.anonymous === true ? `Bib ${result.bib}` : `${result.first} ${result.last}`}</Link></td>

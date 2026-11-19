@@ -43,6 +43,8 @@ describe('live updates', () => {
     function liveResults(race: 'live' | 'finished' | 'old', failRefresh = false) {
         let calls = 0
         const minutesAgo = (minutes: number) => new Date(Date.now() - minutes * 60000).toISOString()
+        // Ann's read doesn't change between fetches
+        const annRead = minutesAgo(race === 'old' ? 7 * 60 : 1)
         const fetch = routeFetch({
             '/results': () => {
                 calls++
@@ -52,7 +54,7 @@ describe('live updates', () => {
                 const runners = [makeTimeResult({
                     person_id: '1', bib: '1', first: 'Ann', last: 'Early', ranking: 1, seconds: 100, chip_seconds: 100,
                     finish: race === 'finished',
-                    local_time: minutesAgo(race === 'old' ? 7 * 60 : 1),
+                    local_time: annRead,
                 })]
                 if (calls > 1) {
                     runners.push(makeTimeResult({ person_id: '2', bib: '2', first: 'Bea', last: 'Late', ranking: 2, seconds: 200, chip_seconds: 200, finish: false, local_time: minutesAgo(0) }))
@@ -87,6 +89,22 @@ describe('live updates', () => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument()
     })
 
+    it('tints only the results that changed in a live refresh', async () => {
+        installMockEventSource()
+        liveResults('live')
+        renderAt('/results/test-race', '/results/:slug/:year?', <Results />)
+        await screen.findByText('Test Race Results')
+        const tinted = () => screen.getAllByRole('row').filter(row => row.classList.contains('result-new')).map(row => within(row).getAllByRole('cell')[2].textContent)
+
+        // nothing is tinted on the first load
+        expect(tinted()).toEqual([])
+
+        MockEventSource.open()[0].emit('results')
+
+        await waitFor(() => { expect(names()).toEqual(['Ann Early', 'Bea Late']) })
+        expect(tinted()).toEqual(['Bea Late'])
+    })
+
     it("doesn't watch once everyone has finished", async () => {
         installMockEventSource()
         liveResults('finished')
@@ -103,6 +121,23 @@ describe('live updates', () => {
 
         await screen.findByText('Test Race Results')
         expect(screen.getByText('Results update automatically')).toBeInTheDocument()
+    })
+
+    it('lists the latest results from the live badge, newest first', async () => {
+        installMockEventSource()
+        liveResults('live')
+        renderAt('/results/test-race', '/results/:slug/:year?', <LiveProvider><Results /></LiveProvider>)
+        await screen.findByText('Test Race Results')
+
+        fireEvent.click(screen.getByRole('button', { name: /Live/ }))
+        const latest = () => within(screen.getByRole('list', { name: 'Latest results' })).getAllByRole('link').map(link => link.textContent)
+        expect(latest()).toEqual(['Ann Early'])
+        expect(within(screen.getByRole('list', { name: 'Latest results' })).getByText('1m ago')).toBeInTheDocument()
+
+        // a runner read since joins the top of the list
+        MockEventSource.open()[0].emit('results')
+        await waitFor(() => { expect(latest()).toEqual(['Bea Late', 'Ann Early']) })
+        expect(within(screen.getByRole('list', { name: 'Latest results' })).getByRole('link', { name: 'Bea Late' }).getAttribute('href')).toMatch(/^\/results\/test-race\/.+\/2$/)
     })
 
     it("doesn't show the live badge without a recent read", async () => {

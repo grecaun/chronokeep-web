@@ -439,6 +439,107 @@ a.chronokeep-pagination-active:hover {
   background-color: rgb(225, 36, 22);
   animation: live-pulse 2s ease-in-out infinite;
 }
+.live-badge-button {
+  cursor: pointer;
+  font-family: inherit;
+  line-height: inherit;
+}
+.live-badge-button:hover {
+  border-color: #adb5bd;
+  color: #3d4955;
+}
+.live-badge-button:focus-visible {
+  outline: 2px solid rgb(225, 36, 22);
+  outline-offset: 2px;
+}
+.live-caret {
+  width: 6px;
+  height: 6px;
+  margin-left: 2px;
+  border-left: 1.5px solid currentColor;
+  border-top: 1.5px solid currentColor;
+  transform: translateY(2px) rotate(45deg);
+  transition: transform .15s ease;
+}
+.live-caret-open {
+  transform: translateY(-2px) rotate(225deg);
+}
+.live-recent {
+  width: 320px;
+  max-width: 100%;
+  max-height: min(60vh, 520px);
+  overflow-y: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #212529;
+  font-size: 14px;
+}
+.live-recent-title {
+  position: sticky;
+  top: 0;
+  padding: 8px 14px;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #fff;
+  color: #5c6c7d;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.live-recent-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.live-recent-item {
+  padding: 7px 14px;
+}
+.live-recent-item + .live-recent-item {
+  border-top: 1px solid #f1f3f5;
+}
+.live-recent-main,
+.live-recent-sub {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.live-recent-name {
+  overflow: hidden;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.live-recent-name:hover {
+  text-decoration: underline;
+}
+.live-recent-time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.live-recent-sub {
+  color: #5c6c7d;
+  font-size: 12px;
+}
+.live-recent-ago {
+  flex-shrink: 0;
+}
+/*
+ * A result that just changed while live starts with a soft tint that fades back to the row's
+ * usual color. Bootstrap colors table cells with an inset box-shadow, so only the start is
+ * given and the fade ends on whatever the cell would normally show. Lasts FRESH_FADE.
+ */
+.result-new > td {
+  animation: result-new 5s ease-in forwards;
+}
+@keyframes result-new {
+  from {
+    box-shadow: inset 0 0 0 9999px rgba(25, 135, 84, .14);
+  }
+}
 @keyframes live-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: .35; }

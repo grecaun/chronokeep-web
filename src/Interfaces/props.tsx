@@ -81,6 +81,8 @@ export interface ResultsTableProps {
     age_group_map: Map<number, string>
     certification: string | undefined
     segment_map: Map<string, Segment>
+    /** Results that just changed while live, by freshKey, to tint as they fade in. */
+    fresh?: ReadonlyMap<string, number>
 }
 
 export interface DoubleResultsTableProps {

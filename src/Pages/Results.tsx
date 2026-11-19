@@ -120,7 +120,7 @@ const filterOptions = createFilterOptions({
 
 function Results() {
     const params = useParams();
-    const { state, setState } = ResultsLoader(params, 'results');
+    const { state, setState, fresh } = ResultsLoader(params, 'results');
     // The distance tab the viewer has picked. None picked shows every distance.
     const [selectedDistance, setSelectedDistance] = useState<string | null>(null);
     document.title = `Chronokeep - Results`
@@ -796,6 +796,7 @@ function Results() {
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
                                                 segment_map={segment_map}
+                                                fresh={fresh}
                                                 />
                                         )
                                     } else if (state.event!.type === "backyardultra") {
@@ -813,6 +814,7 @@ function Results() {
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
                                                 segment_map={segment_map}
+                                                fresh={fresh}
                                                 />
                                         )
                                     } else {
@@ -830,6 +832,7 @@ function Results() {
                                                 age_group_map={age_group_map}
                                                 certification={certifications.get(distance)}
                                                 segment_map={segment_map}
+                                                fresh={fresh}
                                                 />
                                         )
                                     }

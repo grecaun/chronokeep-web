@@ -1,9 +1,11 @@
 import { Params } from "react-router-dom";
 import { ResultsState } from "../Interfaces/states";
 import { ErrorResponse, GetResultsResponse } from "../Interfaces/responses";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { RankingType } from "../Interfaces/types";
 import { mightBeLive, useLiveUpdates } from "./live";
+import { recentChanges } from "../Parts/recentChanges";
+import { useFreshResults } from "./freshResults";
 
 /** Fetches an event year's results, returning the parts of the page state they fill in. */
 async function fetchResults(slug: string | undefined, year: string | undefined): Promise<Partial<ResultsState>> {
@@ -59,7 +61,12 @@ async function fetchResults(slug: string | undefined, year: string | undefined):
  * Loads an event year's results. While the race might be live (see mightBeLive), the
  * results are fetched again whenever the API says they changed, unless `watchLive` is false.
  */
-export function ResultsLoader(params: Params<string>, page: string, watchLive = true): { state: ResultsState, setState: React.Dispatch<React.SetStateAction<ResultsState>> } {
+export function ResultsLoader(params: Params<string>, page: string, watchLive = true): {
+    state: ResultsState,
+    setState: React.Dispatch<React.SetStateAction<ResultsState>>,
+    /** Results that just changed in a live refresh, for the tables to tint (see useFreshResults). */
+    fresh: ReadonlyMap<string, number>,
+} {
     const [state, setState] = useState<ResultsState>({
         page: page,
         count: 0,
@@ -87,6 +94,10 @@ export function ResultsLoader(params: Params<string>, page: string, watchLive = 
     });
     // Counts fetches so only the newest one's results are used.
     const latestFetch = useRef(0);
+    // The results on screen, to compare a live refresh with.
+    const shownResults = useRef(state.results);
+    shownResults.current = state.results;
+    const { fresh, mark } = useFreshResults();
     useEffect(() => {
         let cancelled = false;
         // also makes any background refresh still running for the old slug or year stale
@@ -109,12 +120,23 @@ export function ResultsLoader(params: Params<string>, page: string, watchLive = 
         const fetchId = ++latestFetch.current;
         fetchResults(params.slug, params.year).then(update => {
             if (fetchId === latestFetch.current && !update.error) {
+                if (update.results) {
+                    mark(Object.values(shownResults.current).flat(), Object.values(update.results).flat());
+                }
                 setState(prev => ({ ...prev, ...update }));
             }
         }).catch(() => {});
     };
     const live = watchLive && !state.loading && !state.error && state.year !== null
         && mightBeLive(Object.values(state.results).flat());
-    useLiveUpdates(params.slug, state.year?.year, live, refresh);
-    return { state, setState };
+    // the latest reads, listed under the live badge
+    const slug = state.event?.slug ?? params.slug ?? '';
+    const year = state.year?.year ?? params.year ?? '';
+    const rankByChip = state.default_ranking_type === RankingType.Chip;
+    const recent = useMemo(
+        () => live ? recentChanges(Object.values(state.results).flat(), slug, year, rankByChip) : undefined,
+        [live, state.results, slug, year, rankByChip],
+    );
+    useLiveUpdates(params.slug, state.year?.year, live, refresh, recent);
+    return { state, setState, fresh };
 }
